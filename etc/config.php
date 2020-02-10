@@ -47,7 +47,7 @@ $config = [
     'mailer-custom-opts' => [],         #Custom SMTP options you may need to set for the mailer as an array
 
     #Application settings dependant on server settings
-    'application-root' => 'http://10.243.140.50',         #The applications URL (Depends on how to machine is accessed what this should be.)
+    'application-root' => 'http://10.243.140.12',         #The applications URL (Depends on how to machine is accessed what this should be.)
     'data-root' => '/var/www/chicago/data/raw',                  #Where data files are going to be stored. SDS files, images, etc... Must be writtable by the server process
     'template-root' => '/var/www/chicago/wwwroot/templates',     #Where the application templates are stored for file_get_contents
     
