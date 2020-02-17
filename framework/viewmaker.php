@@ -555,20 +555,23 @@ Class ViewMaker implements ViewWidgets {
      * @param Boolean $centered Whether or not to include Bootstrap centering
      * @return Void
      */
-    public function responsiveTableStart (Array $columnHeadings = null, $centered = false) {
+    public function responsiveTableStart (Array $columnHeadings = null, $centered = false, $return = false) {
+        $output = "";
         if ($centered) {
-            echo "<div class='row'><div class='col-md-3'></div><div class='col-md-6 col-xs-12'><div class='table-responsive'><table class='table'>";
+            $output = "<div class='row'><div class='col-md-3'></div><div class='col-md-6 col-xs-12'><div class='table-responsive'><table class='table'>";
         }
         else {
-            echo "<div class='table-responsive'><table class='table'>";
+            $output = "<div class='table-responsive'><table class='table'>";
         }
         if (!is_null($columnHeadings)) {
-            echo "<tr>";
+            $output .= "<tr>";
             foreach($columnHeadings as $heading) {
-                echo "<th>{$heading}</th>";
+                $output .= "<th>{$heading}</th>";
             }
-            echo "</tr>";
+            $output .= "</tr>";
         }
+        if ($return) return $output;
+        else echo $output;
     }
 
     /**
@@ -594,11 +597,13 @@ Class ViewMaker implements ViewWidgets {
      * Ouputs the closing responsive table to the stream
      * @param Boolean $centered Whether to center the table with Bootstrap
      */
-    public function responsiveTableClose ($centered = false) {
+    public function responsiveTableClose ($centered = false, $return = false) {
         if ($centered)
-            echo "</table></div></div><div class='col-md-3'></div></div>";
+            $output = "</table></div></div><div class='col-md-3'></div></div>";
         else
-            echo "</table></div>";
+            $output = "</table></div>";
+        if ($return) return $output;
+        else echo $output;
     }
 
     /**
@@ -644,10 +649,24 @@ Class ViewMaker implements ViewWidgets {
      * @param String $name The label name of the collapse button.
      * @return Void This method outputs to the stream and returns nothing.
      */
-    public function beginBtnCollapse ($name = 'Show/Hide Content',$id = null) {
+    public function beginBtnCollapse ($name = 'Show/Hide Content',$id = null, $popoverid = null) {
         if (is_null($id)) $id = uniqid('collapse-');
-        echo "<button data-toggle='collapse' data-target='#{$id}' class='btn btn-secondary'>{$name}</button>";
+        if (!is_null($popoverid)) {
+            echo "<script>";
+            echo "$(document).ready(function(){";
+            echo "$('#popoverToggle').popover({";
+            echo "html:true,";
+            echo "title:'<h4>Preview</h4>',";
+            echo "content:'{$popoverid}',";
+            echo "trigger:'hover'});});";
+            echo "</script>";
+            echo "<button id='popoverToggle' data-toggle='collapse' data-target='#{$id}' class='btn btn-secondary'>{$name}</button>";
+        }
+        else {
+            echo "<button data-toggle='collapse' data-target='#{$id}' class='btn btn-secondary'>{$name}</button>";
+        }        
         echo "<div id='{$id}' class='collapse'>";
+
     }
 
     /**

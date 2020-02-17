@@ -116,14 +116,28 @@ if ($server->checkPermission('addProduct')) {
 if ($server->checkPermission('viewProductLog')) {
     $edit = $server->checkPermission('editProductLog');
     $view->hr();
-    $view->beginBtnCollapse('Show/Hide Log');
+
+    //Preview
+    $preview = "<b>Sequence</b>&#160;&#160;&#160;";
+    $preview .= "<b>Serial</b>&#160;&#160;&#160;";
+    $preview .= "<b>FTC</b>&#160;&#160;&#160;";
+    $cnt = 0;
+    foreach($product->pLog as $row) {
+        if ($cnt == 5) break; $cnt++;
+        $preview .= "<hr />";
+        $preview .= "{$row['sequence_number']}&#160;&#160;&#160;";
+        $preview .= "{$row['serial_number']}&#160;&#160;&#160;";
+        $preview .= "{$row['ftc']}&#160;&#160;&#160;";
+    }
+
+    $view->beginBtnCollapse('Show/Hide Log',null, $preview);
     if ($server->checkPermission('inspectQC')) {
         $view->h3("Production Log <a href='{$view->PageData['approot']}/products/productqc?prokey={$_REQUEST['prokey']}' 
             class='btn btn-success btn-sm' role='button'><span class='oi oi-plus' title='plus' aria-hidden='true'></span>&#160;Add Entry</a>");
     }
     else {
         $view->h3('Production Log');
-    }
+    } 
     $head = ['Sequence#','Serial#','Unit Description','Unit QC','Date','Comments','Inspector'];
     if ($edit) array_unshift($head,'Edit');
     $view->responsiveTableStart($head);

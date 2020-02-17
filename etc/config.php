@@ -53,9 +53,9 @@ $config = [
     
     #ViewMaker pagedata settings, effect how the UI looks
     'company-name' => 'Chicago Assembly Division',
-    'company-motto' => 'Making Uhauls finest and safest',
+    'company-motto' => 'Building Uhauls Finest and Safest',
     'home-name' => 'Safety',
-    'theme' => 'dark', #Not implemented as yet
+    'theme' => 'dark',
 
     #Main navbar links
     'navbar-links' => [
