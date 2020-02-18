@@ -14,28 +14,25 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-.cubs-theme-nav {
-    background-color:#005395 !important;
-}
-.beach-theme-nav {
-    background-color:#874c24 !important;
-}
-.bears-theme-nav {
-    background-color:#101034 !important;
-}
-.chfire-theme-nav {
-    background-color:#00215b !important;
-}
-.fordoval-theme-nav {
-    background-color:#1e518e !important;
-}
-.thanksgiving-theme-nav {
-    background-color:#651500 !important;
-}
-.winter-theme-nav {
-    background-color:#bee7fa !important;
-}
-.spring-theme-nav {
-    background-color:#2d862d !important;
-}
+$(document).ready(function(){
+    $('nav').removeClass('bg-dark');
+    $('nav').addClass('spring-theme-nav');
+    $('#template-header').css({
+        'background':"url('" + getAppRoot() + "/wwwroot/images/theme/springheader.png') center",
+        'color':'#ffff80',
+        "border": "1px solid #ffff80"
+    });
+    $('.footer').css({
+        "background-color":"#2d862d",
+        "color": "#ffff80",
+        "border": "1px solid #ffff80",
+     });
+     $('.footer a:link').css({
+        "color": "rgb(0,0,0)"
+    });
+     $('.view-content').css({
+        "padding":"10px",
+        "min-height":"65vh",
+        "background":"rgb(255,255,255) url('" + getAppRoot() + "/wwwroot/images/theme/springbg.png') center fixed no-repeat"
+     });
+});
