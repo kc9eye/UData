@@ -155,7 +155,8 @@ Class FormWidgets {
             echo "<script>";
             echo "$(document).ready(function(){";
             echo "tinymce.init({";
-            echo "selector: 'textarea', plugins: 'autoresize'";
+            echo "selector: 'textarea', plugins: ['autoresize','autolink'],";
+            echo "toolbar: 'link',browser_spellcheck: true";
             echo "});";
             echo "});";
             echo "</script>";

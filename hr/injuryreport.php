@@ -84,21 +84,7 @@ function editReportDisplay () {
 
     $handler = new Injuries($server->pdo);
     $report = $handler->getReport($_REQUEST['id']);
-    $pageOptions = [
-        'headinserts'=>[
-            "<script src='{$server->config['application-root']}/third-party/tinymce/tinymce.min.js'></script>",
-            "<script>
-                $(document).ready(function(){
-                    tinymce.init({
-                        selector: 'textarea',
-                        plugins: 'autoresize'
-                    });
-                });
-            </script>\n"
-        ]
-    ];
-
-    $view = $server->getViewer('HR: Amend Injury Report', $pageOptions);
+    $view = $server->getViewer('HR: Amend Injury Report');
     $view->h1("<small>Amend Report for: {$report['name']}");
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $form->newForm();
@@ -116,7 +102,7 @@ function editReportDisplay () {
         case true: $form->checkBox('followup_medical',['Clinic','No'],'false',false,null,'true'); break;
         case false: $form->checkBox('followup_medical',['Clinic','Yes'],'true',false,null,'false'); break;
     }
-    $form->textArea('injury_description',null,$report['injury_description'],true,'Amend the report about the injury and how it occurred');
+    $form->textArea('injury_description',null,$report['injury_description'],true,'Amend the report about the injury and how it occurred',true);
     $form->submitForm('Amend',false,$server->config['application-root'].'/hr/viewemployee?id='.$report['eid']);
     $form->endForm();
     $view->footer();
