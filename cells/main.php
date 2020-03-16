@@ -130,6 +130,7 @@ function displayCell () {
     }
     if ($server->checkRole('Materials')) {
         $heading .= ' '.$view->linkButton("/cells/printmaterial?cellid={$cell->ID}",'Export Pick List','default',true,'_blank');
+        $heading .= ' '.$view->linkButton("/cells/inventorymaterial?cellid={$cell->ID}","Print Barcodes",'default',true,'_blank');
     }
     $view->h3($heading);
     if (!empty($cell->Material)) {

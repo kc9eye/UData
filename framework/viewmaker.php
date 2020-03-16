@@ -751,4 +751,11 @@ Class ViewMaker implements ViewWidgets {
             return false;
         }
     }
+
+    public function genBarcode ($code,$caption = null) {
+        echo "<img src='{$this->PageData['application-root']}/data/barcode?barcode={$code}&width=200&height=50&format=png&text=0' alt='[BARCODE]' />";
+        if (!is_null($caption)) {
+            echo "<figcaption class='figure-caption text-center'>{$caption}</figcaption>";
+        }
+    }
 }
