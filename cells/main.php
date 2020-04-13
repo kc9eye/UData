@@ -128,7 +128,7 @@ function displayCell () {
     if ($server->checkPermission('editWorkCell')) {
         $heading .= " ".$view->editBtnSm("/cells/cellmaterial?cellid={$_REQUEST['id']}",true);
     }
-    $heading .= ' '.$view->linkButton("/cells/materials?cellid={$cell->ID}","Material Controls","info",true,'_self');
+    $heading .= ' '.$view->linkButton("/cells/materialcontrols?cellid={$cell->ID}","Material Controls","info",true,'_self');
     $view->h3($heading);
     if (!empty($cell->Material)) {
         echo "<div class='table-responsive'><table class='table'>\n";

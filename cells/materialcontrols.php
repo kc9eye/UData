@@ -38,11 +38,11 @@ function main () {
     $view->h1("<small>Work Cell:</small> {$cell->Name}");
     $view->h2("<small>Associated Product:</small> {$cell->Product}");
     $view->hr();
-    $view->linkButton("/cells/materials?cellid={$cell->ID}&action=printlist","Print List","info",false,'_blank');
+    $view->linkButton("/cells/materialcontrols?cellid={$cell->ID}&action=printlist","Print List","info",false,'_blank');
     $view->insertTab();
-    $view->linkButton("/cells/materials?action=printcodes&cellid={$cell->ID}","Print Barcodes","info",false,'_blank');
+    $view->linkButton("/cells/materialcontrols?action=printcodes&cellid={$cell->ID}","Print Barcodes","info",false,'_blank');
     $view->insertTab();
-    $view->linkButton("/cells/materials?cellid={$cell->ID}&action=countsheet","Print Count Sheet","info",false,"_blank");
+    $view->linkButton("/cells/materialcontrols?cellid={$cell->ID}&action=countsheet","Print Count Sheet","info",false,"_blank");
 
     if ($server->checkPermission('editWorkCell')) {
         if (empty($_SESSION['inventory'][$cell->ID])) {
@@ -69,12 +69,12 @@ function main () {
             else {
                 $view->bold("Total Submitted: {$_SESSION['inventory'][$cell->ID]['parts'][$row['number']]}");
                 $view->insertTab();
-                $view->linkButton("/cells/materials?action=remove&number={$row['number']}&cellid={$cell->ID}","Remove Count","danger");
+                $view->linkButton("/cells/materialcontrols?action=remove&number={$row['number']}&cellid={$cell->ID}","Remove Count","danger");
             }
             echo "</td></tr>";
         }
         $view->responsiveTableClose();
-        $view->linkButton("/cells/materials?action=printTotals&cellid={$cell->ID}","Print Inventory Barcodes",'success',false,'_blank');
+        $view->linkButton("/cells/materialcontrols?action=printTotals&cellid={$cell->ID}","Print Inventory Barcodes",'success',false,'_blank');
     }
     else {
         $view->responsiveTableStart(["Quantity","Number","Description"]);
