@@ -25,7 +25,16 @@ $products = new Products($server->pdo);
 $view = $server->getViewer("Material: View Material");
 $view->sideDropDownMenu($submenu);
 
-$view->h1("<small>Material:</small> {$part->material['number']}");
+$view->h1("<small>Material:</small> {$part->material['number']} ".
+    $view->linkButton(
+        "https://techcenter.uhaul.net/ApprovedDrawing/Viewer?num={$part->material['number']}",
+        "View Print",
+        "warning",
+        true,
+        "_blank",
+        true
+    )
+);
 $view->h2("<small>Description:</small> {$part->material['description']}");
 $view->hr();
 
