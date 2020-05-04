@@ -140,7 +140,7 @@ function printList () {
     echo "<table style='line-height:1.5'>\n";
     echo "<tr><th>Qty.</th><th>Number</th><th>Description</th><th id='notes'>Notes</th></tr>\n";
     foreach($cell->Material as $row) {
-        echo "<tr><td style='text-align:right;'>{$row['qty']}</td><td>{$row['number']}</td><td style='text-align:left;'>{$row['description']}</td><td id='notes'>&nbsp;</td></tr>\n";
+        echo "<tr><td style='text-align:center;'>{$row['qty']}</td><td>{$row['number']}</td><td style='text-align:left;'>{$row['description']}</td><td id='notes'>&nbsp;</td></tr>\n";
     }
     echo "</table>\n";
     echo "<script>window.print()</script>\n";

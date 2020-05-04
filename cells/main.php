@@ -85,6 +85,7 @@ function displayCell () {
     $cell = new WorkCell($server->pdo, $_REQUEST['id']);
     $view = $server->getViewer("Products: Work Cell");
     $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
+
     //The cell data (name, edit button, product association)
     $form->inlineButtonGroup([
         "Product View"=>"window.open(\"{$view->PageData['approot']}/products/viewproduct?prokey={$cell->ProductKey}\",\"_self\");",
@@ -132,9 +133,17 @@ function displayCell () {
     $view->h3($heading);
     if (!empty($cell->Material)) {
         echo "<div class='table-responsive'><table class='table'>\n";
-        echo "<tr><th>Quantity</th><th>Number</th><th>Description</th><th>Discrepancy</th></tr>";
+        echo "<tr><th>Quantity</th><th>Number</th><th>Description</th><th>Print</th><th>Discrepancy</th></tr>";
         foreach($cell->Material as $row) {
             echo "<tr><td>{$row['qty']}</td><td>{$row['number']}</td><td>{$row['description']}</td>";
+            echo "<td>".$view->linkButton(
+                "https://techcenter.uhaul.net/ApprovedDrawing/Viewer?num={$row['number']}",
+                "View Print",
+                "info",
+                true,
+                "_blank",
+                true
+            )."</td>";
             echo "<td>".$view->linkButton('/material/discrepancy?number='.$row['number'].'&prokey='.$cell->ProductKey,'Discrepancy','warning',true)."</td></tr>\n";
         }
         echo "</table></div>\n";
