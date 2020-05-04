@@ -97,13 +97,14 @@ function listMaterial () {
     $form->hiddenInput('cellid',$cell->ID);
     $form->hiddenInput('prokey',$cell->ProductKey);
     $form->inputCapture('qty','Qty.',null,['number'=>'true'],"All qty's less than 1 must start with '0.'");
-    $form->inputCapture('number', 'Part&#23', null, true,'All material must be on the BOM, if not see material supervisor.');
+    $form->inputCapture('number', 'Part#', null, true,'All material must be on the BOM, if not see material supervisor.');
+    $form->inputCapture('label','Label',null,false,"Optional label");
     $form->submitForm('Verify',true);
     $form->endForm();
     $view->hr();
-    $view->responsiveTableStart(['Qty.','Number','Description','Edit'],true);
+    $view->responsiveTableStart(['Label','Qty.','Number','Description','Edit'],true);
     foreach($cell->Material as $row) {
-        echo "<tr><td>{$row['qty']}</td><td>{$row['number']}</td><td>{$row['description']}</td><td>";
+        echo "<tr><td>{$row['label']}</td><td>{$row['qty']}</td><td>{$row['number']}</td><td>{$row['description']}</td><td>";
         $view->editBtnSm("?action=edit&id={$row['id']}", false, true);
         echo "</td></tr>\n";
     }
@@ -127,6 +128,7 @@ function editDisplay () {
     $form->hiddenInput('cellid',$cell->ID);
     $form->hiddenInput('uid',$server->currentUserID);
     $form->hiddenInput('rowid',$_REQUEST['id']);
+    $form->inputCapture('label','Label',$part['label'],false,"Optional");
     $form->inputCapture('qty','Qty',$part['qty'],['number'=>'true'],"Edit quantity (Qty's less than 1 must begin with '0.'");
     $form->labelContent("Number",$part['number']);
     $form->labelContent("Description",$part['description']);

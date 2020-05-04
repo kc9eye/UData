@@ -133,9 +133,9 @@ function displayCell () {
     $view->h3($heading);
     if (!empty($cell->Material)) {
         echo "<div class='table-responsive'><table class='table'>\n";
-        echo "<tr><th>Quantity</th><th>Number</th><th>Description</th><th>Print</th><th>Discrepancy</th></tr>";
+        echo "<tr><th>Label</th><th>Quantity</th><th>Number</th><th>Description</th><th>Print</th><th>Discrepancy</th></tr>";
         foreach($cell->Material as $row) {
-            echo "<tr><td>{$row['qty']}</td><td>{$row['number']}</td><td>{$row['description']}</td>";
+            echo "<tr><td>{$row['label']}</td><td>{$row['qty']}</td><td>{$row['number']}</td><td>{$row['description']}</td>";
             echo "<td>".$view->linkButton(
                 "https://techcenter.uhaul.net/ApprovedDrawing/Viewer?num={$row['number']}",
                 "View Print",

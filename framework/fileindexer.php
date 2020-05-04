@@ -95,7 +95,7 @@ class FileIndexer {
             $this->dbh->commit();
             return $this->indexed_ids;
         }
-        catch (Exeption $e) {
+        catch (Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
             $this->dbh->rollBack();
             foreach($this->indexed as $file) {

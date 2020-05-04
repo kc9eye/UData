@@ -131,7 +131,8 @@ class WorkCell {
                 a.id,
                 (SELECT number FROM material WHERE id = (SELECT partid FROM bom WHERE id = a.bomid)),
                 (SELECT description FROM material WHERE id = (SELECT partid FROM bom WHERE id = a.bomid)),
-                a.qty
+                a.qty,
+                a.label
             FROM cell_material AS a
             WHERE a.cellid = ?';
         $pntr = $this->dbh->prepare($sql);

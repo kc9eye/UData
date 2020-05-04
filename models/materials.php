@@ -40,10 +40,10 @@ class Materials {
             if (!$this->verifyOnBOM($data['number'],$data['prokey'])) 
                 throw new Exception("Material is not on the BOM for this product, consider running checks before submitting.");
             if (!$this->verifyBOMQty($data['number'],$data['prokey'],$data['qty'])) 
-                throw new Exception("Material quatity exceeds the BOM limit. Consider running checks before submitting.");
+                throw new Exception("Material quantity exceeds the BOM limit. Consider running checks before submitting.");
             
             $sql = '
-            INSERT INTO cell_material (id,cellid,bomid,qty,uid,_date)
+            INSERT INTO cell_material (id,cellid,bomid,qty,uid,_date,label)
             select :id,:cellid,
                 (select id from bom where partid = (
                     select id from material where number = :number
@@ -52,7 +52,8 @@ class Materials {
                 ),
                 :qty,
                 :uid,
-                now()';
+                now(),
+                :label';
 
             $insert = [
                 ':id'=>uniqid(),
@@ -60,7 +61,8 @@ class Materials {
                 ':qty'=>$data['qty'],
                 ':uid'=>$data['uid'],
                 ':prokey'=>$data['prokey'],
-                ':number'=>$data['number']
+                ':number'=>$data['number'],
+                ':label'=>$data['label']
             ];
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute($insert)) throw new Exception("Insert failed: {$sql}");
@@ -237,10 +239,11 @@ class Materials {
      * @return Boolean True on success, false otherwise.
      */
     public function amendCellMaterialQty (Array $data) {
-        $sql = 'UPDATE cell_material SET qty = :qty WHERE id = :id';
+        $sql = 'UPDATE cell_material SET qty = :qty, label = :label WHERE id = :id';
         try {
             $pntr = $this->dbh->prepare($sql);
-            if (!$pntr->execute([':qty'=>$data['qty'],':id'=>$data['rowid']])) throw new Exception("Update failed: {$sql}");
+            if (!$pntr->execute([':qty'=>$data['qty'],':label'=>$data['label'],':id'=>$data['rowid']])) 
+                throw new Exception("Update failed: {$sql}");
             return true;
         }
         catch (PDOException $e) {
