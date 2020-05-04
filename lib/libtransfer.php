@@ -136,6 +136,7 @@ function transfer_material (Array $data) {
         $faults = array();
         foreach($mats as $part) {
             $insert = [
+                'label'=>"",
                 'number'=>$part['number'],
                 'qty'=>$part['qty'],
                 'cellid'=>$data['newcellid'],
