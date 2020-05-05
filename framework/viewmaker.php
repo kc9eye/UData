@@ -544,9 +544,27 @@ Class ViewMaker implements ViewWidgets {
      */
     public function trashBtnSm ($addr, $return = false, $passthru = false) {
         $addr = $passthru ? $addr : $this->PageData['approot'].$addr;
-        $str = "<a href='{$addr}' class='btn btn-sm btn-danger' role='button'><span class='oi oi-trash' title='trash' aria-hidden='true'></span></a>";
+        // $str = "<a href='{$addr}' class='btn btn-sm btn-danger' role='button'><span class='oi oi-trash' title='trash' aria-hidden='true'></span></a>";
+        $mid = uniqid('trashconf-');
+        $str = "<button class='btn btn-sm btn-danger' data-toggle='modal' data-target='#{$mid}'>";
+        $str .= "<span class='oi oi-trash' title='trash' aria-hidden='true'></span>";
+        $str .= "</button>";
+        $str .= "<div class='modal' id='{$mid}'>";
+        $str .= "<div class='modal-dialog'>";
+        $str .= "<div class='modal-content'>";
+        $str .= "<div class='modal-header'>";
+        $str .= "<h4 class='modal-title'>Confirm Delete</h4>";
+        $str .= "</div>";
+        $str .= "<div class='modal-body'>";
+        $str .= "<span style='font-weight:normal;font-size:14pt'>Are you sure you want to delete this data?</span>";
+        $str .= "</div>";
+        $str .= "<div class='modal-footer'>";
+        $str .= "<a href='{$addr}' class='btn btn-danger' role='button'>DELETE</a>";
+        $str .= "<button type='button' class='btn btn-secondary' data-dismiss='modal'>CANCEL</button>";
+        $str .= "</div></div></div></div>";
         if ($return) return $str;
         else echo $str;
+
     }
 
     /**

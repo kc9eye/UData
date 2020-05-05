@@ -77,7 +77,7 @@ function editDisplay () {
     $view = $server->getViewer("Maintenance: Edit Tool");
     $view->sideDropDownMenu($submenu);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    $form->newForm($view->trashBtnSm("/maintenance/mastertools?action=remove&id={$_REQUEST['id']}",true));
+    $form->newForm("Edit Tool ".$view->trashBtnSm("/maintenance/mastertools?action=remove&id={$_REQUEST['id']}",true));
     $form->inputCapture('category','Current Cat.',$tool['category'],['required'=>'#newcat:blank'],'To select a category below, you must remove the current category, that is in this box.');
     $form->selectBox('newcat','New Category',$select,['required'=>'#category:blank']);
     $form->inputCapture('description','Description',$tool['description'],true);
