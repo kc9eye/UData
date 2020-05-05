@@ -57,6 +57,7 @@ function main () {
     $form->hiddenInput('uid',$server->currentUserID);
     $form->inputCapture('number',"Print Number",null,true);
     $form->submitForm('Add',true);
+    $form->endForm();
     $view->hr();
     $view->responsiveTableStart(['Print Number'],true);
     foreach($cell->Prints as $row) {
