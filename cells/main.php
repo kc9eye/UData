@@ -65,6 +65,43 @@ if (!empty($_REQUEST['action'])) {
                 displaySearchBar("{$_REQUEST['cell_search']} not found.");
             }
         break;
+        case 'multitransfer':
+            if (empty($_SESSION['multitransfer'])) {
+                $_SESSION['multitransfer']['prokey'] = $_REQUEST['prokey'];
+                $_SESSION['multitransfer']['uid'] = $server->currentUserID;
+                $_SESSION['multitransfer']['safetyreviewurl'] = $server->config['application-root'].'/cells/cellsafety?action=review';
+                $_SESSION['multitransfer']['cells'] = array();
+                foreach($_REQUEST as $index => $value) {
+                    if ($value === "true") array_push($_SESSION['multitransfer']['cells'],$index);
+                }
+                $cell = new WorkCell($server->pdo,$_SESSION['multitransfer']['cells'][0]);
+                $url = "/cells/transfer?prokey={$_REQUEST['prokey']}&uid={$server->currentUserID}";
+                $url .= "&safetyreviewurl={$_SESSION['multitransfer']['safetyreviewurl']}";
+                $url .= "&cellid={$_SESSION['multitransfer']['cells'][0]}";
+                $url .= "&action=begin&cell_name={$cell->Name}";
+                $server->redirect($url);
+            }
+            elseif (!empty($_SESSION['multitransfer']['cells'])) {
+                $url = "/cells/transfer?prokey={$_SESSION['multitransfer']['prokey']}";
+                $url .= "&uid={$_SESSION['multitransfer']['uid']}";
+                $url .= "&safetyreviewurl={$_SESSION['multitransfer']['safetyreviewurl']}";
+                $url .= "&cellid={$_SESSION['multitransfer']['cells'][0]}";
+                $cell = new WorkCell($server->pdo,$_SESSION['multitransfer']['cells'][0]);
+                $url .= "&cell_name={$cell->Name}&action=begin";
+                $server->redirect($url);
+            }
+            else {
+                $server->newEndUserDialog(
+                    "MultiTransfer Complete",
+                    DIALOG_SUCCESS,
+                    $server->config['application-root'].'/cells/main?action=list&prokey='.$_SESSION['multitransfer']['prokey']
+                );
+                unset($_SESSION['multitransfer']);
+            }
+            
+
+            $server->getDebugViewer(var_export($_REQUEST,true));
+        break;
         default: displaySearchBar();
     }
 }
@@ -232,10 +269,15 @@ function displayCell () {
 function listWorkCells ($cells) {
     global $server;
     $edit = $server->checkPermission('editWorkCell');
-    //For #46 ----^^^^^^
     $product = new Products($server->pdo);
     $product_description = $product->getProductDescriptionFromKey($_REQUEST['prokey']);
+    $active_select = array();
+    foreach($product->getActiveProducts() as $row) {
+        if ($row['product_key'] != $_REQUEST['prokey']) 
+            array_push($active_select,[$row['product_key'],$row['description']]);
+    }
     $view = $server->getViewer("Products: Work Cell");
+
     $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
     echo "<div class='row'><div class='col-md-3'></div>\n";
     echo "<div class='col-md-6 col-xs-12'>\n";
@@ -244,18 +286,32 @@ function listWorkCells ($cells) {
         'Product View'=>"window.open(\"{$view->PageData['approot']}/products/viewproduct?prokey={$_REQUEST['prokey']}\",\"_self\");",
         'Create New Cell'=>"window.open(\"{$view->PageData['approot']}/cells/createworkcell?prokey={$_REQUEST['prokey']}\",\"_self\");"
     ]);
-    echo "<div class='table-repsonive'><table class='table'>\n";
-    echo "<tr><th>Cell Name</th>";
+    if ($edit) {
+        $form->newInlineForm();
+        $form->hiddenInput('action','multitransfer');
+    }
+    echo "<div class='table-repsonive'><table class='table'><tr>";
+    if ($edit) echo "<th>Transfer</th>";
+    echo "<th>Cell Name</th>";
     if ($edit) echo "<th>QC</th>";
-    //For #46 ---^^^^^^^
     echo "<th>Last Updated</th><th>Last Author</th></tr>\n";
     foreach($cells as $cell) {
-        echo "<tr><td><a href='?action=view&id={$cell['id']}'>{$cell['cell_name']}</a></td>";
+        echo "<tr>";
+        if ($edit) {
+            echo "<td>";
+            $form->inlineCheckbox($cell['id'],'Transfer','true');
+            echo "</td>";
+        }
+        echo "<td><a href='?action=view&id={$cell['id']}'>{$cell['cell_name']}</a></td>";
         if ($edit) echo "<td>".round($cell['qc'],2)."%</td>";
-        //For #46 ---^^^^^^^^
         echo "<td>".$view->formatUserTimestamp($cell['_date'],true)."</td><td>{$cell['author']}</td></tr>\n";
     }
     echo "</table></div><div class='col-md-3'></div>\n";
+    if ($edit) {
+        $form->inlineSelectBox('prokey',"To Product",$active_select,true);
+        $form->inlineSubmit('Transfer',true);
+        $form->endInlineForm();
+    }
     echo "</div>\n";
     $view->footer();
 }

@@ -158,15 +158,26 @@ function completionDialog () {
         $view->responsiveTableClose(true);
         $view->addScrollTopBtn();
         unset($_SESSION['cell_transfer']);
+        if (!empty($_SESSION['multitransfer'])) {
+            array_shift($_SESSION['multitransfer']['cells']);
+            $view->linkButton('/cells/main?action=multitransfer',"Continue",'success');
+        }
         $view->footer();        
     }
     else {
         $cellid = $_SESSION['cell_transfer']['newcellid'];
         unset($_SESSION['cell_transfer']);
+        if (!empty($_SESSION['multitransfer'])) {
+            array_shift($_SESSION['multitransfer']['cells']);
+            $clickback = $server->config['application-root'].'/cells/main?action=multitransfer';
+        }
+        else {
+            $clickback = $server->config['application-root'].'/cells/main?id='.$cellid;
+        }
         $server->newEndUserDialog(
             "Tranfer Complete, there were no errors during the transfer.",
             DIALOG_SUCCESS,
-            $server->config['application-root'].'/cells/main?id='.$cellid
+            $clickback
         );
         
     }    

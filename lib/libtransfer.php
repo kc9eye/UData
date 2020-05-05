@@ -166,7 +166,7 @@ function transfer_material (Array $data) {
         return false;
     }
     catch (Exception $e) {
-        trigger_erro($e->getMessage(),E_USER_WARNING);
+        trigger_error($e->getMessage(),E_USER_WARNING);
         return false;
     }
 }
@@ -189,6 +189,9 @@ function abort_transfer (Array $data) {
         $sql = 'DELETE FROM work_cell WHERE id = ?';
         $pntr = $server->pdo->prepare($sql);
         if (!$pntr->execute([$data['newcellid']])) throw new Exception("Workcell rollback failed.");
+
+        unset($_SESSION['cell_transfer']);
+        if (isset($_SESSION['multitransfer'])) unset($_SESSION['multitransfer']);
 
         return true;
     }
