@@ -71,6 +71,10 @@ class WorkCell {
      * @var Array $Safety An Array containing the safety assessment data associated with the cell.
      */
     public $Safety;
+    /**
+     * @var Array $Prints An array containing the rows of records found in cell_prints table for the cell
+     */
+    public $Prints;
 
     /**
      * Class constructor
@@ -100,6 +104,7 @@ class WorkCell {
             $this->Safety = $this->getCellSafety();
             $this->SafetyReview = $this->getSafetyReviewDoc();
             $this->QCP = $this->getCheckPoints();
+            $this->Prints = $this->getCellPrints();
         }
         catch (PDOException $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
@@ -209,6 +214,19 @@ class WorkCell {
         catch (Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
+        }
+    }
+
+    private function getCellPrints () {
+        $sql = 'SELECT * FROM cell_prints WHERE cellid = ?';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$this->ID])) throw new Exception(print_r($pntr->errorInfo(),true));
+            return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return null;
         }
     }
 }

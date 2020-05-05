@@ -122,6 +122,32 @@ function displayCell () {
         $view->h3("Current Quality Statistic: {$cell->FTC}%");
     }
 
+    //Cell Assembly prints
+    $view->hr();
+    $view->beginBtnCollapse('Show/Hide Prints');
+    $heading = "Prints";
+    if ($server->checkPermission('editWorkCell'))
+        $heading .= " ".$view->editBtnSm("/cells/cellprints?cellid={$_REQUEST['id']}",true);
+    $view->h3($heading);
+    if (!empty($cell->Prints)) {
+        $view->responsiveTableStart(['Number','View']);
+        foreach($cell->Prints as $row) {
+            echo "<tr><td>{$row['number']}</td><td>".$view->linkButton(
+                "https://techcenter.uhaul.net/ApprovedDrawing/Viewer?num={$row['number']}",
+                "View Print",
+                "info",
+                true,
+                "_blank",
+                true
+            )."</td></tr>";
+        }
+        $view->responsiveTableClose();
+    }
+    else {
+        $view->bold("Nothing Found");
+    }
+    $view->endBtnCollapse();
+    
     //Materials data associated with the cell
     $view->hr();
     $view->beginBtnCollapse('Show/Hide Material');

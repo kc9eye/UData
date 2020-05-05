@@ -384,6 +384,51 @@ class WorkCells {
         }
     }
 
+    /**
+     * Adds a print to the cell
+     * 
+     * @param Array $data The given data required to add the cell
+     * in the form ['cellid'=>String,'number'=>String,'uid'=>String]
+     * @return Boolean True on success, false otherwise.
+     */
+    public function addNewCellPrint (Array $data) {
+        $sql = 'INSERT INTO cell_prints VALUES (:id,:cellid,:number,:uid,now())';
+        $insert = [
+            ':id'=>uniqid(),
+            ':cellid'=>$data['cellid'],
+            ':number'=>$data['number'],
+            ':uid'=>$data['uid']
+        ];
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+            return true;
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return false;
+        }
+    }
+
+    /**
+     * Removes a the given cell print from the cell_prints table
+     * 
+     * @param String $id The ID of the row to be removed
+     * @return Boolean True on success, false otherwise
+     */
+    public function removeCellPrint ($id) {
+        $sql = 'DELETE FROM cell_prints WHERE id = ?';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+            return true;
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return false;
+        }
+    }
+
     public function __set ($name, $value) {
         $this->data[$name] = $value;
     }

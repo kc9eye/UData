@@ -51,6 +51,7 @@ class UpdateDatabase implements Service {
         if ($update_version > $current_version) {
             echo "Database being updated from version {$current_version} to {$update_version}, please wait...";
             if (!empty($sql)) {
+                $this->server->pdo->beginTransaction();
                 foreach($sql as $statement) {
                     try {
                         $pntr = $this->server->pdo->prepare($statement);
@@ -58,10 +59,12 @@ class UpdateDatabase implements Service {
                     }
                     catch (Exception $e) {
                         echo "update failed!";
+                        $this->server->pdo->rollBack();
                         trigger_error($e->getMessage(),E_USER_WARNING);
                         return false;
                     }
                 }
+                $this->server->pdo->commit();
             }
             if (!empty($inserts)) {
                 foreach($inserts as $sql => $data) {
