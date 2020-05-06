@@ -184,7 +184,29 @@ function displayCell () {
         $view->bold("Nothing Found");
     }
     $view->endBtnCollapse();
-    
+
+    //Files display
+    $view->hr();
+    $view->beginBtnCollapse('Show/Hide Files');
+    $heading = "Files";
+    $heading .= $server->checkPermission('editWorkCell') ? 
+        " ".$view->editBtnSm("/cells/cellfiles?cellid={$_REQUEST['id']}",true) : "";
+    $view->h3($heading);
+    $view->responsiveTableStart(['File']);
+    $indexer = new FileIndexer($server->pdo,$server->config['data-root']);
+    foreach($cell->Files as $row) {
+        $file = $indexer->getIndexByID($row['fid']);
+        echo "<tr><td>";
+        if ((preg_match('|^image/*|',$file[0]['mime'])) == 1) 
+            $view->responsiveImage($server->config['application-root']."/data/files?file={$file[0]['file']}&dis=inline");
+        else
+            echo "<a href='{$server->config['application-root']}/data/files?file={$file[0]['file']}&dis=attachment'>{$file[0]['upload_name']}</a>";
+        echo "</td></tr>";
+    }
+    $view->responsiveTableClose();
+
+    $view->endBtnCollapse();
+
     //Materials data associated with the cell
     $view->hr();
     $view->beginBtnCollapse('Show/Hide Material');

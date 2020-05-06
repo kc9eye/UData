@@ -176,4 +176,28 @@ class FileIndexer {
             return false;
         }
     }
+
+    /**
+     * Removes an indexed file by it's ID
+     * 
+     * @param String $fid The files index ID to remove
+     * @return Boolean True on success false otherwise
+     */
+    public function removeFilesByFID ($fid) {
+        $sql = 'DELETE FROM file_index WHERE id = ?';
+        try {
+            if (($file = $this->getIndexByID($fid)) === false) throw new Exception("Unable to find indexed file ID:{$fid}");
+            $pntr = $this->dbh->prepare($sql);
+            if (unlink($this->storage.'/'.$file[0]['file'])) {
+                if (!$pntr->execute([$fid])) throw new Exception(print_r($pntr->errorInfo(),true));
+                return true;
+            }
+            else throw new Exception("Unable to remove physical file:{$this->storage}/{$file['file']}");
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return false;
+        }
+    }
+
 }

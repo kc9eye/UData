@@ -429,6 +429,65 @@ class WorkCells {
         }
     }
 
+    /**
+     * Adds a file to the given cell for association
+     * 
+     * @param Array $data The data for the association in the form:
+     * ['cellid'=>string,'uid'=>string,'storage'=>string]
+     * @param FileUpload $file A FileUpload object containing the upload data
+     * @return Boolean True on success, false otherwise.
+     */
+    public function addFileToCell (Array $data, FileUpload $file) {
+        $sql = 'INSERT INTO cell_files VALUES(:id,:fid,:cellid,:uid,now())';
+        $indexer = new FileIndexer($this->dbh,$data['storage']);
+        if (($index = $indexer->indexFiles($file,$data['uid'])) !== false) {
+            try {
+                $insert = [
+                    ':id'=>uniqid(),
+                    ':fid'=>$index[0],
+                    ':cellid'=>$data['cellid'],
+                    ':uid'=>$data['uid']
+                ];
+                $pntr = $this->dbh->prepare($sql);
+                if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+                return true;
+            }
+            catch (Exception $e) {
+                $indexer->removeFilesByFID($index[0]);
+                trigger_error($e->getMessage(),E_USER_WARNING);
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Removes a file from association with a cell, and deletes the file
+     * 
+     * @param String $id The id for the record in question from cell_files
+     * @param String $storage the path to the local data storage
+     * @return Boolean True on success false otheriwse
+     */
+    public function removeCellFile ($id,$storage) {
+        $sql = 'SELECT * FROM cell_files WHERE id = ?';
+        $indexer = new FileIndexer($this->dbh,$storage);
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+            $index = $pntr->fetchAll(PDO::FETCH_ASSOC);
+            if (!$indexer->removeFilesByFID($index[0]['fid'])) throw new Exception("Indexer failed to remove file");
+            else {
+                $sql = 'DELETE FROM cell_files WHERE id = ?';
+                $pntr = $this->dbh->prepare($sql);
+                if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+            }
+            return true;            
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return false;
+        }
+    }
+
     public function __set ($name, $value) {
         $this->data[$name] = $value;
     }

@@ -100,7 +100,7 @@ Class Instance {
      * @param String $pagetitle Optional pagetitle for the browser page. Defaults to configuration option
      * `$config['company-name']`.
      * @param Array $pagedata Optional array of PageData for content manipulation.
-     * @return Object ViewMaker
+     * @return ViewMaker The ViewMaker Object used to start the page.
      * @uses ViewMaker
      * 
      * @author Paul W. Lane

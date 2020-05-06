@@ -75,6 +75,10 @@ class WorkCell {
      * @var Array $Prints An array containing the rows of records found in cell_prints table for the cell
      */
     public $Prints;
+    /**
+     * @var Array $Files An array containing the indexes of files associated with the cell
+     */
+    public $Files;
 
     /**
      * Class constructor
@@ -105,6 +109,7 @@ class WorkCell {
             $this->SafetyReview = $this->getSafetyReviewDoc();
             $this->QCP = $this->getCheckPoints();
             $this->Prints = $this->getCellPrints();
+            $this->Files = $this->getCellFilesIndex();
         }
         catch (PDOException $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
@@ -219,6 +224,19 @@ class WorkCell {
 
     private function getCellPrints () {
         $sql = 'SELECT * FROM cell_prints WHERE cellid = ?';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$this->ID])) throw new Exception(print_r($pntr->errorInfo(),true));
+            return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return null;
+        }
+    }
+
+    private function getCellFilesIndex () {
+        $sql = 'SELECT * FROM cell_files WHERE cellid = ?';
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->ID])) throw new Exception(print_r($pntr->errorInfo(),true));
