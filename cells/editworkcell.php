@@ -25,8 +25,8 @@ if (!empty($_REQUEST['action'])) {
         case 'remove':
             $server->processingDialog(
                 [$wc,'removeWorkCell'],
-                [$_REQUEST['id']],
-                $server->config['application-root'].'/cells/main'
+                [$_REQUEST['id'],$server->config['data-root']],
+                $server->config['application-root'].'/cells/main?action=list&prokey='.$_REQUEST['prokey']
             );
         break;
         case 'update':
@@ -47,11 +47,11 @@ else
 function updateDisplay () {
     global $server;
     $cell = new WorkCell($server->pdo,$_REQUEST['id']);
-    $products = new Products($server->pdo);
     $view = $server->getViewer("Products: Work Cell (Edit)");
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     echo "<div class='row'><div class='col-md-3'></div><div class='col-md-6 col-xs-12'>\n";
-    $view->h2("<small>Work Cell:</small> {$cell->Name} ".$view->trashBtnSm("/cells/editworkcell?action=remove&id={$_REQUEST['id']}",true));
+    $view->h2("<small>Work Cell:</small> {$cell->Name} "
+        .$view->trashBtnSm("/cells/editworkcell?action=remove&id={$_REQUEST['id']}&prokey={$cell->ProductKey}",true));
     $view->h3("<small>Associated With:</small> {$cell->Product}");
     echo "</div><div class='col-md-3'></div></div>\n";
     $form->newForm("<small>Tranfer Cell:</small> ".$view->linkButton('/cells/transfer?id='.$_REQUEST['id'],'Start','info',true));

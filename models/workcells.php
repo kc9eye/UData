@@ -164,21 +164,44 @@ class WorkCells {
 
     /**
      * Removes a work cell completely along with all it's associated items
-     * @param String $cellid The ID of the cell to remove.
+     * @param String $id The ID of the cell to remove.
+     * @param String $storage The path to the files local storage
      * @return Boolean True on success, false otherwise.
      */
-    public function removeWorkCell ($cellid) {
-        $sql = "DELETE FROM work_cell WHERE id = ?";
+    public function removeWorkCell ($id,$storage) {
+        $sql = [
+            'DELETE from work_cell WHERE id = ?',
+            'DELETE from cell_material WHERE cellid = ?',
+            'DELETE from cell_tooling WHERE cellid = ?',
+            'DELETE from cell_prints WHERE cellid = ?',
+            'DELETE from documents WHERE name = ?'
+        ];
         try {
-            $pntr = $this->dbh->prepare($sql);
-            if (!$pntr->execute([$cellid])) throw new Exception("Delete failed: {$sql}");
-            return true;
-        }
-        catch (PDOException $e) {
-            trigger_error($e->getMessage(), E_USER_WARNING);
-            return false;
+            $this->dbh->beginTransaction();
+            foreach($sql as $statement) {
+                $pntr = $this->dbh->prepare($statement);
+                if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+            }
         }
         catch (Exception $e) {
+            $this->dbh->rollBack();
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return false;
+        }
+
+        //Remove files as well
+        $sql = 'SELECT * FROM cell_files WHERE cellid = ?';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+            foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                if (!$this->removeCellFile($row['id'],$storage)) throw new Exception("Removing file failed");
+            }
+            $this->dbh->commit();
+            return true;
+        }
+        catch (Exception $e) {
+            $this->dbh->rollBack();
             trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
