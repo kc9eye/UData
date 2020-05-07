@@ -206,7 +206,7 @@ class BillOfMaterials {
             return true;
         }
         catch (PDOException $e) {
-            trigger_error($e->getMesssage(),E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             $this->dbh->rollBack();
             return false;
         }
@@ -384,7 +384,11 @@ class BillOfMaterials {
         }
         $subtends = [];
         for($cnt = 0; $cnt < count($bom);$cnt++) {
-            if ($bom[$cnt]['partid'] == $bom[($cnt + 1)]['partid']) array_push($subtends,$bom[($cnt + 1)]);
+           if ($bom[$cnt]['partid'] == $bom[($cnt +1)]['partid']) {
+               if (!$this->materialInUse($bom[$cnt]['id'],$prokey)) array_push($subtends,$bom[$cnt]);
+               elseif (!$this->materialInUse($bom[($cnt +1)]['id'],$prokey)) array_push($subtends,$bom[($cnt + 1)]);
+               else array_push($subtends,$bom[($cnt + 1)]);
+            }
         }
         $sql = 'DELETE FROM bom WHERE id = ?';
         try {
@@ -423,6 +427,33 @@ class BillOfMaterials {
             $this->dbh->rollBack();
             trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
+        }
+    }
+
+    /**
+     * Verifies that a material is not assigned to a work cell
+     * @param String $bomid The ID of the BOM matieral to check
+     * @param String $prokey The product key of the material to check
+     * @return Boolean Returns true if the material is on work cell already, false if not.
+     */
+    public function materialInUse ($bomid, $prokey) {
+        $sql = 
+        'select count(*)
+        from cell_material
+        where cellid in (
+            select id from work_cell where prokey = :prokey
+        )
+        and bomid = :bomid';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([':prokey'=>$prokey,':bomid'=>$bomid])) throw new Exception(print_r($pntr->errorInfo(),true));
+            $count = $pntr->fetchAll(PDO::FETCH_ASSOC);
+            if ($count[0]['count'] > 0) return true;
+            else return false;
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return null;
         }
     }
 }
