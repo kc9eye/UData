@@ -25,7 +25,7 @@ require_once(PHPMAILER_DIR.'/SMTP.php');
 require_once(PHPMAILER_DIR.'/PHPMailer.php');
 
 class Mailer {
-    protected $config;
+    public $config;
 
     public function __construct (Array $config) {
         $this->config = $config;

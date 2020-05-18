@@ -20,7 +20,7 @@ class Notification {
     const EMAIL_TYPE = 'EMAIL';
 
     private $dbh;
-    private $mailer;
+    public $mailer;
 
     public function __construct (PDO $dbh, Mailer $mailer) {
         $this->dbh = $dbh;
