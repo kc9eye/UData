@@ -776,4 +776,19 @@ Class ViewMaker implements ViewWidgets {
             echo "<figcaption class='figure-caption text-center'>{$caption}</figcaption>";
         }
     }
+
+    public function accordianFromArray (Array $accord, $return = false) {
+        $accordianID = uniqid("accordian-");
+        $out = "<div id='{$accordianID}'>";
+        foreach($accord as $i => $v) {
+            $section = uniqid("section-");
+            $out .= "<div class='card'><div class='card-header'>";
+            $out .= "<a class='card-link' data-toggle='collapse' href='#{$section}'>{$i}</a>";
+            $out .= "</div><div id='{$section}' class='collapse' data-parent='#{$accordianID}'>";
+            $out .= "<div class='card-body'>{$v}</div></div>";
+        }
+        $out .= "</div>";
+        if ($return) return $out;
+        else echo $out;
+    }
 }

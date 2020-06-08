@@ -367,5 +367,19 @@ function displaySearchBar ($content = null) {
             $view->bold($content);
         }
     }
+    else {
+        $products = new Products($server->pdo);
+        $cells = new WorkCells($server->pdo);
+        foreach($products->getActiveProducts() as $p) {
+            $content = "<div class='list-group'>";
+            foreach($cells->getCellsFromKey($p['product_key']) as $cell) {
+                $content .= "<a href='{$view->PageData['approot']}/cells/main?action=view&id={$cell['id']}' ";
+                $content .= "class='list-group-item list-group-item-action'>{$cell['cell_name']}</a>";
+            }
+            $content .= "</div>";
+            $accordian[$p['description']] = $content;
+        }
+        $view->accordianFromArray($accordian);
+    }
     $view->footer();
 }
