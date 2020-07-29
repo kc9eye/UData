@@ -142,8 +142,8 @@ Class FormWidgets {
         echo "</form>";
         echo "</div>";
         if ($this->validate) {
-            echo "<script src='https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js'></script>";
-            echo "<script src='https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/additional-methods.min.js'></script>";
+            echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js'></script>";
+            echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/additional-methods.min.js'></script>";
             echo "<script>";
             echo "  $(document).ready(function(){";
             echo "    $('#{$this->formid}').validate(".str_replace('"','',json_encode(['rules'=>$this->rules],JSON_FORCE_OBJECT)).");";
