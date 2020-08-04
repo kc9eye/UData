@@ -29,6 +29,7 @@ if (!empty($_REQUEST['action'])) {
         break;
         case 'date_range_lookup':
             $materials = new Materials($server->pdo);
+            $_REQUEST['dis_search'] = null;
             resultsDisplay($materials->getDiscrepanciesByDateRange($_REQUEST['begin_date'],$_REQUEST['end_date'],$_REQUEST['type']));
         break;
         case 'view':
@@ -64,7 +65,7 @@ function resultsDisplay ($discrepancies) {
         }
         $view->responsiveTableClose();
     }
-    elseif (!empty($_REQUEST['dis_search'] && empty($discrepancies))) {
+    elseif (!is_null($_REQUEST['dis_search'] && empty($discrepancies))) {
         $view->bold('Nothing Found');
     }
     $view->footer();
