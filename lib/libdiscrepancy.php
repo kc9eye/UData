@@ -158,7 +158,7 @@ function notOnBOM () {
     global $server;
     $product = new Product($server->pdo,$_REQUEST['prokey']);
     $server->newEndUserDialog(
-        "The material number: {$_REQUEST['number']}, was not found on the {$p->pDescription} BOM.",
+        "The material number: {$_REQUEST['number']}, was not found on the {$product->pDescription} BOM.",
         DIALOG_FAILURE,
         $server->config['application-root'].'/material/discrepancy'
     );
