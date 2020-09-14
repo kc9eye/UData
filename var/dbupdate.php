@@ -1,8 +1,9 @@
 <?php
-$update_version = 0.20;
+$update_version = 0.21;
 
 $sql = [
-    'select CURRENT_TIME'
+    'ALTER TABLE public.supervisor_comments
+    ADD COLUMN subject text'
  ];
 
 $inserts = [

@@ -17,8 +17,6 @@
  */
 require_once(dirname(__DIR__).'/lib/init.php');
 
-
-
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
         case 'add':
@@ -45,7 +43,7 @@ function commentFormDisplay () {
     $server->userMustHavePermission('editSupervisorComments');
     include('submenu.php');
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-    $view = $server->getViewer('HR: Comments');
+    $view = $server->getViewer('Employee Feedback');
     $view->sideDropDownMenu($submenu);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
@@ -53,7 +51,8 @@ function commentFormDisplay () {
     $form->hiddenInput('action','add');
     $form->hiddenInput('eid',$_REQUEST['id']);
     $form->hiddenInput('uid',$server->currentUserID);
-    $view->h2('Comments:',true);
+    $view->h2('Feedback',true);
+    $form->inputCapture('subject','Subject',null,true);
     $form->textArea('comments',null,'',true,'Enter comments for the individual',true);
     $form->fileUpload(FileIndexer::UPLOAD_NAME,'',null,false,false,"Uploaded file can not exceed ".FileUpload::MAX_UPLOAD_SIZE." bytes.");
     $form->submitForm('Submit',false,$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['id']);
@@ -77,6 +76,7 @@ function viewCommentDisplay () {
     echo "<tr><th>Comment ID:</th><td>{$comment['id']}</td></tr>";
     echo "<tr><th>Comment Author:</th><td>{$comment['author']}</td></tr>";
     echo "<tr><th>Comment Date/Time:</th><td>{$comment['date']}</td></tr>";
+    echo "<tr><th>Subject:</th><td>{$comment['subject']}</td></tr>";
     echo "<tr><th>Comment:</th><td>{$comment['comments']}</td></tr>";
     if (!empty($comment['fid'])){
         $indexer = new FileIndexer($server->pdo,$server->config['data-root']);

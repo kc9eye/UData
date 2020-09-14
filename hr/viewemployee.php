@@ -166,10 +166,10 @@ function employeeViewDisplay () {
             : "Comments";
         $view->h3($heading);
         if (!empty($emp->Comments)) {
-            $view->responsiveTableStart(['ID','Date','Author']);
+            $view->responsiveTableStart(['ID','Date','Subject','Author']);
             foreach($emp->Comments as $row) {
                 echo "<tr><td><a href='{$server->config['application-root']}/hr/feedback?action=view&id={$row['id']}'>{$row['id']}</a></td>";
-                echo "<td>{$row['date']}</td><td>{$row['author']}</td></tr>\n";
+                echo "<td>{$row['date']}</td><td>{$row['subject']}</td><td>{$row['author']}</td></tr>\n";
             }
             $view->responsiveTableClose();
         }

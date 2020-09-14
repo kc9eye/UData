@@ -155,6 +155,7 @@ class Employee {
                 id,
                 (SELECT firstname||' '||lastname FROM user_accts WHERE id = a.uid) as author,
                 _date as date,
+                subject,
                 comments
             FROM supervisor_comments as a
             WHERE eid = ?";
