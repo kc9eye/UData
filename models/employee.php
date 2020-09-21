@@ -171,6 +171,24 @@ class Employee {
         }
     }
 
+    public function getAttendanceDateRange($begin,$end) {
+        $sql = 'SELECT * FROM missed_time WHERE eid = :eid AND occ_date <= :end AND occ_date >= :begin ORDER by occ_date';
+        $data = [
+            ':eid'=>$this->Employee['id'],
+            ':begin'=>$begin,
+            ':end'=>$end
+        ];
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute($data)) throw new Exception(print_r($pntr->errorInfo(),true));
+            return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return [];
+        }
+    }
+
     /**
      * Returns the image file name of the employee
      * @return String The image's disk filename

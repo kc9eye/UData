@@ -28,11 +28,18 @@ else
     employeeViewDisplay();
 
 function employeeViewDisplay () {
+    //View header options for adding the Boostrap DatePicker
+    $pageOptions = [
+        'headinserts'=> [
+            '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>',
+            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>'
+        ]
+    ];
     global $server;
     include('submenu.php');
     $server->userMustHavePermission('viewProfiles');
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-    $view = $server->getViewer('HR: Employee Profile');
+    $view = $server->getViewer('HR: Employee Profile',$pageOptions);
     $view->sideDropDownMenu($submenu);
     $view->h1("Employee Profile");
 
@@ -103,7 +110,34 @@ function employeeViewDisplay () {
     $view->beginBtnCollapse("Show/Hide Attendance");
     $heading = $server->checkPermission('editEmployeeAttendance') ?
         "Attendance ".$view->editBtnSm('/hr/attendance?id='.$_REQUEST['id'],true) : "Attendance ";
-    $view->h3($heading.'&#160'.$view->linkButton('/hr/attendance?action=print&id='.$_REQUEST['id'],'Print','default',true,'_blank'));
+    $view->h3(
+        $heading.'&#160'
+        .$view->linkButton('/hr/attendance?action=print&id='.$_REQUEST['id'],'Print','default',true,'_blank')
+    );
+    echo "<div class='w-50'><b>View Date Range</b>
+            <div class='input-group input-daterange'>
+                <input class='form-control' type='text' id='beginDate' name='begin_date' />
+                <span class='input-group-addon'>to</span>
+                <input class='form-control' type='text' id='endDate' name='end_date' />
+                <div class='input-group-append'>
+                    <button type='button' class='btn btn-primary' onclick='dateRangeLookup()'>Submit</button>
+                </div>
+            </div>
+        </div>
+    <script>
+    function dateRangeLookup(){
+        var url = '".$server->config['application-root']."/hr/attendance?action=range&id=".$_REQUEST['id']."&begin='+$('#beginDate').val()+'&end='+$('#endDate').val();
+        window.open(url,'_self');
+    }
+    $(document).ready(function(){
+        var options = {
+            format:'yyyy/mm/dd',
+            autoclose: true
+        };
+        $('.input-group input').each(function(){
+            $(this).datepicker(options);
+        });
+    });\n</script>";
     if (!empty($emp->Attendance)) {
         $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Excused','Reason']);
         foreach($emp->Attendance as $row) {
