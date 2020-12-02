@@ -18,5 +18,6 @@
 $submenu = [
     'Materials'=>$server->config['application-root'].'/material/main',
     'Discrepancies'=>$server->config['application-root'].'/material/viewdiscrepancy',
-    'Shipping'=>$server->config['application-root'].'/material/shipping'
+    'Shipping'=>$server->config['application-root'].'/material/shipping',
+    "PPE Supplies"=>$server->config['application-root'].'/material/ppesupplies'
 ];

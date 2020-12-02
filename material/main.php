@@ -35,7 +35,6 @@ else {
     searchDisplay();
 }
 
-
 function searchDisplay ($results = null) {
     global $server;
     include('submenu.php');

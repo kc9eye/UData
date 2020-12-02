@@ -53,6 +53,7 @@ $view->responsiveTableStart(['Variable Name','Current Value']);
 foreach($server->config as $index => $value) {
     if (is_string($value)) {
         if ($index == 'dbpass') echo "<tr><td>{$index}</td><td>REDACTED</td></tr>";
+        else if ($index == 'mailer-password') echo "<tr><td>{$index}</td><td>REDACTED</td></tr>"; 
         else echo "<tr><td>{$index}</td><td>{$value}</td></tr>";
     }
     elseif (is_array($value)) {

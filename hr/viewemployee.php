@@ -208,8 +208,22 @@ function employeeViewDisplay () {
             $view->responsiveTableClose();
         }
         else $view->bold("No comment data found");
+        $view->endBtnCollapse();
+    }    
+
+    //PPE Data
+    if ($server->checkPermission('readPPE')) {
+        $ppe = new ShopSupplies($server->pdo);
+        $agg = $ppe->getAggregatePPE($_REQUEST['id']);
+        $view->hr();
+        $view->beginBtnCollapse("PPE Data");
+        $view->responsiveTableStart(["Total Expense","Qty.","Total Exchanged","Description"]);
+        foreach ($agg as $row) {
+            echo "<tr><td>{$row['Expense']}</td><td>{$row['Issued']}</td><td>{$row['Exchanged']}</td><td>{$row['Item']}</td></tr>";
+        }
+        $view->responsiveTableClose();
+        $view->endBtnCollapse();
     }
-    $view->endBtnCollapse();
 
     $view->footer();
 }
