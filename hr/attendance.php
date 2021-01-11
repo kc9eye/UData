@@ -23,12 +23,13 @@ if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
         case 'add':
             $handler = new Employees($server->pdo);
+            // $server->getDebugViewer(var_export($handler->addAttendanceRecord($_REQUEST),true));
             $server->processingDialog(
                 [$handler,'addAttendanceRecord'],
                 [$_REQUEST],
                 $server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid']
             );
-        break;
+    break;
         case 'edit':
             editAttendanceDisplay();
         break;
@@ -94,17 +95,20 @@ function attendanceDisplay () {
     $form->inputCapture('arrive_time','Time Arrived','00:00');
     $form->inputCapture('leave_time','Time Left','00:00');
     $form->checkBox('absent',['Absent','Yes'],'true',false,null,'false');
-    $form->checkBox('excused',['Excused','Yes'],'true',false,null,'false');
+    $form->checkBox('nocall',['No Call/Show','Not Notified'],'true',false,null,'false');
+    $form->checkBox('nopoints',['Excused','Yes'],'true',false,'No points will be calculated.','false');
+    $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
     $form->textArea('description',null,'',true);
     $form->submitForm('Add',false,$view->PageData['approot'].'/hr/viewemployee?id='.$_REQUEST['id']);
     $form->endForm();
-    $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Excused','Reason','Edit']);
+    $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
+    $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points','Edit']);
     if (!empty($emp->Attendance)) {
         foreach($emp->Attendance as $row) {
             $absent = ($row['absent'] == 'true') ? 'Yes' : 'No';
-            $excused = ($row['excused'] == 'true') ? 'Yes' : 'No';
+            // $excused = ($row['excused'] == 'true') ? 'Yes' : 'No';
             echo "<tr><td>{$row['occ_date']}</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td>";
-            echo "<td>{$absent}</td><td>{$excused}</td><td>{$row['description']}</td><td>";
+            echo "<td>{$absent}</td><td>{$row['description']}</td><td>{$row['points']}</td><td>";
             $view->editBtnSm('/hr/attendance?action=edit&id='.$row['id'].'&uid='.$_REQUEST['id']);
             echo "</td></tr>\n";
         }
@@ -143,14 +147,15 @@ function editAttendanceDisplay() {
     $form->inputCapture('occ_date','Date',$row['occ_date'],['dateISO'=>'true']);
     $form->inputCapture('arrive_time','Time Arrived',$row['arrive_time']);
     $form->inputCapture('leave_time','Time Left',$row['leave_time']);
+    $form->inputCapture('points','Points',$row['points']);
     if ($row['absent']) 
         $form->checkBox('absent',['Absent','No'],'false',false,null,'true');
     else
         $form->checkBox('absent',['Absent','Yes'],'true',false,null,'false');
     if ($row['excused'])
-        $form->checkBox('excused',['Excused','No'],'false',false,null,'true');
+        $form->checkBox('excused',['Perfect Attendace','No'],'false',false,null,'true');
     else
-        $form->checkBox('excused',['Excused','Yes'],'true',false,null,'false');
+        $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
     $form->textArea('description',null,$row['description'],true);
     $form->submitForm('Amend',false,$view->PageData['approot'].'/hr/attendance?id='.$_REQUEST['uid']);
     $form->endForm();

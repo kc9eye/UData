@@ -95,6 +95,7 @@ class Employee {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->Employee['id']])) throw new Exception("Select faile: {$sql}");
             $this->Attendance = $pntr->fetchAll(PDO::FETCH_ASSOC);
+            $this->AttendancePoints = $this->getAttendancepoints();
             return true;
         }
         catch (Exception $e) {
@@ -186,6 +187,19 @@ class Employee {
         catch(Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
             return [];
+        }
+    }
+
+    public function getAttendancePoints() {
+        $sql = 'select sum(points) from missed_time where eid = ?';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$this->eid])) throw new Exception(print_r($pntr->errorInfo(),true));
+            return $pntr->fetchColumn(0);
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return null;
         }
     }
 

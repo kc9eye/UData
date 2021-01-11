@@ -139,13 +139,14 @@ function employeeViewDisplay () {
         });
     });\n</script>";
     if (!empty($emp->Attendance)) {
-        $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Excused','Reason']);
+        $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
+        $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points']);
         foreach($emp->Attendance as $row) {
             if ($row['absent'] == 'true') $absent = 'Yes';
             else $absent = 'No';
-            if ($row['excused'] == 'true') $excused = 'Yes';
-            else $excused = 'No';
-            echo "<tr><td>".$view->formatUserTimestamp($row['occ_date'],true)."</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td><td>{$absent}</td><td>{$excused}</td><td>{$row['description']}</td></tr>\n";
+            // if ($row['excused'] == 'true') $excused = 'Yes';
+            // else $excused = 'No';
+            echo "<tr><td>".$view->formatUserTimestamp($row['occ_date'],true)."</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td><td>{$absent}</td><td>{$row['description']}</td><td>{$row['points']}</td></tr>\n";
         }
         $view->responsiveTableClose();
     }

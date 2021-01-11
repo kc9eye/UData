@@ -493,11 +493,11 @@ Class FormWidgets {
         echo "<div class='checkbox'>";
         if (!is_null($default)) echo "<input type='hidden' name='{$name}' value='{$default}' />";
         echo "<label><input type='checkbox' id='{$name}' name='{$name}' value='{$value}' />{$label[1]}</label>";
+        if (!is_null($helpBlock)) {
+            echo "<small class='form-text text-muted'>{$helpBlock}</small>";
+        }
         echo "</div>";
         echo "<label class='error' for='{$name}' generated='true'></label>";
-        if (!is_null($helpBlock)) {
-            echo "<span class='help-block'>{$helpBlock}</span>";
-        }
         echo "</div>";
         echo "<div class='col-md-3'></div>";
         echo "</div>";

@@ -1,8 +1,9 @@
 <?php
-$update_version = 0.217;
+$update_version = 0.218;
 
 $sql = [
-    'SELECT CURRENT_TIME'
+    'ALTER TABLE public.missed_time
+    ADD COLUMN points real'
  ];
 
 $inserts = [
