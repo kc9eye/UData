@@ -300,6 +300,31 @@ class Employees extends Profiles {
         }
     }
 
+    public function getPointsList() :Array {
+        $sql = 
+        "select name, sum(points) as points
+        from (
+            select profiles.first||' '||profiles.last as name, missed_time.points as points
+            from missed_time
+            inner join employees on employees.id = missed_time.eid
+            inner join profiles on profiles.id = employees.pid
+            where employees.end_date is null
+            and missed_time.points is not null
+        ) as foo
+        where points > 0
+        group by name
+        order by points desc";
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
+            return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch (Exception $e) {
+            trigger_error($e->getMessgae(),E_USER_WARNING);
+            return [];
+        }
+    }
+
     /**
      * Retrieves an attendance record by it's given ID
      * @param String $id The ID of the record to retrieve
