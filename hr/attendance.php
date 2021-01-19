@@ -193,12 +193,12 @@ function printDisplay () {
     echo "<body>\n";
     echo "<h1>Missed Time for: {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}</h1>\n";
     echo "<table border='1'>\n";
-    echo "<tr><th>Date</th><th>Arrived Late</th><th>Left Early</th><th>Absent</th><th>Excused</th><th>Reason</th></tr>\n";
+    echo "<tr><th>Date</th><th>Arrived Late</th><th>Left Early</th><th>Absent</th><th>Reason</th><th>Points</th></tr>\n";
     foreach($emp->Attendance as $row) {
         $absent = ($row['absent'] == 'true') ? 'Yes' : 'No';
-        $excused = ($row['excused'] == 'true') ? 'Yes' : 'No';
+        //$excused = ($row['excused'] == 'true') ? 'Yes' : 'No';
         echo "<tr><td>{$row['occ_date']}</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td>";
-        echo "<td>{$absent}</td><td>{$excused}</td><td>{$row['description']}</td>";
+        echo "<td>{$absent}</td><td>{$row['description']}</td><td>{$row['points']}</td>";
         echo "</tr>\n";
     }
     echo "</table>\n";
