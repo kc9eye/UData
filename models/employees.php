@@ -42,7 +42,7 @@ class Employees extends Profiles {
      * @return Boolean True on success, false otherwise
      */
     public function addNewEmployee (Array $data) {
-        $sql = 'INSERT INTO employees VALUES (:id, :status, :pid, :start_date::date, :end_date::date, :photo_id, now(), :uid)';
+        $sql = 'INSERT INTO employees VALUES (:id, :status, :pid, :start_date::date, :end_date::date, :photo_id, now(), :uid,:smid)';
         try {
             if (!$this->createNewProfile($data)) throw new Exception("Create profile failed");
             $insert = [
@@ -52,7 +52,8 @@ class Employees extends Profiles {
                 ':start_date'=>$data['start_date'],
                 ':end_date'=>null,
                 ':photo_id'=>$data['fid'],
-                ':uid'=>$data['uid']
+                ':uid'=>$data['uid'],
+                ':smid'=>$data['smid']
             ];
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute($insert)) throw new Exception("Insert failed: {$sql}");
@@ -133,24 +134,26 @@ class Employees extends Profiles {
      */
     public function updateEmployee (Array $data) {
         if (!empty($data['end_date'])) {
-            $sql = 'UPDATE employees SET start_date=:start_date::date,end_date=:end_date::date,photo_id=:fid,status=:status,_date=now(),uid=:uid WHERE id=:id';
+            $sql = 'UPDATE employees SET start_date=:start_date::date,end_date=:end_date::date,photo_id=:fid,status=:status,_date=now(),uid=:uid,smid=:smid WHERE id=:id';
             $insert = [
                 ':start_date'=>$data['start_date'],
                 ':end_date'=>$data['end_date'],
                 ':fid'=>$data['fid'],
                 ':status'=>$data['status'],
                 ':uid'=>$data['uid'],
-                ':id'=>$data['eid']
+                ':id'=>$data['eid'],
+                ':smid'=>$data['smid']
             ];
         }
         else {
-            $sql = 'UPDATE employees SET start_date=:start_date::date,photo_id=:fid,status=:status,_date=now(),uid=:uid WHERE id=:id';
+            $sql = 'UPDATE employees SET start_date=:start_date::date,photo_id=:fid,status=:status,_date=now(),uid=:uid, smid=:smid WHERE id=:id';
             $insert = [
                 ':start_date'=>$data['start_date'],
                 ':fid'=>$data['fid'],
                 ':status'=>$data['status'],
                 ':uid'=>$data['uid'],
-                ':id'=>$data['eid']
+                ':id'=>$data['eid'],
+                ':smid'=>$data['smid']
             ];
         }
         try {
@@ -320,7 +323,7 @@ class Employees extends Profiles {
             return $pntr->fetchAll(PDO::FETCH_ASSOC);
         }
         catch (Exception $e) {
-            trigger_error($e->getMessgae(),E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             return [];
         }
     }

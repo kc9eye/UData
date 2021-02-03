@@ -49,6 +49,7 @@ function addNewFormDisplay() {
         ['Seasonal','Seasonal'],
         ['Temporary','Temporary']
     ],true);
+    $form->inputCapture('smid','SMID',null,true);
     $form->inputCapture('first','First Name',null,true);
     $form->inputCapture('middle','Middle/Int.');
     $form->inputCapture('last','Last Name',null, true);

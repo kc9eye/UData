@@ -68,10 +68,10 @@ function employeeViewDisplay () {
         echo "</td>";
     }
     else {
-        $view->responsiveTableStart(['Start Date','End Date', 'Status']);
+        $view->responsiveTableStart(['Start Date','End Date', 'Status','SMID']);
         echo "<tr>";
     }
-    echo "<td>{$emp->Employee['start_date']}</td><td>{$emp->Employee['end_date']}</td><td>{$emp->Employee['status']}</td></tr>\n";
+    echo "<td>{$emp->Employee['start_date']}</td><td>{$emp->Employee['end_date']}</td><td>{$emp->Employee['status']}</td><td>{$emp->Employee['smid']}</td></tr>\n";
     $view->responsiveTableClose();
 
     //Profile data
