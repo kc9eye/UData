@@ -305,9 +305,9 @@ class Employees extends Profiles {
 
     public function getPointsList() :Array {
         $sql = 
-        "select name, sum(points) as points
+        "select eid, name, sum(points) as points
         from (
-            select profiles.first||' '||profiles.last as name, missed_time.points as points
+            select employees.id as eid, profiles.first||' '||profiles.last as name, missed_time.points as points
             from missed_time
             inner join employees on employees.id = missed_time.eid
             inner join profiles on profiles.id = employees.pid
@@ -315,7 +315,7 @@ class Employees extends Profiles {
             and missed_time.points is not null
         ) as foo
         where points > 0
-        group by name
+        group by name,eid
         order by points desc";
         try {
             $pntr = $this->dbh->prepare($sql);

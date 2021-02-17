@@ -46,7 +46,7 @@ function mainDisplay() {
     $view->printButton();
     $view->responsiveTableStart(["Employee Name","Total Points"]);
     foreach($points as $row) {
-        echo "<tr><td>{$row['name']}</td><td>{$row['points']}</td></tr>";
+        echo "<tr><td><a href='{$view->PageData['approot']}/hr/viewemployee?id={$row['eid']}'>{$row['name']}</a></td><td>{$row['points']}</td></tr>";
     }
     $view->responsiveTableClose();
     $view->footer();
