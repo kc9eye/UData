@@ -91,7 +91,7 @@ function displaySearchResults ($results) {
         foreach($results as $row) {
             echo "<tr><td><a href='{$view->PageData['approot']}/data/files?dis=inline&file=".urlencode($row['file'])."' download='{$row['file']}'>";
             echo "{$row['name']}</a></td><td>{$row['dist']}</td>";
-            if ($edit)
+            if ($server->checkPermission('editSDS'))
             {                
                 echo "<td>".$view->trashBtnSm("/safety/main?action=rem&id={$row['id']}&fid={$row['fid']}",true)."</td>";
             }
