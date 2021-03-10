@@ -39,8 +39,8 @@ class LostTime {
              (
                 SELECT eid 
                 FROM missed_time
-                WHERE occ_date > :begin::date
-                AND occ_date < :end::date
+                WHERE occ_date >= :begin::date
+                AND occ_date <= :end::date
                 AND NOT excused
              ) ORDER BY profiles.last ASC";
         try {
