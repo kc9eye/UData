@@ -76,6 +76,7 @@ function displayOngoingReview ($revid) {
     global $server;
     include('submenu.php');
     $review = new Review($server->pdo,$revid);
+    $emp = new Employee($server->pdo, $_REQUEST['eid']);
     $view = $server->getViewer('Review: '.$review->getFullName());
     $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
@@ -107,6 +108,7 @@ function displayOngoingReview ($revid) {
     $view->hr();
     $view->beginBtnCollapse('Show/Hide Attendance');
     $view->h2("Review Attendance");
+    $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
     $attendance = $review->getReviewAttendance();
     if (empty($attendance)) {
         $view->bold("No attendance incidents found.");
