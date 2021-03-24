@@ -48,7 +48,6 @@ class pointsreduction {
             where occ_date <= (current_date - interval '180 days')";
         try {
             $pntr = $this->server->pdo->prepare($sql);
-            $this->server->pdo->beginTransaction();
             if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
             return true;
         }
