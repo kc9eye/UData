@@ -37,6 +37,7 @@ function main () {
     $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->h1("<small>Work Cell:</small> {$cell->Name}");
     $view->h2("<small>Associated Product:</small> {$cell->Product}");
+    $view->linkButton("/cells/main?action=view&id={$_REQUEST['cellid']}","Back",'primary');
     $view->hr();
     $view->linkButton("/cells/materialcontrols?cellid={$cell->ID}&action=printlist","Print List","info",false,'_blank');
     $view->insertTab();
