@@ -84,7 +84,7 @@ function main () {
         }
         $view->responsiveTableClose();
     }
-    $view->footer();
+    $view->footer([$view->PageData['wwwroot']."/scripts/scrollposition.js"]);
 }
 
 function addCounts () {
