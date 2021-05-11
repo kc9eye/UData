@@ -16,40 +16,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 require_once(dirname(__DIR__).'/lib/init.php');
-include('submenu.php');
 
-$doc = new DocumentViewer($server);
-$doc->docURL = $server->config['application-root'].'/safety/loto';
-$doc->access = [DocumentViewer::EDIT_ACCESS_NAME=>['editLoto'], DocumentViewer::APPROVE_ACCESS_NAME=>['approveLoto']];
-$doc->setDocument('Lock Out Tag Out');
+main();
 
-if (!empty($_REQUEST)) {
-    switch($_REQUEST['action']) {
-        case 'edit': 
-            $doc->editDisplay($submenu) or $server->notAuthorized(); 
-        break;
-        case 'approve': 
-            $doc->approveDisplay($submenu) or $server->notAuthorized(); 
-        break;
-        case 'submit': 
-            $doc->submitForApproval($_REQUEST)
-            && $server->newEndUserDialog('Document submitted for approval',DIALOG_SUCCESS,$doc->docURL)
-            or $server->newEndUserDialog('Something went wrong, you may not have access to do this',DIALOG_FAILURE,$doc->docURL);
-        break;
-        case 'submitapproval': 
-            $doc->approvalGranted($_REQUEST)
-            && $server->newEndUserDialog('Document edition was approved',DIALOG_SUCCESS,$doc->docURL)
-            or $server->newEndUserDialog('Something went wrong, you may not have access to do this',DIALOG_FAILURE,$doc->docURL);
-        break;
-        case 'reject': $doc->rollBack($_REQUEST['id'])
-            && $server->newEndUserDialog('Document was rejected',DIALOG_SUCCESS,$doc->docURL)
-            or $server->newEndUserDialog('Something went wrong, you may not have access to do this',DIALOG_FAILURE,$doc->docURL);
-        break;
-        default: 
-            $doc->displayDoc($submenu); 
-        break;
+function main(){
+    global $server;
+    include('submenu.php');
+    $view = $server->getViewer("Lock Out/Tag Out");
+    $view->sideDropDownMenu($submenu);
+    $view->h1("Lock Out/Tag Out Document");
+    if ($server->checkPermission('approveLoto')){
+        $view->linkButton('https://docs.google.com/document/d/12y6sMb_7dBlRLs1J1WkA7E3cJbLrqwxcN8seehNw5WQ/edit?usp=sharing','Edit Document',null,false,'_blank',true);
     }
-}
-else {
-    $doc->displayDoc($submenu);
+    $view->hr();
+    echo '<iframe id="printFrame" name="printFrame" src="https://docs.google.com/document/d/e/2PACX-1vTq_6H50JXePCayWIjdkJe85dKbqruiwB8am217tjxHLmyp58_UInXw93LFfQgIUXEg1KhJb-GRBky6/pub?embedded=true" width="800" height="600"></iframe>';
+    $view->footer();
 }
