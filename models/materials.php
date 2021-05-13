@@ -239,6 +239,7 @@ class Materials {
      * @return Boolean True on success, false otherwise.
      */
     public function amendCellMaterialQty (Array $data) {
+        if (empty($data['label'])) $data['label'] = "";
         $sql = 'UPDATE cell_material SET qty = :qty, label = :label WHERE id = :id';
         try {
             $pntr = $this->dbh->prepare($sql);
