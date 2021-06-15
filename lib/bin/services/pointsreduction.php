@@ -44,8 +44,11 @@ class pointsreduction {
 
     public function run () {
         $sql = 
-            "update missed_time set points=0
-            where occ_date <= (current_date - interval '180 days')";
+            "update missed_time set points = 0
+            from employees
+            where missed_time.eid = employees.id
+            and missed_time.occ_date <= (current_date - interval '180 days')
+            and employees.end_date is null";
         try {
             $pntr = $this->server->pdo->prepare($sql);
             if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
