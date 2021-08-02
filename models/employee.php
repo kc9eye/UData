@@ -191,7 +191,7 @@ class Employee {
     }
 
     public function getAttendancePoints() {
-        $sql = 'select sum(points) from missed_time where eid = ?';
+        $sql = "select sum(points) from missed_time where eid = ? and occ_date >= (current_date - interval '180 days')";
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->eid])) throw new Exception(print_r($pntr->errorInfo(),true));
