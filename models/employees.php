@@ -312,7 +312,7 @@ class Employees extends Profiles {
             inner join employees on employees.id = missed_time.eid
             inner join profiles on profiles.id = employees.pid
             where employees.end_date is null
-            and missed_time.points is not null
+            and missed_time.occ_date >= (current_date - interval '180 days')
         ) as foo
         where points > 0
         group by name,eid
