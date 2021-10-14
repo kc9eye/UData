@@ -22,8 +22,6 @@ class review75init implements Service {
         $this->server = $server;
         $this->data = array();
         $this->server->currentUserID = 'cron';
-        set_error_handler([$this,'errorHandler']);
-        set_exception_handler([$this,'exceptionHandler']);
     }
 
     public function cronjob () {
@@ -42,14 +40,5 @@ class review75init implements Service {
             elseif (!$employees->initiateReview($this->server,$row['id'])) return false;
         }
         return true;
-    }
-
-    public function errorHandler($code,$msg,$file,$line,$trace) {
-        echo "CODE: {$code}\nMSG: {$msg}\nFILE:{$file}\nLINE: {$line}\nTRACE: ".print_r($trace,true);
-        exit($code);
-    }
-
-    public function exceptionHandler($e) {
-        $this->errorHandler($e->getCode(),$e->getMessage(),$e->getFile(),$e->getLine(),$e->getTrace());
     }
 }
