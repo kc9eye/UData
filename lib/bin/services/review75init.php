@@ -21,6 +21,7 @@ class review75init implements Service {
     public function __construct (Instance $server) {
         $this->server = $server;
         $this->data = array();
+        $this->server->currentUserID = 'cron';
         set_error_handler([$this,'errorHandler']);
         set_exception_handler([$this,'exceptionHandler']);
     }
