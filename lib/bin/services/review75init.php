@@ -35,7 +35,8 @@ class review75init implements Service {
         $employees = new Employees($this->server->pdo);
         $pntr = $this->server->pdo->query("select * from employees where (start_date + interval '75 day') = CURRENT_DATE");
         foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if (!$employees->initiateReview($this->server,$row['id'])) return false;
+            if (empty($row)) break;
+            elseif (!$employees->initiateReview($this->server,$row['id'])) return false;
         }
         return true;
     }
