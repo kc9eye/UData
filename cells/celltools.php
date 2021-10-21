@@ -107,7 +107,7 @@ function editCellToolView() {
     $form->hiddenInput("uid",$server->currentUserID);
     $form->hiddenInput("toolid",$celltool['id']);
     $form->inputCapture("qty","Quantity",$celltool['qty'],true);
-    $form->submitForm("submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
+    $form->submitForm("Submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
     $form->endForm();
     $view->footer();
 }
