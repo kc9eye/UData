@@ -78,7 +78,8 @@ function editView () {
     foreach($cell->Tools as $row) {
         echo "<tr><td>{$row['qty']}</td><td>{$row['description']}</td><td>{$row['category']}</td><td>{$row['torque_val']}</td>";
         echo "<td>{$row['torque_units']}</td><td>{$row['torque_label']}</td>";
-        echo "<td>".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$row['id']}&cellid={$_REQUEST['id']}",true)."</td></tr>";
+        // echo "<td>".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$row['id']}&cellid={$_REQUEST['id']}",true)."</td></tr>";
+        echo "<td>".$view->editBtnSm("/cells/celltools?action=edit&toolid={$row['id']}&cellid={$_REQUEST['id']}",true)."</td></tr>";
     }
     $view->responsiveTableClose();
     $view->hr();
