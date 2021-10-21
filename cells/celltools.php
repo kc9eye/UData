@@ -92,10 +92,12 @@ function editView () {
 
 function editCellToolView() {
     global $server;
-    $tool = (new WorkCells($server->pdo))->getCellToolData($_REQUEST['toolid']);
+    $celltool = (new WorkCells($server->pdo))->getCellToolData($_REQUEST['toolid']);
+    $tool = (new Tool($server->pdo,$celltool['toolid']));
     $view = $server->getViewer("Edit Cell Tool");
+    $view->h2($tool['description']);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    $form->inputCapture("qty","Quantity",$tool['qty'],true);
+    $form->inputCapture("qty","Quantity",$celltool['qty'],true);
     $form->submitForm("submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
     $form->endForm();
     $view->footer();
