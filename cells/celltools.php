@@ -38,6 +38,9 @@ elseif (!empty($_REQUEST['action'])) {
         case 'edit':
             editCellToolView();
         break;
+        case 'changeqty':
+            $server->processingDialog([new WorkCells($server->pdo),'editCellToolQty'],[$_REQUEST],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
+        break;
         case 'remove':
             $cells = new WorkCells($server->pdo);
             $server->processingDialog([$cells,'removeToolingFromCell'],[$_REQUEST['toolid']],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
@@ -99,8 +102,10 @@ function editCellToolView() {
     $view->h1("{$cell->Product} {$cell->Name}",true);
     $view->h2("{$tool->Category} {$tool->Description} &#160;".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$celltool['id']}&cellid={$_REQUEST['cellid']}",true),true);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $form->hiddenInput("action","changeqty");
     $form->hiddenInput("cellid",$_REQUEST['cellid']);
     $form->hiddenInput("uid",$server->currentUserID);
+    $form->hiddenInput("toolid",$celltool['id']);
     $form->inputCapture("qty","Quantity",$celltool['qty'],true);
     $form->submitForm("submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
     $form->endForm();
