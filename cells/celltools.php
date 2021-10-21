@@ -102,6 +102,7 @@ function editCellToolView() {
     $view->h1("{$cell->Product} {$cell->Name}",true);
     $view->h2("{$tool->Category} {$tool->Description} &#160;".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$celltool['id']}&cellid={$_REQUEST['cellid']}",true),true);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $form->newForm();
     $form->hiddenInput("action","changeqty");
     $form->hiddenInput("cellid",$_REQUEST['cellid']);
     $form->hiddenInput("uid",$server->currentUserID);
