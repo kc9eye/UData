@@ -37,7 +37,7 @@ define('DIALOG_FAILURE', false);
 /**
  * @var String APP_VERSION The current version string of the application in dotted format major.minor.patch
  */
-define('APP_VERSION', '1.3.17');
+define('APP_VERSION', '1.3.27');
 /**
  * @var String BOOTSTRAP_VERSION The current version string of Bootstrap the application UI utilizes in dotted format major.minor.patch
  */
