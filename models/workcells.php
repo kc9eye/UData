@@ -513,7 +513,7 @@ class WorkCells {
 
     public function getCellToolData($tid) :Array {
         $pntr = $this->dbh->prepare('select * from cell_tools where id = ?');
-        if (!$pntr->exectue([$tid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        if (!$pntr->execute([$tid])) throw new Exception(print_r($pntr->errorInfo(),true));
         return $pntr->fetchAll(PDO::FETCH_ASSOC)[0];
     }
 
