@@ -95,7 +95,7 @@ function editCellToolView() {
     $celltool = (new WorkCells($server->pdo))->getCellToolData($_REQUEST['toolid']);
     $tool = (new Tool($server->pdo,$celltool['toolid']));
     $view = $server->getViewer("Edit Cell Tool");
-    $view->h2($tool->Description);
+    $view->h2($tool->Description." ".$tool->Category);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $form->inputCapture("qty","Quantity",$celltool['qty'],true);
     $form->submitForm("submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
