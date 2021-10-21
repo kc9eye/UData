@@ -35,6 +35,9 @@ elseif (!empty($_REQUEST['action'])) {
             $cells = new WorkCells($server->pdo);
             $server->processingDialog([$cells,'addToolingToCell'],[$_REQUEST],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
         break;
+        case 'edit':
+            editCellToolView();
+        break;
         case 'remove':
             $cells = new WorkCells($server->pdo);
             $server->processingDialog([$cells,'removeToolingFromCell'],[$_REQUEST['toolid']],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
@@ -74,7 +77,7 @@ function editView () {
         }
     }
     $view->hr();
-    $view->responsiveTableStart(['Qty.','Description','Category','Torque Value','Torque Units','Torque Label','Remove']);
+    $view->responsiveTableStart(['Qty.','Description','Category','Torque Value','Torque Units','Torque Label','Edit']);
     foreach($cell->Tools as $row) {
         echo "<tr><td>{$row['qty']}</td><td>{$row['description']}</td><td>{$row['category']}</td><td>{$row['torque_val']}</td>";
         echo "<td>{$row['torque_units']}</td><td>{$row['torque_label']}</td>";
@@ -84,6 +87,17 @@ function editView () {
     $view->responsiveTableClose();
     $view->hr();
 
+    $view->footer();
+}
+
+function editCellToolView() {
+    global $server;
+    $tool = (new WorkCells($server->pdo))->getCellToolData($_REQUEST['toolid']);
+    $view = $server->getViewer("Edit Cell Tool");
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $form->inputCapture("qty","Quantity",$tool['qty'],true);
+    $form->submitForm("submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
+    $form->endForm();
     $view->footer();
 }
 
