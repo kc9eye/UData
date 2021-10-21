@@ -35,6 +35,12 @@ elseif (!empty($_REQUEST['action'])) {
             $cells = new WorkCells($server->pdo);
             $server->processingDialog([$cells,'addToolingToCell'],[$_REQUEST],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
         break;
+        case 'edit':
+            editCellToolView();
+        break;
+        case 'changeqty':
+            $server->processingDialog([new WorkCells($server->pdo),'editCellToolQty'],[$_REQUEST],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
+        break;
         case 'remove':
             $cells = new WorkCells($server->pdo);
             $server->processingDialog([$cells,'removeToolingFromCell'],[$_REQUEST['toolid']],$server->config['application-root'].'/cells/celltools?id='.$_REQUEST['cellid']);
@@ -74,15 +80,36 @@ function editView () {
         }
     }
     $view->hr();
-    $view->responsiveTableStart(['Qty.','Description','Category','Torque Value','Torque Units','Torque Label','Remove']);
+    $view->responsiveTableStart(['Qty.','Description','Category','Torque Value','Torque Units','Torque Label','Edit']);
     foreach($cell->Tools as $row) {
         echo "<tr><td>{$row['qty']}</td><td>{$row['description']}</td><td>{$row['category']}</td><td>{$row['torque_val']}</td>";
         echo "<td>{$row['torque_units']}</td><td>{$row['torque_label']}</td>";
-        echo "<td>".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$row['id']}&cellid={$_REQUEST['id']}",true)."</td></tr>";
+        // echo "<td>".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$row['id']}&cellid={$_REQUEST['id']}",true)."</td></tr>";
+        echo "<td>".$view->editBtnSm("/cells/celltools?action=edit&toolid={$row['id']}&cellid={$_REQUEST['id']}",true)."</td></tr>";
     }
     $view->responsiveTableClose();
     $view->hr();
 
+    $view->footer();
+}
+
+function editCellToolView() {
+    global $server;
+    $celltool = (new WorkCells($server->pdo))->getCellToolData($_REQUEST['toolid']);
+    $tool = (new Tool($server->pdo,$celltool['toolid']));
+    $cell = new WorkCell($server->pdo,$_REQUEST['cellid']);
+    $view = $server->getViewer("Edit Cell Tool");
+    $view->h1("{$cell->Product} {$cell->Name}",true);
+    $view->h2("{$tool->Category} {$tool->Description} &#160;".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$celltool['id']}&cellid={$_REQUEST['cellid']}",true),true);
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $form->newForm();
+    $form->hiddenInput("action","changeqty");
+    $form->hiddenInput("cellid",$_REQUEST['cellid']);
+    $form->hiddenInput("uid",$server->currentUserID);
+    $form->hiddenInput("toolid",$celltool['id']);
+    $form->inputCapture("qty","Quantity",$celltool['qty'],true);
+    $form->submitForm("Submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
+    $form->endForm();
     $view->footer();
 }
 

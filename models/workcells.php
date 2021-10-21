@@ -511,6 +511,21 @@ class WorkCells {
         }
     }
 
+    public function getCellToolData($tid) :Array {
+        $pntr = $this->dbh->prepare('select * from cell_tooling where id = ?');
+        if (!$pntr->execute([$tid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetchAll(PDO::FETCH_ASSOC)[0];
+    }
+
+    public function editCellToolQty($data) {
+        $sql = 'update cell_tooling set qty = :qty, uid = :uid where id = :id and cellid = :cellid';
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute([':qty'=>$data['qty'],':uid'=>$data['uid'],':id'=>$data['toolid'],':cellid'=>$data['cellid']]))
+            throw new Exception(print_r($pntr->errorInfo(),true));
+        else
+            return true;
+    }
+
     public function __set ($name, $value) {
         $this->data[$name] = $value;
     }
