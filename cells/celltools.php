@@ -97,8 +97,10 @@ function editCellToolView() {
     $cell = new WorkCell($server->pdo,$_REQUEST['cellid']);
     $view = $server->getViewer("Edit Cell Tool");
     $view->h1("{$cell->Product} {$cell->Name}");
-    $view->h2("{$tool->Category} {$tool->Description}");
+    $view->h2("{$tool->Category} {$tool->Description}".$view->trashBtnSm("/cells/celltools?action=remove&toolid={$celltool['id']}&cellid={$_REQUEST['cellid']}",true));
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $form->hiddenInput("cellid",$_REQUEST['cellid']);
+    $form->hiddenInput("uid",$server->currentUserID);
     $form->inputCapture("qty","Quantity",$celltool['qty'],true);
     $form->submitForm("submit",false,'/cells/celltools?id='.$_REQUEST['cellid']);
     $form->endForm();
