@@ -207,8 +207,11 @@ function displayPastReview ($revid) {
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
     $view->h1($review->getFullName());
     $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
-    $view->h3("Review <small>Began:</small> ".$review->getStartDate());
-    $view->h3("Review <small>Ended:</small> ".$review->getEndDate());
+    $view->h2("<small>Last Review</small>&#160;".$review['last_review']);
+    $view->hr();
+    $view->h2("This Review");
+    $view->h3("<small>Began:</small> ".$review->getStartDate());
+    $view->h3("<small>Ended:</small> ".$review->getEndDate());
     $view->bold("The following data represents the previous 6 months prior to the above begin date.");
 
     //Training
