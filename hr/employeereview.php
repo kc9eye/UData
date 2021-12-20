@@ -203,6 +203,7 @@ function displayPastReview ($revid) {
     include('submenu.php');
     $review = new Review($server->pdo,$revid);
     $view = $server->getViewer("Review: ".$review->getFullName());
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
     $view->h1($review->getFullName());
@@ -270,6 +271,12 @@ function displayPastReview ($revid) {
         echo "</div>";
     }
     echo "</div>";
+    $view->hr();
+    $form->newForm("Review Comments");
+    $form->hiddenInput("action","addReviewComments");
+    $form->textArea("comments",null,'',true,null,true);
+    $form->submitForm("Submit",true);
+    $form->endForm();
     $view->footer();
 }
 
