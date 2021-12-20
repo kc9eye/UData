@@ -272,12 +272,11 @@ function displayPastReview ($revid) {
     }
     echo "</div>";
     $view->hr();
-    $form->newInlineForm("Review Comments");
+    $form->newForm("Review Comments");
     $form->hiddenInput("action","addReviewComments");
-    $form->inlineTextArea("comments",null,'',true,null,true);
-    $view->br();
+    $form->textArea("comments",null,'',true,null,true);
     $form->submitForm("Submit",true);
-    $form->endInlineForm();
+    $form->endForm();
     $view->footer();
 }
 
