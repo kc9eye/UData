@@ -32,10 +32,10 @@ class Review extends Employee {
         $this->setAttendanceData();
         $this->setManagementComments();
         $this->setAppraisalData();
-        $this->getLastReview();
+        $this->setLastReview();
     }
 
-    protected function getLastReview() {
+    protected function setLastReview() {
         $sql = 'select MAX(end_date) from reviews where eid = ?';
         $pntr = $this->dbh->prepare($sql);
         if (!$pntr->execute([$this->review['raw_review'][0]['eid']])) throw new Exception(print_r($pntr->errorInfo(),true));
