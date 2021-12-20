@@ -275,6 +275,7 @@ function displayPastReview ($revid) {
     $form->newInlineForm("Review Comments");
     $form->hiddenInput("action","addReviewComments");
     $form->inlineTextArea("comments",null,'',true,null,true);
+    $view->br();
     $form->submitForm("Submit",true);
     $form->endInlineForm();
     $view->footer();
