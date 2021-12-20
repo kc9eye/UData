@@ -36,9 +36,16 @@ class Review extends Employee {
     }
 
     protected function setLastReview() {
-        $sql = 'select MAX(end_date) from reviews where eid = ?';
+        $sql = 
+            'select MAX(end_date) 
+            from reviews 
+            where eid = :eid
+            and end_date not in (
+                select MAX(end_date) from reviews where eid = :uid
+            )';
         $pntr = $this->dbh->prepare($sql);
-        if (!$pntr->execute([$this->review['raw_review'][0]['eid']])) throw new Exception(print_r($pntr->errorInfo(),true));
+        $eid = $this->review['raw_review'][0]['eid'];
+        if (!$pntr->execute([':eid'=>$eid,':uid'=>$eid])) throw new Exception(print_r($pntr->errorInfo(),true));
         $this->review['last_review'] = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['max'];
     }
 
