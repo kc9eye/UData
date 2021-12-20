@@ -226,6 +226,7 @@ function displayPastReview ($revid) {
     //Attendance
     $view->hr();
     $view->h3("Attendance");
+    $view->h3("<small>Current Points:</small>".$review->AttendancePoints);
     $attendance = $review->getReviewAttendance();
     if (empty($attendance)) {
         $view->bold("No attendance incidents found.");
