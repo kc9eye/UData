@@ -206,4 +206,8 @@ class Review extends Employee {
     public function getAllAppraisals () {
         return $this->review['review_comments'];
     }
+
+    public function getLastReview () {
+        return $this->review['last_review'];
+    }
 }
