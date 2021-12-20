@@ -207,7 +207,7 @@ function displayPastReview ($revid) {
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
     $view->h1($review->getFullName());
     $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
-    $view->h2("<small>Last Review</small>&#160;".$review['last_review']);
+    $view->h2("<small>Last Review</small>&#160;".$review->review['last_review']);
     $view->hr();
     $view->h2("This Review");
     $view->h3("<small>Began:</small> ".$review->getStartDate());
