@@ -58,6 +58,14 @@ if (!empty($_REQUEST['action'])) {
             $server->userMustHavePermission('initEmployeeReview');
             displayPrintReview($_REQUEST['revid']);
         break;
+        case 'addReviewComments':
+            $server->userMustHavePermission('initEmployeeReview');
+            $server->processingDialog(
+                [new Review($server->pdo,$_REQUEST['revid']),'commitComments'],
+                [$_REQUEST],
+                $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
+            );
+        break;
         default: main(); break;
    }
 }
@@ -274,8 +282,8 @@ function displayPastReview ($revid) {
     $view->hr();
     $form->newForm("Review Comments");
     $form->hiddenInput("action","addReviewComments");
-    $form->hiddenInput("rid",$revid);
-    $form->textArea("comments",null,'',true,null,true,false);
+    $form->hiddenInput("revid",$revid);
+    $form->textArea("comments",null,$review->getMeetingComments(),true,null,true,false);
     $form->submitForm("Submit",true);
     $form->endForm();
     $view->footer();

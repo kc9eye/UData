@@ -217,4 +217,8 @@ class Review extends Employee {
     public function getLastReview () {
         return $this->review['last_review'];
     }
+
+    public function getMeetingComments() {
+        return $this->review['raw_review'][0]['meeting_comments'];
+    }
 }
