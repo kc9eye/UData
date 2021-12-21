@@ -221,4 +221,11 @@ class Review extends Employee {
     public function getMeetingComments() {
         return $this->review['raw_review'][0]['meeting_comments'];
     }
+
+    public function commitComments($comments) {
+        $sql = 'update reviews set meeting_comments = :comments where id = :revid';
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute(['comments'=>$comments,':revid'=>$this->revid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        else return true;
+    }
 }

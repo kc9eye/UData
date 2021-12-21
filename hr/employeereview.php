@@ -62,7 +62,7 @@ if (!empty($_REQUEST['action'])) {
             $server->userMustHavePermission('initEmployeeReview');
             $server->processingDialog(
                 [new Review($server->pdo,$_REQUEST['revid']),'commitComments'],
-                [$_REQUEST],
+                [$_REQUEST['comments']],
                 $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
             );
         break;
