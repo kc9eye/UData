@@ -274,6 +274,7 @@ function displayPastReview ($revid) {
     $view->hr();
     $form->newForm("Review Comments");
     $form->hiddenInput("action","addReviewComments");
+    $form->hiddenInput("rid",$revid);
     $form->textArea("comments",null,'',true,null,true);
     $form->submitForm("Submit",true);
     $form->endForm();
