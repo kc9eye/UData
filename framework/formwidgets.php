@@ -610,7 +610,7 @@ Class FormWidgets {
      * @param String $helpBlock Optional string of help text for the widget
      * @return Void Output is directed to the stream, and this widget returns no value
      */
-    public function textArea ($name, $id = null, $value = '', $required = false, $helpBlock = null, $wysiwyg = false) {
+    public function textArea ($name, $id = null, $value = '', $required = false, $helpBlock = null, $wysiwyg = false, $center = true) {
         $this->wysiwyg = $wysiwyg;
         if ($required) {
             $this->addValidation($name, $required);
@@ -620,14 +620,21 @@ Class FormWidgets {
         }
         echo "<div class='form-group'>";
         echo "<div class='row'>";
-        echo "<div class='col-md-3'><!-- Desktop spacing --></div>";
-        echo "<div class='col-md-6 col-xs-12'>";
+        if ($center) {
+            echo "<div class='col-md-3'><!-- Desktop spacing --></div>";
+            echo "<div class='col-md-6 col-xs-12'>";
+        }
+        else {
+            echo "<div class='col-12'>";
+        }
         echo "<textarea class='form-control' name='{$name}' id='{$id}'>{$value}</textarea>";
         if (!is_null($helpBlock)) {
             echo "<span class='help-block'>{$helpBlock}</span>";
         }
         echo "</div>";
-        echo "<div class='col-md-3'></div>";
+        if ($center) {
+            echo "<div class='col-md-3'></div>";
+        }        
         echo "</div>";
         echo "</div>";      
     }
