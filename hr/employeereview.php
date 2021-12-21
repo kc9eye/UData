@@ -58,6 +58,14 @@ if (!empty($_REQUEST['action'])) {
             $server->userMustHavePermission('initEmployeeReview');
             displayPrintReview($_REQUEST['revid']);
         break;
+        case 'addReviewComments':
+            $server->userMustHavePermission('initEmployeeReview');
+            $server->processingDialog(
+                [new Review($server->pdo,$_REQUEST['revid']),'commitComments'],
+                [$_REQUEST['comments']],
+                $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
+            );
+        break;
         default: main(); break;
    }
 }
@@ -203,11 +211,16 @@ function displayPastReview ($revid) {
     include('submenu.php');
     $review = new Review($server->pdo,$revid);
     $view = $server->getViewer("Review: ".$review->getFullName());
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
     $view->h1($review->getFullName());
-    $view->h2("<small>Began:</small> ".$review->getStartDate());
-    $view->h2("<small>Ended:</small> ".$review->getEndDate());
+    $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
+    $view->h2("<small>Last Review</small>&#160;".$review->getLastReview());
+    $view->hr();
+    $view->h2("This Review");
+    $view->h3("<small>Began:</small> ".$review->getStartDate());
+    $view->h3("<small>Ended:</small> ".$review->getEndDate());
     $view->bold("The following data represents the previous 6 months prior to the above begin date.");
 
     //Training
@@ -222,6 +235,7 @@ function displayPastReview ($revid) {
     //Attendance
     $view->hr();
     $view->h3("Attendance");
+    $view->h3("<small>Current Points:</small>".$review->AttendancePoints);
     $attendance = $review->getReviewAttendance();
     if (empty($attendance)) {
         $view->bold("No attendance incidents found.");
@@ -265,6 +279,13 @@ function displayPastReview ($revid) {
         echo "</div>";
     }
     echo "</div>";
+    $view->hr();
+    $form->newForm("Review Comments");
+    $form->hiddenInput("action","addReviewComments");
+    $form->hiddenInput("revid",$revid);
+    $form->textArea("comments",null,$review->getMeetingComments(),true,null,true,false);
+    $form->submitForm("Submit",true);
+    $form->endForm();
     $view->footer();
 }
 

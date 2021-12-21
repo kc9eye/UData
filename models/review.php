@@ -32,6 +32,21 @@ class Review extends Employee {
         $this->setAttendanceData();
         $this->setManagementComments();
         $this->setAppraisalData();
+        $this->setLastReview();
+    }
+
+    protected function setLastReview() {
+        $sql = 
+            'select MAX(end_date) 
+            from reviews 
+            where eid = :eid
+            and end_date not in (
+                select MAX(end_date) from reviews where eid = :uid
+            )';
+        $pntr = $this->dbh->prepare($sql);
+        $eid = $this->review['raw_review'][0]['eid'];
+        if (!$pntr->execute([':eid'=>$eid,':uid'=>$eid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        $this->review['last_review'] = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['max'];
     }
 
     protected function setReviewData () {
@@ -197,5 +212,20 @@ class Review extends Employee {
      */
     public function getAllAppraisals () {
         return $this->review['review_comments'];
+    }
+
+    public function getLastReview () {
+        return $this->review['last_review'];
+    }
+
+    public function getMeetingComments() {
+        return $this->review['raw_review'][0]['meeting_comments'];
+    }
+
+    public function commitComments($comments) {
+        $sql = 'update reviews set meeting_comments = :comments where id = :revid';
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute(['comments'=>$comments,':revid'=>$this->revid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        else return true;
     }
 }

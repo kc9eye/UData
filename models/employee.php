@@ -53,7 +53,7 @@ class Employee {
         $sql = 'SELECT * FROM employees WHERE id = ?';
         try {
             $pntr = $this->dbh->prepare($sql);
-            if (!$pntr->execute([$this->eid])) throw new Exception($pntr->errorInfo());
+            if (!$pntr->execute([$this->eid])) throw new Exception(print_r($pntr->errorInfo(),true));
             $this->Employee = $pntr->fetchAll(PDO::FETCH_ASSOC)[0];
             return true;
         }
