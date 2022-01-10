@@ -33,7 +33,7 @@ class review75init implements Service {
 
     public function run() {
         $employees = new Employees($this->server->pdo);
-        $pntr = $this->server->pdo->query("select * from employees where (start_date + interval '75 days') = CURRENT_DATE");
+        $pntr = $this->server->pdo->query("select * from employees where (start_date + interval '75 days') = CURRENT_DATE and end_date is null");
         $this->server->currentUserID = 'cron';
         foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
             if (empty($row)) break;
