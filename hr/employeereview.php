@@ -66,7 +66,7 @@ if (!empty($_REQUEST['action'])) {
                 $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
             );
         break;
-        case 'schedule_review':
+        case 'schedule_followup':
             $server->userMustHavePermission('initEmployeeReview');
             $server->processingDialog(
                 [new Review($server->pdo,$_REQUEST['revid']),'scheduleFollowup'],
@@ -401,7 +401,7 @@ function displayPrintReview ($revid) {
     echo "</div>";
     echo "<div class='well'>";
     echo "<h3>Attendance</h3>";
-    echo "<b>Current Attendance Points: ".$review->AttendancePoints."</b>";
+    echo "<h4>Current Attendance Points: ".$review->AttendancePoints."</h4>";
     $attendance = $review->getReviewAttendance();
     if (empty($attendance)) {
         echo "<strong>No attendance incidents found.</strong>";
