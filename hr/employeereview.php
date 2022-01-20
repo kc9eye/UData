@@ -216,7 +216,7 @@ function displayPastReview ($revid) {
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
     echo "<div class='float-right'>";
     echo "<form><table><tr><td>Follow Up:</td>";
-    echo "<td><input type='type' name='action' value='schedule_followup' />";
+    echo "<td><input type='hidden' name='action' value='schedule_followup' />";
     echo "<input type='hidden' name='eid' value='".$review->getEID()."' />";
     echo "<select class='form-control' name='interval'><option value='30 days'>30 Days</option><option value='60 days'>60 Days</option><option value='90 days'>90 Days</option></select></td>";
     echo "<td><button type='submit' class='btn btn-success'>Schedule</button></td></tr></table></form>";
