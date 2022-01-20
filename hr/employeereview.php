@@ -235,7 +235,7 @@ function displayPastReview ($revid) {
     }
     else {
         echo "<div class='float-right'>";
-        echo "Follow Up Scheduled at <b>{$followup['scehdule']}</b> from <i>{$followup['_date']}</i>";
+        echo "Follow Up Scheduled at <b>{$followup['schedule']}</b> from <i>{$followup['_date']}</i>";
         echo "</div>";
     }
     $view->h1($review->getFullName());
