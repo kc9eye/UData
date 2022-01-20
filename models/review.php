@@ -237,6 +237,9 @@ class Review extends Employee {
     }
 
     public function scheduleFollowup($data) {
-        //check if employee has a review scheduled
+        if (!is_null($this->getScheduledFollowup($data['eid']))) throw new Exception("A follow is already scheduled for this employee");
+        $pntr = $this->dbh->prepare('insert into scheduled_reviews values (:id,now(),:eid,:int)');
+        if (!$pntr->execute([':id'=>uniqid(),':eid'=>$data['eid'],':int'=>$data['interval']])) throw new Exception(print_r($pntr->errorInfo(),true));
+        return true;
     }
 }
