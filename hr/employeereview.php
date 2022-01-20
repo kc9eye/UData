@@ -214,6 +214,13 @@ function displayPastReview ($revid) {
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
+    echo "<div class='float-right'>";
+    $form->newForm();
+    $form->hiddenInput("uid",$review->getEID());
+    $form->selectBox("scheduled","Schedule Next",[['30 days','30 Days'],['60 days','60 Days'],['90 days','90 Days']]);
+    $form->submitForm("Schedule");
+    $form->endForm();
+    echo "</div>";
     $view->h1($review->getFullName());
     $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
     $view->h2("<small>Last Review</small>&#160;".$review->getLastReview());
