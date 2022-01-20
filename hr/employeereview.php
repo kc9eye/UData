@@ -342,8 +342,11 @@ function displayPrintReview ($revid) {
     echo "</head>";
     echo "<body>";
     echo "<h1>Review for:".$review->getFullName()."</h1>";
-    echo "<h3>Began: ".$review->getStartDate()."</h3>";
-    echo "<h3>Ended: ".$review->getEndDate()."</h3>";
+    echo "<h2>Hire Date:".$review->Employee['start_date']."</h2>";
+    echo "<h2>Last Review:".$review->getLastReview()."</h2>";
+    echo "<hr/>";
+    echo "<h3>This Review Began: ".$review->getStartDate()."</h3>";
+    echo "<h3>This Review Ended: ".$review->getEndDate()."</h3>";
     echo "<div class='well'>";
     echo "<h4>Preface</h4>";
     echo "<p>The purpose of conducting the performance appraisal is to:</p>";
@@ -374,6 +377,7 @@ function displayPrintReview ($revid) {
     echo "</div>";
     echo "<div class='well'>";
     echo "<h3>Attendance</h3>";
+    echo "<b>Current Attendance Points: ".$review->AttendancePoints."</b>";
     $attendance = $review->getReviewAttendance();
     if (empty($attendance)) {
         echo "<strong>No attendance incidents found.</strong>";
@@ -417,6 +421,7 @@ function displayPrintReview ($revid) {
     echo "</div>";
     echo "<div class='well' style='min-height:200px'>";
     echo "<h3>Notes:</h3>";
+    echo "<p>".$review->getMeetingComments()."</p>";
     echo "</div>";
     echo "</body>";
     echo "</html>";    
