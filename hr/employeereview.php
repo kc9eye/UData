@@ -66,6 +66,14 @@ if (!empty($_REQUEST['action'])) {
                 $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
             );
         break;
+        case 'schedule_followup':
+            $server->userMustHavePermission('initEmployeeReview');
+            $server->processingDialog(
+                [new Review($server->pdo,$_REQUEST['revid']),'scheduleFollowup'],
+                [$_REQUEST],
+                $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
+            );
+        break;
         default: main(); break;
    }
 }
@@ -214,6 +222,22 @@ function displayPastReview ($revid) {
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
+    $followup = $review->getScheduledFollowup($review->getEID());
+    if (is_null($followup)) {
+        echo "<div class='float-right'>";
+        echo "<form><table><tr><td>Follow Up:</td>";
+        echo "<td><input type='hidden' name='action' value='schedule_followup' />";
+        echo "<input type='hidden' name='eid' value='".$review->getEID()."' />";
+        echo "<input type='hidden' name='revid' value='".$revid."' />";
+        echo "<select class='form-control' name='interval'><option value='30 days'>30 Days</option><option value='60 days'>60 Days</option><option value='90 days'>90 Days</option></select></td>";
+        echo "<td><button type='submit' class='btn btn-success'>Schedule</button></td></tr></table></form>";
+        echo "</div>";
+    }
+    else {
+        echo "<div class='float-right'>";
+        echo "Follow Up Scheduled at <b>{$followup['schedule']}</b> from <i>{$followup['_date']}</i>";
+        echo "</div>";
+    }
     $view->h1($review->getFullName());
     $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
     $view->h2("<small>Last Review</small>&#160;".$review->getLastReview());
@@ -342,8 +366,11 @@ function displayPrintReview ($revid) {
     echo "</head>";
     echo "<body>";
     echo "<h1>Review for:".$review->getFullName()."</h1>";
-    echo "<h3>Began: ".$review->getStartDate()."</h3>";
-    echo "<h3>Ended: ".$review->getEndDate()."</h3>";
+    echo "<h2>Hire Date:".$review->Employee['start_date']."</h2>";
+    echo "<h2>Last Review:".$review->getLastReview()."</h2>";
+    echo "<hr/>";
+    echo "<h3>This Review Began: ".$review->getStartDate()."</h3>";
+    echo "<h3>This Review Ended: ".$review->getEndDate()."</h3>";
     echo "<div class='well'>";
     echo "<h4>Preface</h4>";
     echo "<p>The purpose of conducting the performance appraisal is to:</p>";
@@ -374,6 +401,7 @@ function displayPrintReview ($revid) {
     echo "</div>";
     echo "<div class='well'>";
     echo "<h3>Attendance</h3>";
+    echo "<h4>Current Attendance Points: ".$review->AttendancePoints."</h4>";
     $attendance = $review->getReviewAttendance();
     if (empty($attendance)) {
         echo "<strong>No attendance incidents found.</strong>";
@@ -417,6 +445,7 @@ function displayPrintReview ($revid) {
     echo "</div>";
     echo "<div class='well' style='min-height:200px'>";
     echo "<h3>Notes:</h3>";
+    echo "<p>".$review->getMeetingComments()."</p>";
     echo "</div>";
     echo "</body>";
     echo "</html>";    

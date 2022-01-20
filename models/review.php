@@ -228,4 +228,18 @@ class Review extends Employee {
         if (!$pntr->execute(['comments'=>$comments,':revid'=>$this->revid])) throw new Exception(print_r($pntr->errorInfo(),true));
         else return true;
     }
+
+    public function getScheduledFollowup($eid) {
+        $pntr = $this->dbh->prepare('select * from scheduled_reviews where eid = ?');
+        if (!$pntr->execute([$eid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        if (empty(($results = $pntr->fetchAll(\PDO::FETCH_ASSOC)))) return null;
+        else return $results[0];
+    }
+
+    public function scheduleFollowup($data) {
+        if (!is_null($this->getScheduledFollowup($data['eid']))) throw new Exception("A follow is already scheduled for this employee");
+        $pntr = $this->dbh->prepare('insert into scheduled_reviews values (:id,now(),:eid,:int)');
+        if (!$pntr->execute([':id'=>uniqid(),':eid'=>$data['eid'],':int'=>$data['interval']])) throw new Exception(print_r($pntr->errorInfo(),true));
+        return true;
+    }
 }
