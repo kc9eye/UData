@@ -215,11 +215,11 @@ function displayPastReview ($revid) {
     $view->sideDropDownMenu($submenu);
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
     echo "<div class='float-right'>";
-    $form->newForm();
-    $form->hiddenInput("uid",$review->getEID());
-    $form->selectBox("scheduled","Schedule Next",[['30 days','30 Days'],['60 days','60 Days'],['90 days','90 Days']]);
-    $form->submitForm("Schedule");
-    $form->endForm();
+    echo "<form><table><tr><td>Follow Up:</td>";
+    echo "<td><input type='type' name='action' value='schedule_followup' />";
+    echo "<input type='hidden' name='eid' value='".$review->getEID()."' />";
+    echo "<select class='form-control' name='interval'><option value='30 days'>30 Days</option><option value='60 days'>60 Days</option><option value='90 days'>90 Days</option></select></td>";
+    echo "<td><button type='submit' class='btn btn-success'>Schedule</button></td></tr></table></form>";
     echo "</div>";
     $view->h1($review->getFullName());
     $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
