@@ -66,6 +66,14 @@ if (!empty($_REQUEST['action'])) {
                 $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
             );
         break;
+        case 'schedule_review':
+            $server->userMustHavePermission('initEmployeeReview');
+            $server->processingDialog(
+                [new Review($server->pdo,$_REQUEST['revid']),'scheduleFollowup'],
+                [$_REQUEST],
+                $server->config['application-root'].'/hr/employeereview?action=viewreview&revid='.$_REQUEST['revid']
+            );
+        break;
         default: main(); break;
    }
 }
@@ -214,13 +222,22 @@ function displayPastReview ($revid) {
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
     $view->linkButton("/hr/employeereview?action=printreview&revid={$revid}","Print",'secondary',false,'_blank');
-    echo "<div class='float-right'>";
-    echo "<form><table><tr><td>Follow Up:</td>";
-    echo "<td><input type='hidden' name='action' value='schedule_followup' />";
-    echo "<input type='hidden' name='eid' value='".$review->getEID()."' />";
-    echo "<select class='form-control' name='interval'><option value='30 days'>30 Days</option><option value='60 days'>60 Days</option><option value='90 days'>90 Days</option></select></td>";
-    echo "<td><button type='submit' class='btn btn-success'>Schedule</button></td></tr></table></form>";
-    echo "</div>";
+    $followup = $review->getScheduledFollowup($review->getEID());
+    if (is_null($followup)) {
+        echo "<div class='float-right'>";
+        echo "<form><table><tr><td>Follow Up:</td>";
+        echo "<td><input type='hidden' name='action' value='schedule_followup' />";
+        echo "<input type='hidden' name='eid' value='".$review->getEID()."' />";
+        echo "<input type='hidden' name='revid' value='".$revid."' />";
+        echo "<select class='form-control' name='interval'><option value='30 days'>30 Days</option><option value='60 days'>60 Days</option><option value='90 days'>90 Days</option></select></td>";
+        echo "<td><button type='submit' class='btn btn-success'>Schedule</button></td></tr></table></form>";
+        echo "</div>";
+    }
+    else {
+        echo "<div class='float-right'>";
+        echo "Follow Up Scheduled at <b>{$followup['scehdule']}</b> from <i>{$followup['_date']}</i>";
+        echo "</div>";
+    }
     $view->h1($review->getFullName());
     $view->h2("<small>Start Date:</small>".$review->Employee['start_date']);
     $view->h2("<small>Last Review</small>&#160;".$review->getLastReview());
