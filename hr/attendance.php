@@ -98,6 +98,12 @@ function attendanceDisplay () {
     $form->checkBox('nocall',['No Call/Show','Not Notified'],'true',false,null,'false');
     $form->checkBox('nopoints',['Excused','Yes'],'true',false,'No points will be calculated.','false');
     $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
+    if ($emp->getProbationStatus()) {
+        $form->labelContent("Probation","Employee is currently on 30 day probation.");
+    }
+    else {
+        $form->checkBox('probation',['Probation','Yes'],'true');
+    }
     $form->textArea('description',null,'',true);
     $form->submitForm('Add',false,$view->PageData['approot'].'/hr/viewemployee?id='.$_REQUEST['id']);
     $form->endForm();

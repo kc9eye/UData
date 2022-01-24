@@ -317,4 +317,22 @@ class Employee {
       public function getComments () {
           return $this->data['Comments'];
       }
+
+      /**
+       * Returns whether or not the employee is on attendance probation
+       * @return Boolean
+       * @author Paul W. Lane 2022
+       * @copyright 2022 Paul W. Lane
+       */
+      public function getProbationStatus() {
+        $sql =
+            'select * from employee_probation
+            where eid = ?
+            and (date_trunc(\'day\',_date) + period) > CURRENT_DATE';
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute([$this->getEID()])) throw new Exception(print_r($pntr->errorInfo(),true));
+        if (empty(($result = $pntr->fetchAll(PDO::FETCH_ASSOC)))) return false;
+        else return true;
+      }
+
 }
