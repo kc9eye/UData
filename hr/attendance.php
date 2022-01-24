@@ -102,7 +102,7 @@ function attendanceDisplay () {
         $form->labelContent("Probation","Employee is currently on 30 day probation.");
     }
     else {
-        $form->checkBox('probation',['Probation','Yes'],'true');
+        $form->checkBox('probation',['Probation','Yes'],'true',false,"Initiate a 30 day probation reminder.");
     }
     $form->textArea('description',null,'',true);
     $form->submitForm('Add',false,$view->PageData['approot'].'/hr/viewemployee?id='.$_REQUEST['id']);
