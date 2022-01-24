@@ -176,6 +176,7 @@ class Employees extends Profiles {
      * @return Boolean True on sucess, false otherwise.
      */
     public function addAttendanceRecord (Array $data) {
+        if (isset($data['probation'])) $this->startProbation($data['eid']);
         $sql = 'INSERT INTO missed_time VALUES (
             :id,
             :eid,
@@ -274,6 +275,20 @@ class Employees extends Profiles {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Starts the current employee on 30 day probation
+     * @return Boolean
+     * @copyright 2022 Paul W. Lane
+     */
+
+    private function startProbation($eid) {
+        $sql = "insert into employee_probation values (:id,now(),:eid,'30 days')";
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute([':eid'=>$eid,':id'=>uniqid()]))
+            throw new Exception(print_r($pntr->errorInfo(),true));
+        return true;
     }
 
     private function calculateTimePoints(Array $data) {
