@@ -100,6 +100,7 @@ function attendanceDisplay () {
     $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
     if ($emp->getProbationStatus()) {
         $form->labelContent("Probation","Employee is currently on 30 day probation.");
+        $form->hiddenInput('probation_set','true');
     }
     else {
         $form->checkBox('probation',['Probation','Yes'],'true',false,"Initiate a 30 day probation reminder.");
