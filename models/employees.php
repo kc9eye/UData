@@ -176,6 +176,7 @@ class Employees extends Profiles {
      * @return Boolean True on sucess, false otherwise.
      */
     public function addAttendanceRecord (Array $data) {
+        if (isset($data['probation'])) $this->startProbation($data['eid']);
         $sql = 'INSERT INTO missed_time VALUES (
             :id,
             :eid,
@@ -203,6 +204,11 @@ class Employees extends Profiles {
                 $data['congruent'] = true;
                 $data['period'] = $period;
                 $data['points'] = $this->calculateTimePoints($data);
+
+                //For Adam's probation notification request
+                if (isset($data['probation_set']) && ($data['points'] > 0)) {
+                    $this->probationNotification($data['eid']);
+                } 
 
                 $this->dbh->beginTransaction();
                 foreach($period as $date) {
@@ -239,6 +245,12 @@ class Employees extends Profiles {
                     ':excused'=>$data['excused'],
                     ':points'=>$this->calculateTimePoints($data)
                 ];
+
+                //For Adam's probation notification
+                if (isset($data['probation_set']) && ($insert[':points'] > 0)) {
+                    $this->probationNotification($insert[':eid']);
+                }
+
                 if (!$pntr->execute($insert)) throw new Exception("Insert failed: {$sql}");
                 return true;
             }
@@ -258,6 +270,12 @@ class Employees extends Profiles {
                     ':excused'=>$data['excused'],
                     ':points'=>$this->calculateTimePoints($data)
                 ];
+
+                //Adam's probation notification request
+                if (isset($data['probation_set']) && ($insert[':points'] > 0)) {
+                    $this->probationNotification($insert[':eid']);
+                }
+
                 if (!$pntr->execute($insert)) throw new Exception("Insert failed: {$sql}");
                 return true;
             }
@@ -274,6 +292,35 @@ class Employees extends Profiles {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Sends the probation notification
+     * @param String The employees eid 
+     * @return Boolean
+     */
+    private function probationNotification($eid) {
+        include(dirname(__DIR__).'/etc/config.php');
+        $mailer = new Mailer($config);
+        $notifier = new Notification($this->dbh,$mailer);
+        $emp = new Employee($this->dbh,$eid);
+        $link = '<a href="'.$config['application-root'].'/hr/viewemployee?id='.$eid.'">'.$emp->getFullName().'</a>';
+        $notifier->notify("Propation Infraction","Probation Infraction",$mailer->wrapInTemplate('probationnotification.html',$link));
+        return true;
+    }
+
+    /**
+     * Starts the current employee on 30 day probation
+     * @return Boolean
+     * @copyright 2022 Paul W. Lane
+     */
+
+    private function startProbation($eid) {
+        $sql = "insert into employee_probation values (:id,now(),:eid,'30 days')";
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute([':eid'=>$eid,':id'=>uniqid()]))
+            throw new Exception(print_r($pntr->errorInfo(),true));
+        return true;
     }
 
     private function calculateTimePoints(Array $data) {
