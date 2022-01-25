@@ -305,7 +305,7 @@ class Employees extends Profiles {
         $notifier = new Notification($this->dbh,$mailer);
         $emp = new Employee($this->dbh,$eid);
         $link = '<a href="'.$config['application-root'].'/hr/viewemployee?id='.$eid.'">'.$emp->getFullName().'</a>';
-        $notifier->notify("Propation Infraction","Probation Infraction",$mailer->wrapInTemplate('probationnotification.html',$link));
+        $notifier->notify("Probation Infraction","Probation Infraction",$mailer->wrapInTemplate('probationnotification.html',$link));
         return true;
     }
 
