@@ -34,6 +34,8 @@ function main(){
         id="printFrame" 
         name="printFrame" 
         src="https://docs.google.com/document/d/e/2PACX-1vRhWzhM-YNaJrMR84Fg9aeUYC18e_dyCOCkuJRBqM5UgHlqT6EYKcd2mfNhPudbFiDXLZ-wkDtLjDMy/pub?embedded=true"
+        width="800"
+        height="600"
         ></iframe>';
     $view->footer();
 }
