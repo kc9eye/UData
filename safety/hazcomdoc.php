@@ -26,7 +26,7 @@ function main(){
     $view = $server->getViewer("HAZCOM DOC");
     $view->sideDropDownMenu($submenu);
     $view->h1("Hazardous Communications Document");
-    if ($server->checkPermission('approveEmac')){
+    if ($server->checkPermission('approveHazcom')){
         $view->linkButton('https://docs.google.com/document/d/1zaIH-TnU2aeGxaUpqhagj175U4Vd0sRhQUofqJMYKLU/edit?usp=sharing','Edit Document',null,false,'_blank',true);
     }
     $view->hr();
