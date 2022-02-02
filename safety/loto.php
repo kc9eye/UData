@@ -26,9 +26,9 @@ function main(){
     $view->sideDropDownMenu($submenu);
     $view->h1("Lock Out/Tag Out Document");
     if ($server->checkPermission('approveLoto')){
-        $view->linkButton('https://docs.google.com/document/d/12y6sMb_7dBlRLs1J1WkA7E3cJbLrqwxcN8seehNw5WQ/edit?usp=sharing','Edit Document',null,false,'_blank',true);
+        $view->linkButton('','Edit Document',null,false,'_blank',true);
     }
     $view->hr();
-    echo '<iframe id="printFrame" name="printFrame" src="https://docs.google.com/document/d/e/2PACX-1vTq_6H50JXePCayWIjdkJe85dKbqruiwB8am217tjxHLmyp58_UInXw93LFfQgIUXEg1KhJb-GRBky6/pub?embedded=true" width="800" height="600"></iframe>';
+    echo '<iframe id="printFrame" name="printFrame" src="" width="800" height="600"></iframe>';
     $view->footer();
 }
