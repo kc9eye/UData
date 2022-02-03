@@ -27,13 +27,13 @@ function main(){
     $view->sideDropDownMenu($submenu);
     $view->h1("Emergency Action Plan");
     if ($server->checkPermission('approveEmac')){
-        $view->linkButton('https://docs.google.com/document/d/1f4qeysvgNE0du2dfiyopzuo1woDSBld_JzyntFi1q0w/edit?usp=sharing','Edit Document',null,false,'_blank',true);
+        $view->linkButton('','Edit Document',null,false,'_blank',true);
     }
     $view->hr();
     echo '<iframe
         id="printFrame"
         name="printFrame" 
-        src="https://docs.google.com/document/d/e/2PACX-1vRltf3G_lyLYG0EYCvdlapio_v6FdZrCDmpme9s4l7ReYiqUmYNNRodhqG4t86k-I5nWhbsnVG295Zi/pub?embedded=true"
+        src=""
         width="800";
         height="600";
         ></iframe>';
