@@ -25,7 +25,7 @@ function main(){
     include('submenu.php');
     $view = $server->getViewer("Emergency Action Plan");
     $view->sideDropDownMenu($submenu);
-    $view->h1("Emergency Action Plane");
+    $view->h1("Emergency Action Plan");
     if ($server->checkPermission('approveEmac')){
         $view->linkButton('https://docs.google.com/document/d/1f4qeysvgNE0du2dfiyopzuo1woDSBld_JzyntFi1q0w/edit?usp=sharing','Edit Document',null,false,'_blank',true);
     }
