@@ -43,6 +43,8 @@ function searchDisplay () {
         $buttongrp['List Open Reviews'] = "window.open(\"{$view->PageData['approot']}/hr/lists?action=openreviews\",\"_self\");";
     if ($server->checkPermission('addNewProfile'))
         $buttongrp['Add New Profile'] = "window.open(\"{$view->PageData['approot']}/hr/addnew\",\"_self\");";
+    if ($server->checkPermission('initEmployeeReview'))
+        $buttongrp['Pending Follow Up Reviews'] = "window.open(\"{$view->PageData['approot']}/hr/pending\",\"_self\");";
 
     $view->h1('Search Employee Profiles');
     $form->inlineButtonGroup($buttongrp);

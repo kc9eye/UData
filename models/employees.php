@@ -600,4 +600,19 @@ class Employees extends Profiles {
             return false;
         }
     }
+
+    /**
+     * Retuns an array list of pending scheduled reviews
+     * @return Array A 2 dimensional array of [due date, Employee Object]
+     * @author Paul W. Lane
+     */
+    public function getPendingScheduledReviews() {
+        $sql = "select eid, date_trunc('day',(_date + schedule)) as due from scheduled_reviews where (date_trunc('day',_date) + schedule) > CURRENT_DATE";
+        $pntr = $this->dbh->prepare($sql);
+        if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
+        foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $scheduled[] = [$row['due'], new Employee($this->dbh, $row['eid'])];
+        }
+        return $scheduled;
+    }
 }
