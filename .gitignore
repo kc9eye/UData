@@ -1,0 +1,4 @@
+/vendor/
+/composer.*
+/phpDocumentor.phar
+/etc/config.php
