@@ -17,7 +17,7 @@
  */
 /**
  * Main configuration file
- * 
+ *
  * This file should contain only the `$config` variable. Which contains an indexed array
  * of configuration options for the framework.
  * @package UData
@@ -43,14 +43,14 @@ $config = [
     'mailer-username' => '',            #Required if above is true
     'mailer-password' => '',            #Same as above
     'mailer-security' => '',            #Either 'tls' or 'ssl'
-    'mailer-port' => '',                #The SMTP server port to connect to 
+    'mailer-port' => '',                #The SMTP server port to connect to
     'mailer-custom-opts' => [],         #Custom SMTP options you may need to set for the mailer as an array
 
     #Application settings dependant on server settings
     'application-root' => '',         #The applications URL (Depends on how to machine is accessed what this should be.)
     'data-root' => '',                  #Where data files are going to be stored. SDS files, images, etc... Must be writtable by the server process
     'template-root' => '',     #Where the application templates are stored for file_get_contents
-    
+
     #ViewMaker pagedata settings, effect how the UI looks
     'company-name' => '',
     'company-motto' => '',
@@ -67,5 +67,5 @@ $config = [
     ],
 
     #Background operations
-    'services-run' => 'onaccess'        #When background serveices shoudl run, options are 'onacess' (services are run on every page acess), 'cron' (services are run by OS as a cron job). 
+    'services-run' => 'onaccess'        #When background serveices shoudl run, options are 'onacess' (services are run on every page acess), 'cron' (services are run by OS as a cron job).
 ];
