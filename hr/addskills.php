@@ -74,8 +74,8 @@ function addSkillsDisplay () {
             if ($training['id'] == $row['trid']) {
                 echo "checked ";
             }
-            echo "/>";
         }
+        echo "/>";
         echo '<label for="'.$row['trid'].'" class="form-check-label">'.$row['description'].'</lable>';
         echo '</div>';
     }
