@@ -68,7 +68,7 @@ function addSkillsDisplay () {
     '<h2>Training Change Form</h2>
     <h3><span class="text-muted fs-6">Training for:</span><b>'.$emp->getFullName().'</b></h3>
     <hr>
-    <div class="newContent m-2">
+    <div id="newContent" class="m-2">
         <form id="empTraining">
             <input type="hidden" name="action" value="saveTraining" />
             <input type="hidden" name="uid" value="'.$_REQUEST['id'].'" />
