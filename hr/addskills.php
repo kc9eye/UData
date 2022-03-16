@@ -67,7 +67,18 @@ function addSkillsDisplay () {
     // }
 
     $view = $server->getViewer("HR: Add Skill Training");
-    echo '<pre>',var_export($skills->getEmployeeTraining($_REQUEST['id']),true),"</pre>";
+    foreach($skills->getEmployeeTraining($_REQUEST['id']) as $row) {
+        echo '<div class="form-check">';
+        echo '<input type="checkbox" class="form-check-input" id="'.$row['trid'].'" name="trainging[]" value="'.$row['trid'].'" ';
+        foreach($skills->getAllAvailableTraining() as $training) {
+            if ($training['id'] == $row['trid']) {
+                echo "checked ";
+            }
+            echo "/>";
+        }
+        echo '<label for="'.$row['trid'].'" class="form-check-label">'.$row['description'].'</lable>';
+        echo '</div>';
+    }
     // $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
     // $view->sideDropDownMenu($submenu);
     // $view->h1(
