@@ -59,16 +59,12 @@ function addSkillsDisplay () {
 
     $skills = new Training($server->pdo);
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-    // $used_skills = $skills->getEmployeeTraining($_REQUEST['id']);
-    // $unused_skills = $skills->getUnusedTraining($_REQUEST['id']);
-    // $select = array();
-    // foreach($unused_skills as $row) {
-    //     array_push($select,[$row['id'],$row['description']]);
-    // }
 
     $view = $server->getViewer("HR: Add Skill Training");
     echo 
-    '<div class="newContent m-2">
+    '<h2>Training Change Form</h2>
+    <h3><span class="text-muted">Training for:</span>'.$emp->getFullName().'</h3>
+    <div class="newContent m-2">
         <form id="empTraining">';
     foreach($skills->getAllAvailableTraining() as $row) {
         echo '<div class="form-check">';
@@ -85,36 +81,6 @@ function addSkillsDisplay () {
     echo 
     '   </form>
     </div>';
-    // $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
-    // $view->sideDropDownMenu($submenu);
-    // $view->h1(
-    //     "<small>Add Skills to:</small>
-    //     {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
-    //     $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
-    // );
-    // $form->newInlineForm();
-    // $form->hiddenInput('action','add');
-    // $form->hiddenInput('uid',$server->currentUserID);
-    // $form->hiddenInput('eid',$_REQUEST['id']);
-    // $form->inlineSelectBox('trid','Add',$select,true);
-    // $form->inlineSubmit('Add');
-    // $form->endInlineForm();
 
-    // $view->responsiveTableStart(['Training','','Trash']);
-    // foreach($used_skills as $row) {
-    //     echo "<tr><td>{$row['description']}</td><td>";
-    //     $form->newInlineForm();
-    //     $form->hiddenInput('action','update');
-    //     $form->hiddenInput('uid',$server->currentUserID);
-    //     $form->hiddenInput('eid',$_REQUEST['id']);
-    //     $form->hiddenInput('trid',$row['trid']);
-    //     $form->inlineInputCapture('train_date','Date',$row['train_date'],['dateISO'=>'true']);
-    //     $form->inlineSubmit('Update');
-    //     $form->endInlineForm();
-    //     echo "</td><td>";
-    //     $view->trashBtnSm("/hr/addskills?action=remove&trid={$row['trid']}&eid={$_REQUEST['id']}");
-    //     echo "</td></tr>\n";
-    // }
-    // $view->responsiveTableClose();
     $view->footer();
 }
