@@ -63,7 +63,8 @@ function addSkillsDisplay () {
     $view = $server->getViewer("HR: Add Skill Training");
     echo 
     '<h2>Training Change Form</h2>
-    <h3><span class="text-muted">Training for:</span>'.$emp->getFullName().'</h3>
+    <h3><span class="text-muted fs-5">Training for:</span>'.$emp->getFullName().'</h3>
+    <hr>
     <div class="newContent m-2">
         <form id="empTraining">';
     foreach($skills->getAllAvailableTraining() as $row) {
