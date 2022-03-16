@@ -67,6 +67,7 @@ function addSkillsDisplay () {
     // }
 
     $view = $server->getViewer("HR: Add Skill Training");
+    echo '<pre>',var_export($skills->getEmployeeTraining($_REQUEST['id']),true),"</pre>";
     // $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
     // $view->sideDropDownMenu($submenu);
     // $view->h1(
