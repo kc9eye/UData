@@ -90,7 +90,7 @@ function addSkillsDisplay () {
         </form>
     </div>
     <script>
-        let theForm = document.getElementById("empTraing");
+        let theForm = document.getElementById("empTraining");
         let tSave = document.getElementById("topSave");
         let bSave = document.getElementById("bottomSave");
         tSave.addEventListener("click",saveChanges);
