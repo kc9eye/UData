@@ -45,6 +45,9 @@ if (!empty($_REQUEST['action'])) {
                 $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
             );
         break;
+        case 'saveTraining':
+            saveTraining();
+        break;
         default:
             addSkillsDisplay();
         break;
@@ -66,7 +69,10 @@ function addSkillsDisplay () {
     <h3><span class="text-muted fs-6">Training for:</span><b>'.$emp->getFullName().'</b></h3>
     <hr>
     <div class="newContent m-2">
-        <form id="empTraining">';
+        <form id="empTraining">
+            <input type="hidden" name="action" value="saveTraining" />
+            <input type="hidden" name="uid" value="'.$_REQUEST['id'].'" />
+            <button type="button" id="topSave" class="btn btn-outline-secondary">Save Changes</button>';
     foreach($skills->getAllAvailableTraining() as $row) {
         echo '<div class="form-check">';
         echo '<input type="checkbox" class="form-check-input" id="'.$row['id'].'" name="trainging[]" value="'.$row['id'].'" ';
@@ -80,8 +86,33 @@ function addSkillsDisplay () {
         echo '</div>';
     }
     echo 
-    '   </form>
-    </div>';
+    '       <button type="button" id="bottomSave" class="btn btn-outline-secondary">Save Changes</button>
+        </form>
+    </div>
+    <script>
+        let theForm = document.getElementById("empTraing");
+        let tSave = document.getElementById("topSave");
+        let bSave = document.getElementById("bottomSave");
+        tSave.addEventListener("click",saveChanges);
+        bSave.addEventListener("click",saveChanges);
+
+        async function saveChanges(event){
+            event.preventDefault();
+            tSave.setAttribute("disabled","disabled");
+            bSave.setAttribute("disabled","disabled");
+            tSave.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>";
+            bSave.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>";
+            let resp = await fetch(
+                "'.$server->config['application-root'].'/hr/addskills",
+                {method:"POST",body:new FormData(theForm)}
+            );
+            document.getElementById("newContent").innerHTML = await resp.text();
+        }
+    </script>';
 
     $view->footer();
+}
+
+function saveTraining() {
+    echo "<pre>",var_export($_REQUEST,true),"</pre>";
 }
