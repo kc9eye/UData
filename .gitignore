@@ -1,5 +1,11 @@
 /vendor/
 /composer.*
 /phpDocumentor.phar
+/src/
+/vendor/
+composer.json
+composer.lock
+composer.phar
+phpDocumentor.phar
 /etc/config.php
 /.phpdoc/

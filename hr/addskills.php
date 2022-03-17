@@ -21,29 +21,11 @@ $server->userMustHavePermission('editSkills');
 
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
-        case 'add':
-            $handler = new Training($server->pdo);
-            $server->processingDialog(
-                [$handler,'addSkillToEmployee'],
-                [$_REQUEST],
-                $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
-            );
+        case 'updateDates':
+            updateTrainingDates();
         break;
-        case 'update':
-            $handler = new Training($server->pdo);
-            $server->processingDialog(
-                [$handler,'updateSkillTraining'],
-                [$_REQUEST],
-                $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
-            );
-        break;
-        case 'remove':
-            $handler = new Training($server->pdo);
-            $server->processingDialog(
-                [$handler,'removeSkillFromEmployee'],
-                [$_REQUEST['eid'],$_REQUEST['trid']],
-                $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
-            );
+        case 'saveTraining':
+            saveTraining();
         break;
         default:
             addSkillsDisplay();
@@ -59,44 +41,139 @@ function addSkillsDisplay () {
 
     $skills = new Training($server->pdo);
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-    $used_skills = $skills->getEmployeeTraining($_REQUEST['id']);
-    $unused_skills = $skills->getUnusedTraining($_REQUEST['id']);
-    $select = array();
-    foreach($unused_skills as $row) {
-        array_push($select,[$row['id'],$row['description']]);
-    }
-
+    $et = $skills->getEmployeeTraining($_REQUEST['id']);
     $view = $server->getViewer("HR: Add Skill Training");
-    $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
-    $view->sideDropDownMenu($submenu);
-    $view->h1(
-        "<small>Add Skills to:</small>
-        {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
-        $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
-    );
-    $form->newInlineForm();
-    $form->hiddenInput('action','add');
-    $form->hiddenInput('uid',$server->currentUserID);
-    $form->hiddenInput('eid',$_REQUEST['id']);
-    $form->inlineSelectBox('trid','Add',$select,true);
-    $form->inlineSubmit('Add');
-    $form->endInlineForm();
-
-    $view->responsiveTableStart(['Training','','Trash']);
-    foreach($used_skills as $row) {
-        echo "<tr><td>{$row['description']}</td><td>";
-        $form->newInlineForm();
-        $form->hiddenInput('action','update');
-        $form->hiddenInput('uid',$server->currentUserID);
-        $form->hiddenInput('eid',$_REQUEST['id']);
-        $form->hiddenInput('trid',$row['trid']);
-        $form->inlineInputCapture('train_date','Date',$row['train_date'],['dateISO'=>'true']);
-        $form->inlineSubmit('Update');
-        $form->endInlineForm();
-        echo "</td><td>";
-        $view->trashBtnSm("/hr/addskills?action=remove&trid={$row['trid']}&eid={$_REQUEST['id']}");
-        echo "</td></tr>\n";
+    echo 
+    '<h2>Training Change Form</h2>
+    <h3><span class="text-muted fs-6">Training for:</span><b>'.$emp->getFullName().'</b></h3>
+    <hr>
+    <div id="newContent" class="m-2">
+        <h4>Update Training Dates</h4>
+        <form id="updateDates">
+            <input type="hidden" name="action" value="updateDates" />
+            <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />';
+    foreach($et as $row) {
+        echo '<div class="mb-2">';
+        echo '<label class="form-label" for="'.$row['trid'].'">'.$row['description'].'</label>';
+        echo '<input class="form-control" type="date" name="'.$row['trid'].'" value="'.$row['train_date'].'" required />';
+        echo '</div>';
     }
-    $view->responsiveTableClose();
+    echo
+    '        <button type="button" id="topSave" class="btn btn-outline-secondary">Save Updates</button>
+        </form>
+        <hr>
+        <h4>Add New Training</h4>
+        <form id="empTraining">
+            <input type="hidden" name="action" value="saveTraining" />
+            <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />';
+    foreach($skills->getAllAvailableTraining() as $row) {
+        echo '<div class="form-check">';
+        echo '<input type="checkbox" class="form-check-input" id="'.$row['id'].'" name="training[]" value="'.$row['id'].'" ';
+        foreach($et as $training) {
+            if ($training['trid'] == $row['id']) {
+                echo "checked ";
+            }
+        }
+        echo "/>";
+        echo '<label for="'.$row['id'].'" class="form-check-label">'.$row['description'].'</lable>';
+        echo '</div>';
+    }
+    echo 
+    '       <button type="button" id="bottomSave" class="btn btn-outline-secondary">Save Changes</button>
+        </form>
+    </div>
+    <script>
+        let updateForm = document.getElementById("updateDates");
+        let theForm = document.getElementById("empTraining");
+        let tSave = document.getElementById("topSave");
+        let bSave = document.getElementById("bottomSave");
+        tSave.addEventListener("click",saveUpdates);
+        bSave.addEventListener("click",saveChanges);
+
+        async function saveUpdates(event) {
+            event.preventDefault();
+            tSave.setAttribute("disabled","disabled");
+            bSave.setAttribute("disabled","disabled");
+            tSave.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>";
+            let resp = await fetch(
+                "'.$server->config['application-root'].'/hr/addskills",
+                {method:"POST",body:new FormData(updateForm)}
+            );
+            document.getElementById("newContent").innerHTML = await resp.text();
+        }
+
+        async function saveChanges(event){
+            event.preventDefault();
+            tSave.setAttribute("disabled","disabled");
+            bSave.setAttribute("disabled","disabled");            
+            bSave.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>";
+            let resp = await fetch(
+                "'.$server->config['application-root'].'/hr/addskills",
+                {method:"POST",body:new FormData(theForm)}
+            );
+            document.getElementById("newContent").innerHTML = await resp.text();
+        }
+    </script>';
+
     $view->footer();
+}
+
+function saveTraining() {
+    global $server;
+    $pntr = $server->pdo->prepare("insert into emp_training values (:eid,:trid,now(),:uid)");
+    $training = new Training($server->pdo);
+    $existing = array();
+    foreach($training->getEmployeeTraining($_REQUEST['eid']) as $et) {
+        array_push($existing,$et['trid']);
+    }
+    $diff = array_diff($_REQUEST['training'],$existing);
+    if (!empty($diff)) {
+        $server->pdo->beginTransaction();
+        try {
+            foreach($diff as $new) {
+                if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$new,':uid'=>$server->security->secureUserID]))
+                    throw new Exception(print_r($pntr->errorInfo(),true));
+            }
+            $server->pdo->commit();
+            exit(
+                '<h6 class="text-success m-2">Update Successful</h6>
+                <button class="btn btn-outline-success" type="button" onclick="window.open(\''.$server->config['application-root'].'/hr/addskills?id='.$_REQUEST['eid'].'\',\'_self\')">
+                Back
+                </button>'
+            );
+        }
+        catch (Exception $e) {
+            $server->pdo->rollBack();
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            exit('<span class="text-monospace text-danger">There was an exception during the update, can not continue...</span>');
+        } 
+    }
+    else exit("<pre>Nothing to add</pre>");   
+    exit("<pre>Unkown Error</pre>");
+}
+
+function updateTrainingDates() {
+    global $server;
+    $pntr = $server->pdo->prepare('update emp_training set train_date = :date where trid = :trid and eid = :eid');
+    $server->pdo->beginTransaction();
+    try{
+        foreach($_REQUEST as $index=>$value) {
+            if ($index == 'action'||$index == 'eid') continue;
+            if (!$pntr->execute([':date'=>$value,':trid'=>$index,':eid'=>$_REQUEST['eid']]))
+                throw new Exception(print_r($pntr->errorInfo(),true));
+        } 
+        $server->pdo->commit();
+        exit(
+            '<h6 clas="text-success">Save updates, successful</h6>
+            <button type="button" class="btn btn-outline-success" onclick="window.open(\''.$server->config['application-root'].'/hr/addskills?id='.$_REQUEST['eid'].'\',\'_self\')">
+            Back
+            </button>'
+        );
+    }
+    catch(Exception $e) {
+        $server->pdo->rollBack();
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        exit('<pre class="text-danger">Unable to update, an exception occurred</pre>');
+    }
+    exit("<pre>Unknown error</pre>");
 }
