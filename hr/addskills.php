@@ -21,29 +21,8 @@ $server->userMustHavePermission('editSkills');
 
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
-        case 'add':
-            $handler = new Training($server->pdo);
-            $server->processingDialog(
-                [$handler,'addSkillToEmployee'],
-                [$_REQUEST],
-                $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
-            );
-        break;
-        case 'update':
-            $handler = new Training($server->pdo);
-            $server->processingDialog(
-                [$handler,'updateSkillTraining'],
-                [$_REQUEST],
-                $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
-            );
-        break;
-        case 'remove':
-            $handler = new Training($server->pdo);
-            $server->processingDialog(
-                [$handler,'removeSkillFromEmployee'],
-                [$_REQUEST['eid'],$_REQUEST['trid']],
-                $server->config['application-root']."/hr/addskills?id={$_REQUEST['eid']}"
-            );
+        case 'updateDates':
+            updateTrainingDates();
         break;
         case 'saveTraining':
             saveTraining();
@@ -71,6 +50,7 @@ function addSkillsDisplay () {
     <div id="newContent" class="m-2">
         <h4>Update Training Dates</h4>
         <form id="updateDates">
+            <input type="hidden" name="action" value="updateDates" />
             <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />';
     foreach($et as $row) {
         echo '<div class="mb-2">';
@@ -79,7 +59,7 @@ function addSkillsDisplay () {
         echo '</div>';
     }
     echo
-    '        <button type="button" id="topSave" class="btn btn-outline-secondary">Save Changes</button>
+    '        <button type="button" id="topSave" class="btn btn-outline-secondary">Save Updates</button>
         </form>
         <hr>
         <h4>Add New Training</h4>
@@ -103,17 +83,29 @@ function addSkillsDisplay () {
         </form>
     </div>
     <script>
+        let updateForm = document.getElementById("updateDates");
         let theForm = document.getElementById("empTraining");
         let tSave = document.getElementById("topSave");
         let bSave = document.getElementById("bottomSave");
-        tSave.addEventListener("click",()=>{alert("FIX ME");});
+        tSave.addEventListener("click",saveUpdates);
         bSave.addEventListener("click",saveChanges);
 
-        async function saveChanges(event){
+        async function saveUpdates(event) {
             event.preventDefault();
             tSave.setAttribute("disabled","disabled");
             bSave.setAttribute("disabled","disabled");
             tSave.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>";
+            let resp = await fetch(
+                "'.$server->config['application-root'].'/hr/addskills",
+                {method:"POST",body:new FormData(updateForm)}
+            );
+            document.getElementById("newContent").innerHTML = await resp.text();
+        }
+
+        async function saveChanges(event){
+            event.preventDefault();
+            tSave.setAttribute("disabled","disabled");
+            bSave.setAttribute("disabled","disabled");            
             bSave.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>";
             let resp = await fetch(
                 "'.$server->config['application-root'].'/hr/addskills",
@@ -158,4 +150,9 @@ function saveTraining() {
     }
     else exit("<pre>Nothing to add</pre>");   
     exit("<pre>Unkown Error</pre>");
+}
+
+function updateTrainingDates() {
+    global $server;
+    echo "<pre>",var_export($_REQUEST,true),"</pre>";
 }
