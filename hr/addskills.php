@@ -62,21 +62,34 @@ function addSkillsDisplay () {
 
     $skills = new Training($server->pdo);
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-
+    $et = $skills->getEmployeeTraining($_REQUEST['eid']);
     $view = $server->getViewer("HR: Add Skill Training");
     echo 
-    '<h2>Add Training Form</h2>
+    '<h2>Training Change Form</h2>
     <h3><span class="text-muted fs-6">Training for:</span><b>'.$emp->getFullName().'</b></h3>
     <hr>
     <div id="newContent" class="m-2">
+        <h4>Update Training Dates</h4>
+        <form id="updateDates">
+            <input type="hidden" name="eid" value="'.$_REQUEST['eid'].'" />';
+    foreach($et as $row) {
+        echo '<div class="mb-2">';
+        echo '<label class="form-label" for="'.$row['trid'].'">'.$row['description'].'</label>';
+        echo '<input type="date" name="'.$row['trid'].'" value="'.$row['train_date'].'" required />';
+        echo '</div>';
+    }
+    echo
+    '        <button type="button" id="topSave" class="btn btn-outline-secondary">Save Changes</button>
+        </form>
+        <hr>
+        <h4>Add New Training</h4>
         <form id="empTraining">
             <input type="hidden" name="action" value="saveTraining" />
-            <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
-            <button type="button" id="topSave" class="btn btn-outline-secondary">Save Changes</button>';
+            <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />';
     foreach($skills->getAllAvailableTraining() as $row) {
         echo '<div class="form-check">';
         echo '<input type="checkbox" class="form-check-input" id="'.$row['id'].'" name="training[]" value="'.$row['id'].'" ';
-        foreach($skills->getEmployeeTraining($_REQUEST['id']) as $training) {
+        foreach($et as $training) {
             if ($training['trid'] == $row['id']) {
                 echo "checked ";
             }
@@ -93,7 +106,7 @@ function addSkillsDisplay () {
         let theForm = document.getElementById("empTraining");
         let tSave = document.getElementById("topSave");
         let bSave = document.getElementById("bottomSave");
-        tSave.addEventListener("click",saveChanges);
+        tSave.addEventListener("click",()=>{alert("FIX ME");});
         bSave.addEventListener("click",saveChanges);
 
         async function saveChanges(event){
@@ -122,24 +135,27 @@ function saveTraining() {
         array_push($existing,$et['trid']);
     }
     $diff = array_diff($_REQUEST['training'],$existing);
-    $server->pdo->beginTransaction();
-    try {
-        foreach($diff as $new) {
-            if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$new,':uid'=>$server->security->secureUserID]))
-                throw new Exception(print_r($pntr->errorInfo(),true));
+    if (!empty($diff)) {
+        $server->pdo->beginTransaction();
+        try {
+            foreach($diff as $new) {
+                if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$new,':uid'=>$server->security->secureUserID]))
+                    throw new Exception(print_r($pntr->errorInfo(),true));
+            }
+            $server->pdo->commit();
+            exit(
+                '<h6 class="text-success m-2">Update Successful</h6>
+                <button class="btn btn-outline-success" type="button" onclick="window.open(\''.$server->config['application-root'].'/hr/addskills?id='.$_REQUEST['eid'].'\',\'_self\')">
+                Back
+                </button>'
+            );
         }
-        $server->pdo->commit();
-        exit(
-            '<h6 class="text-success m-2">Update Successful</h6>
-            <button class="btn btn-outline-success" type="button" onclick="window.open(\''.$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['eid'].'\',\'_self\')">
-            Back
-            </button>'
-        );
+        catch (Exception $e) {
+            $server->pdo->rollBack();
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            exit('<span class="text-monospace text-danger">There was an exception during the update, can not continue...</span>');
+        } 
     }
-    catch (Exception $e) {
-        $server->pdo->rollBack();
-        trigger_error($e->getMessage(),E_USER_WARNING);
-        exit('<span class="text-monospace text-danger">There was an exception during the update, can not continue...</span>');
-    }    
-    exit("<pre>Unkown Exception</pre>");
+    else exit("<pre>Nothing to add</pre>");   
+    exit("<pre>Unkown Error</pre>");
 }
