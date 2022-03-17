@@ -62,7 +62,7 @@ function addSkillsDisplay () {
 
     $skills = new Training($server->pdo);
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-    $et = $skills->getEmployeeTraining($_REQUEST['eid']);
+    $et = $skills->getEmployeeTraining($_REQUEST['id']);
     $view = $server->getViewer("HR: Add Skill Training");
     echo 
     '<h2>Training Change Form</h2>
