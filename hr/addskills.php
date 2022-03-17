@@ -115,6 +115,7 @@ function addSkillsDisplay () {
 
 function saveTraining() {
     global $server;
-
-    echo "<pre>",var_export([$server->security->secureUserID,$_REQUEST],true),"</pre>";
+    $training = new Training($server->pdo);
+    echo "<pre>",var_export([$training->getEmployeeTraining($_REQUEST['eid']),$_REQUEST['training']],true),"</pre>";
+    exit();
 }
