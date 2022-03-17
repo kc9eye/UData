@@ -71,7 +71,7 @@ function addSkillsDisplay () {
     <div id="newContent" class="m-2">
         <h4>Update Training Dates</h4>
         <form id="updateDates">
-            <input type="hidden" name="eid" value="'.$_REQUEST['eid'].'" />';
+            <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />';
     foreach($et as $row) {
         echo '<div class="mb-2">';
         echo '<label class="form-label" for="'.$row['trid'].'">'.$row['description'].'</label>';
