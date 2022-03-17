@@ -72,7 +72,6 @@ function addSkillsDisplay () {
         <form id="empTraining">
             <input type="hidden" name="action" value="saveTraining" />
             <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
-            <input type="hidden" name="uid" value="
             <button type="button" id="topSave" class="btn btn-outline-secondary">Save Changes</button>';
     foreach($skills->getAllAvailableTraining() as $row) {
         echo '<div class="form-check">';
@@ -116,6 +115,6 @@ function addSkillsDisplay () {
 
 function saveTraining() {
     global $server;
-    
+
     echo "<pre>",var_export([$server,$_REQUEST],true),"</pre>";
 }
