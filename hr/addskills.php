@@ -115,12 +115,30 @@ function addSkillsDisplay () {
 
 function saveTraining() {
     global $server;
+    $pntr = $server->pdo->prepare("insert into emp_training values (:eid,:trid,now(),:uid)");
     $training = new Training($server->pdo);
     $existing = array();
     foreach($training->getEmployeeTraining($_REQUEST['eid']) as $et) {
         array_push($existing,$et['trid']);
     }
     $diff = array_diff($_REQUEST['training'],$existing);
-    echo "<pre>",var_export($diff,true),"</pre>";
+    $server->pdo->beginTransaction();
+    try {
+        foreach($diff as $new) {
+            if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$new,':uid'=>$server->security->secureUserID]))
+                throw new Exception(print_r($pntr->errorInfo(),true));
+        }
+        exit(
+            '<h6 class="text-success m-2">Update Successful</h6>
+            <button class="btn btn-outline-success" type="button" onclick="window.open(\''.$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['eid'].'\',\'_self\')">
+            Back
+            </button>'
+        );
+    }
+    catch (Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        exit('<span class="text-monospace text-danger">There was an exception during the update, can not continue...</span>');
+    }
+    
     exit();
 }
