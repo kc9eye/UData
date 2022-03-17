@@ -154,5 +154,26 @@ function saveTraining() {
 
 function updateTrainingDates() {
     global $server;
-    echo "<pre>",var_export($_REQUEST,true),"</pre>";
+    $pntr = $server->pdo->prepare('update emp_training set train_date = :date where trid = :trid and eid = :eid');
+    $server->pdo->beginTransaction();
+    try{
+        foreach($_REQUEST as $index=>$value) {
+            if ($index == 'action'||$index == 'eid') continue;
+            if (!$pntr->execute([':date'=>$value,':trid'=>$index,':eid'=>$_REQUEST['eid']]))
+                throw new Exception(print_r($pntr->errorInfo(),true));
+        } 
+        $server->pdo->commit();
+        exit(
+            '<h6 clas="text-success">Save updates, successful</h6>
+            <button type="button" class="btn btn-outline-success" onclick="window.open(\''.$server->config['application-root'].'/hr/addskills?id='.$_REQUEST['eid'].'\',\'_self\')">
+            Back
+            </button>'
+        );
+    }
+    catch(Exception $e) {
+        $server->pdo->rollBack();
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        exit('<pre class="text-danger">Unable to update, an exception occurred</pre>');
+    }
+    exit("<pre>Unknown error</pre>");
 }
