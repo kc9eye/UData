@@ -65,17 +65,18 @@ function addSkillsDisplay () {
 
     $view = $server->getViewer("HR: Add Skill Training");
     echo 
-    '<h2>Training Change Form</h2>
+    '<h2>Add Training Form</h2>
     <h3><span class="text-muted fs-6">Training for:</span><b>'.$emp->getFullName().'</b></h3>
     <hr>
     <div id="newContent" class="m-2">
         <form id="empTraining">
             <input type="hidden" name="action" value="saveTraining" />
-            <input type="hidden" name="uid" value="'.$_REQUEST['id'].'" />
+            <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
+            <input type="hidden" name="uid" value="
             <button type="button" id="topSave" class="btn btn-outline-secondary">Save Changes</button>';
     foreach($skills->getAllAvailableTraining() as $row) {
         echo '<div class="form-check">';
-        echo '<input type="checkbox" class="form-check-input" id="'.$row['id'].'" name="trainging[]" value="'.$row['id'].'" ';
+        echo '<input type="checkbox" class="form-check-input" id="'.$row['id'].'" name="training[]" value="'.$row['id'].'" ';
         foreach($skills->getEmployeeTraining($_REQUEST['id']) as $training) {
             if ($training['trid'] == $row['id']) {
                 echo "checked ";
@@ -114,5 +115,7 @@ function addSkillsDisplay () {
 }
 
 function saveTraining() {
-    echo "<pre>",var_export($_REQUEST,true),"</pre>";
+    global $server;
+    
+    echo "<pre>",var_export([$server,$_REQUEST],true),"</pre>";
 }
