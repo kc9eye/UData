@@ -2,3 +2,4 @@
 /composer.*
 /phpDocumentor.phar
 /etc/config.php
+/.phpdoc/
