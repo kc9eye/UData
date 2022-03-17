@@ -75,7 +75,7 @@ function addSkillsDisplay () {
     foreach($et as $row) {
         echo '<div class="mb-2">';
         echo '<label class="form-label" for="'.$row['trid'].'">'.$row['description'].'</label>';
-        echo '<input type="date" name="'.$row['trid'].'" value="'.$row['train_date'].'" required />';
+        echo '<input class="form-control" type="date" name="'.$row['trid'].'" value="'.$row['train_date'].'" required />';
         echo '</div>';
     }
     echo
