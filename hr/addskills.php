@@ -116,5 +116,5 @@ function addSkillsDisplay () {
 function saveTraining() {
     global $server;
 
-    echo "<pre>",var_export([$server,$_REQUEST],true),"</pre>";
+    echo "<pre>",var_export([$server->security->secureUserID,$_REQUEST],true),"</pre>";
 }
