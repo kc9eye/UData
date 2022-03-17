@@ -116,6 +116,11 @@ function addSkillsDisplay () {
 function saveTraining() {
     global $server;
     $training = new Training($server->pdo);
-    echo "<pre>",var_export([$training->getEmployeeTraining($_REQUEST['eid']),$_REQUEST['training']],true),"</pre>";
+    $existing = array();
+    foreach($training->getEmployeeTraining($_REQUEST['eid']) as $et) {
+        array_push($existing,$et['trid']);
+    }
+    $diff = array_diff($_REQUEST['training'],$existing);
+    echo "<pre>",var_export($diff,true),"</pre>";
     exit();
 }
