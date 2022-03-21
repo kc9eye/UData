@@ -124,7 +124,7 @@ function saveTraining() {
     $training = new Training($server->pdo);
     $existing = array();
 
-    echo "<pre>",var_export($_REQUEST,true),"</pre>";
+    echo "<pre>",var_export($training->getEmployeeTraining($_REQUEST['eid']),true),"</pre>";
     // if (!empty($diff)) {
     //     // $server->pdo->beginTransaction();
     //     // try {
