@@ -126,8 +126,8 @@ function saveTraining() {
     foreach($training->getEmployeeTraining($_REQUEST['eid']) as $et) {
         array_push($existing,$et['trid']);
     }
-    $adds = array_diff($existing,$_REQUEST['training']);
-    $subs = array_diff($_REQUEST['training'],$existing);
+    $adds = array_diff($_REQUEST['training'],$existing);
+    $subs = array_diff($existing,$_REQUEST['training']);
     echo "<pre>",var_export(['adds'=>$adds,'subs'=>$subs],true),"</pre>";
     // if (!empty($diff)) {
     //     // $server->pdo->beginTransaction();
