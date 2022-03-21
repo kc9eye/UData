@@ -122,8 +122,7 @@ function saveTraining() {
     global $server;
     $pntr = $server->pdo->prepare("insert into emp_training values (:eid,:trid,now(),:uid)");
     $training = new Training($server->pdo);
-    echo "<pre>",var_export(array_diff($_REQUEST['training'],$training->getEmployeeTraining($_REQUEST['eid'])),true),"</pre>";
-
+    echo "<pre>",var_export($training->getEmployeeTraining($_REQUEST['eid']),true),"</pre>";
     // if (!empty($diff)) {
     //     // $server->pdo->beginTransaction();
     //     // try {
