@@ -120,36 +120,42 @@ function addSkillsDisplay () {
 
 function saveTraining() {
     global $server;
-    $pntr = $server->pdo->prepare("insert into emp_training values (:eid,:trid,now(),:uid)");
+    $addpntr = $server->pdo->prepare("insert into emp_training values (:eid,:trid,now(),:uid)");
+    $subpntr = $server->pdo->prepare("delete from emp_training where eid = :eid and trid = :trid");
     $training = new Training($server->pdo);
     $existing = array();
     foreach($training->getEmployeeTraining($_REQUEST['eid']) as $et) {
         array_push($existing,$et['trid']);
     }
-    $diff = array_diff($_REQUEST['training'],$existing);
-    if (!empty($diff)) {
-        $server->pdo->beginTransaction();
-        try {
-            foreach($diff as $new) {
-                if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$new,':uid'=>$server->security->secureUserID]))
-                    throw new Exception(print_r($pntr->errorInfo(),true));
-            }
-            $server->pdo->commit();
-            exit(
-                '<h6 class="text-success m-2">Update Successful</h6>
-                <button class="btn btn-outline-success" type="button" onclick="window.open(\''.$server->config['application-root'].'/hr/addskills?id='.$_REQUEST['eid'].'\',\'_self\')">
-                Back
-                </button>'
-            );
-        }
-        catch (Exception $e) {
-            $server->pdo->rollBack();
-            trigger_error($e->getMessage(),E_USER_WARNING);
-            exit('<span class="text-monospace text-danger">There was an exception during the update, can not continue...</span>');
-        } 
+    $adds = array_diff($_REQUEST['training'],$existing);
+    $subs = array_diff($existing,$_REQUEST['training']);
+
+    if (empty($adds)&&empty($subs)) {
+        exit("<pre>Nothing to change</pre>");
     }
-    else exit("<pre>Nothing to add</pre>");   
-    exit("<pre>Unkown Error</pre>");
+    
+    try {
+        $server->pdo->beginTransaction();
+        if (!empty($adds)) {
+            foreach($adds as $new) {
+                if (!$addpntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$new,':uid'=>$server->security->secureUserID]))
+                    throw new Exception(print_r($addpntr->errorInfo(),true));
+            }
+        }
+        if (!empty($subs)) {
+            foreach($subs as $del) {
+                if (!$subpntr->execute([':eid'=>$_REQUEST['eid'],':trid'=>$del]))
+                throw new Exception(print_r($subpntr->errorInfo(),true));
+            }
+        }
+        $server->pdo->commit();
+        exit('<pre class="text-success">Save changes</pre>');
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        exit('<pre>Unknown data excpetion</pre>');
+    }
+    exit("<pre>Unknown Exception</pre>");
 }
 
 function updateTrainingDates() {
