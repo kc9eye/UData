@@ -37,3 +37,24 @@ function editMatrix() {
 
     $view->footer();
 }
+
+function getCellList() {
+    global $server;
+    $sql =
+    'select products.description,work_cell.cell_name
+    from work_cell
+    inner join products on products.product_key = work_cell.prokey
+    where products.active is true
+    sort by products.description
+    order by products.description';
+
+    try{
+        $pntr = $server->pdo->prepare($sql);
+        if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        return false;
+    }
+}
