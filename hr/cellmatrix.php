@@ -34,7 +34,7 @@ function editMatrix() {
     $view = $server->getViewer('HR: Edit Matrix');
     $view->sideDropDownMenu($submenu);
     $view->h1("Matrix for: <small>".$emp->getFullName()."</small>");
-
+    $view->wrapInPre(getCellList());
     $view->footer();
 }
 
