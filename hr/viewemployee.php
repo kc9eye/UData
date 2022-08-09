@@ -177,6 +177,15 @@ function employeeViewDisplay () {
     else $view->bold("No training data found");
     $view->endBtnCollapse();
 
+    //Work cell Matrix
+    $view->hr();
+    $view->beginBtnCollapse("Show/Hide Matrix");
+    $heading = $server->checkPermission('editMatrix') ?
+        "Cell Matrix ".$view->editBtnSm('/hr/cellmatrix?id='.$_REQUEST['id'],true) : "Cell Matrix";
+    $view->h3($heading);
+
+    $view->endBtnCollapse();
+
     //Injuries Section
     $view->hr();
     $view->beginBtnCollapse("Show/Hide Injuries");
