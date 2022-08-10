@@ -29,19 +29,23 @@ else
 function editMatrix() {
     global $server;
     include('submenu.php');
-    $server->userMustHavePermission('viewProfiles');
+    $server->userMustHavePermission('editMatrix');
     $emp = new Employee($server->pdo,$_REQUEST['id']);
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view = $server->getViewer('HR: Edit Matrix');
     $view->sideDropDownMenu($submenu);
     $view->h1("Matrix for: <small>".$emp->getFullName()."</small>");
-    $view->wrapInPre(getCellList());
+    $form->newForm("Add Work Cell to Matrix");
+    $form->hiddenInput("eid",$_REQUEST['id']);
+    $form->hiddenInput('uid',$server->currentUserID);
+    $view->wrapInPre(print_r(getCellList(),true));
     $view->footer();
 }
 
 function getCellList() {
     global $server;
     $sql =
-    'select products.description,work_cell.cell_name
+    'select products.description,work_cell.cell_name,work_cell.id
     from work_cell
     inner join products on products.product_key = work_cell.prokey
     where products.active is true
