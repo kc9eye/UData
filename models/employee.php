@@ -128,11 +128,11 @@ class Employee {
 
     private function setMatrixData () {
         $sql =
-            'select work_cell.cell_name,cell_matrix.gen_date
+            'select work_cell.cell_name,cell_matrix.gen_date,cell_matrix.trained
             from cell_matrix
             inner join work_cell on work_cell.id = cell_matrix.cellid
             where eid = ?
-            order by gen_date asc';
+            order by gen_date desc';
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->Employee['id']])) throw new Exception("Failed to retreive matrix data.");

@@ -184,9 +184,9 @@ function employeeViewDisplay () {
         "Cell Matrix ".$view->editBtnSm('/hr/cellmatrix?id='.$_REQUEST['id'],true) : "Cell Matrix";
     $view->h3($heading);
     if (!empty($emp->Matrix)) {
-        $view->responsiveTableStart(['Work Cell','Placement Date']);
+        $view->responsiveTableStart(['Work Cell','Placement Date','Trained By']);
         foreach($emp->Matrix as $row) {
-            echo "<tr><td>{$row['cell_name']}</td><td>".$view->formatUserTimestamp($row['gen_date'],true)."</td></tr>";
+            echo "<tr><td>{$row['cell_name']}</td><td>".$view->formatUserTimestamp($row['gen_date'],true)."</td><td>{$row['trained']}</td></tr>";
         }
         $view->responsiveTableClose();
     }
