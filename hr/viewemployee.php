@@ -177,6 +177,22 @@ function employeeViewDisplay () {
     else $view->bold("No training data found");
     $view->endBtnCollapse();
 
+    //Work cell Matrix
+    $view->hr();
+    $view->beginBtnCollapse("Show/Hide Matrix");
+    $heading = $server->checkPermission('editMatrix') ?
+        "Cell Matrix ".$view->editBtnSm('/hr/cellmatrix?id='.$_REQUEST['id'],true) : "Cell Matrix";
+    $view->h3($heading);
+    if (!empty($emp->Matrix)) {
+        $view->responsiveTableStart(['Work Cell','Placement Date','Trained By']);
+        foreach($emp->Matrix as $row) {
+            echo "<tr><td>{$row['cell_name']}</td><td>".$view->formatUserTimestamp($row['gen_date'],true)."</td><td>{$row['trained']}</td></tr>";
+        }
+        $view->responsiveTableClose();
+    }
+    else $view->bold("No matrix data found");
+    $view->endBtnCollapse();
+
     //Injuries Section
     $view->hr();
     $view->beginBtnCollapse("Show/Hide Injuries");

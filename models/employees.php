@@ -615,4 +615,25 @@ class Employees extends Profiles {
         }
         return $scheduled;
     }
+
+    public function addEmployeeToMatrix($data) {
+        $sql =
+        'insert into cell_matrix values (:id,:eid,:cellid,now(),:uid,:trained)';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            $insert = [
+                ':id'=>uniqid(),
+                'eid'=>$data['eid'],
+                ':cellid'=>$data['cellid'],
+                ':uid'=>$data['uid'],
+                ':trained'=>$data['trained']
+            ];
+            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+            return true;
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return false;
+        }
+    }
 }
