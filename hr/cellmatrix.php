@@ -32,7 +32,7 @@ function editMatrix() {
     $server->userMustHavePermission('editMatrix');
     $options = [];
     foreach(getCellList() as $row) {
-        array_push($options,["{$row['description']}:{$row['cell_name']}",$row['id']]);
+        array_push($options,[$row['id'],"{$row['description']}:{$row['cell_name']}"]);
     }
     $emp = new Employee($server->pdo,$_REQUEST['id']);
     $view = $server->getViewer('HR: Edit Matrix');
