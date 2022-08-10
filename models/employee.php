@@ -128,9 +128,9 @@ class Employee {
 
     private function setMatrixData () {
         $sql =
-            'select work_cells.cell_name,cell_matrix.gen_date
+            'select work_cell.cell_name,cell_matrix.gen_date
             from cell_matrix
-            inner join work_cells on work_cells.id = cell_matrix..cellid
+            inner join work_cell on work_cell.id = cell_matrix.cellid
             where eid = ?
             order by gen_date asc';
         try {
