@@ -45,6 +45,7 @@ class Employee {
         }
         $this->setAttendanceData();
         $this->setTrainingData();
+        $this->setMatrixData();
         $this->setInjuriesData();
         $this->setCommentsData();
     }
@@ -123,6 +124,26 @@ class Employee {
             trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
+    }
+
+    private function setMatrixData () {
+        $sql =
+            'select work_cell.cell_name,cell_matrix.gen_date
+            from cell_matrix
+            inner join work_cell on work_cell.id = cell_matrix.cellid
+            where eid = ?
+            order by gen_date asc';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$this->Employee['id']])) throw new Exception("Failed to retreive matrix data.");
+            $this->Matrix = $pntr->fetchAll(PDO::FETCH_ASSOC);
+            return true;
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(), E_USER_WARNING);
+            return false;
+        }
+
     }
 
     private function setInjuriesData () {
