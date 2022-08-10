@@ -18,6 +18,13 @@ require_once(dirname(__DIR__).'/lib/init.php');
 
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
+        case "assign": 
+            $server->processingDialog(
+                [new Employees($server->pdo),'addEmployeeToMatrix'],
+                [$_REQUEST],
+                $server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['eid']
+            );
+        break;
         default:
             editMatrix();
         break;
@@ -40,6 +47,7 @@ function editMatrix() {
     $view->sideDropDownMenu($submenu);
     $view->h1("Matrix for: <small>".$emp->getFullName()."</small>");
     $form->newForm("Add Work Cell to Matrix");
+    $form->hiddenInput("action","assign");
     $form->hiddenInput("eid",$_REQUEST['id']);
     $form->hiddenInput('uid',$server->currentUserID);
     $form->selectBox("cellid","Assign Cell",$options,true);
