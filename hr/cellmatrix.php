@@ -30,6 +30,10 @@ function editMatrix() {
     global $server;
     include('submenu.php');
     $server->userMustHavePermission('editMatrix');
+    $options = [];
+    foreach(getCellList() as $row) {
+        array_push($options,["{$row['description']}:{$row['cell_name']}",$row['id']]);
+    }
     $emp = new Employee($server->pdo,$_REQUEST['id']);
     $view = $server->getViewer('HR: Edit Matrix');
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
@@ -38,7 +42,9 @@ function editMatrix() {
     $form->newForm("Add Work Cell to Matrix");
     $form->hiddenInput("eid",$_REQUEST['id']);
     $form->hiddenInput('uid',$server->currentUserID);
-    $view->wrapInPre(print_r(getCellList(),true));
+    $form->selectBox("cellid","Assign Cell",$options,true);
+    $form->submitForm("Assign");
+    $form->endForm();
     $view->footer();
 }
 
