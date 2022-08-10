@@ -186,7 +186,7 @@ function employeeViewDisplay () {
     if (!empty($emp->Matrix)) {
         $view->responsiveTableStart(['Work Cell','Placement Date']);
         foreach($emp->Matrix as $row) {
-            echo "<tr><td>{$row['cell_name']}</td><td>".$view->formatUserTimestamp($row['gen_date'])."</td></tr>";
+            echo "<tr><td>{$row['cell_name']}</td><td>".$view->formatUserTimestamp($row['gen_date'],true)."</td></tr>";
         }
         $view->responsiveTableClose();
     }
