@@ -132,7 +132,7 @@ class Employee {
             from cell_matrix
             inner join work_cell on work_cell.id = cell_matrix.cellid
             where eid = ?
-            order by gen_date asc';
+            order by gen_date desc';
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->Employee['id']])) throw new Exception("Failed to retreive matrix data.");

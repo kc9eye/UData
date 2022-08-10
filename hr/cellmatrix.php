@@ -51,6 +51,7 @@ function editMatrix() {
     $form->hiddenInput("eid",$_REQUEST['id']);
     $form->hiddenInput('uid',$server->currentUserID);
     $form->selectBox("cellid","Assign Cell",$options,true);
+    $form->inputCapture("trained","Trained By");
     $form->submitForm("Assign");
     $form->endForm();
     $view->footer();

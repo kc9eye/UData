@@ -618,14 +618,15 @@ class Employees extends Profiles {
 
     public function addEmployeeToMatrix($data) {
         $sql =
-        'insert into cell_matrix values (:id,:eid,:cellid,now(),:uid)';
+        'insert into cell_matrix values (:id,:eid,:cellid,now(),:uid,:trained)';
         try {
             $pntr = $this->dbh->prepare($sql);
             $insert = [
                 ':id'=>uniqid(),
                 'eid'=>$data['eid'],
                 ':cellid'=>$data['cellid'],
-                ':uid'=>$data['uid']
+                ':uid'=>$data['uid'],
+                ':trained'=>$data['trained']
             ];
             if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             return true;

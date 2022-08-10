@@ -48,10 +48,24 @@ function getData() {
     try {
         $pntr = $server->pdo->prepare($sql);
         if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
-        return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        $emps = $pntr->fetchAll(PDO::FETCH_ASSOC);
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
         return "NOPE";
+    }
+
+    $sql =
+    'select *
+    from cell_matrix
+    where eid = ?
+    order by gen_date desc
+    limit 1';
+    $pntr = $server->pdo->prepare($sql);
+    foreach($emps as $row) {
+        try {
+            if (!$pntr->execute($row['id'])) throw new Exception(print_r($pntr->errorInfo(),true));
+            
+        }
     }
 }
