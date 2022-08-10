@@ -29,7 +29,7 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    $view->wrapInPre(getData());
+    $view->wrapInPre(var_export(getData(),true));
     $view->footer();
 }
 
