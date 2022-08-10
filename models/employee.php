@@ -128,7 +128,7 @@ class Employee {
 
     private function setMatrixData () {
         $sql =
-            'select work_cell.cell_name,cell_matrix.gen_date
+            'select work_cell.cell_name,cell_matrix.gen_date,cell_matrix.trained
             from cell_matrix
             inner join work_cell on work_cell.id = cell_matrix.cellid
             where eid = ?
