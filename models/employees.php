@@ -618,7 +618,7 @@ class Employees extends Profiles {
 
     public function addEmployeeToMatrix($data) {
         $sql =
-        'insert into cell_matirx values (:id,:eid,:cellid,now(),:uid)';
+        'insert into cell_matrix values (:id,:eid,:cellid,now(),:uid)';
         try {
             $pntr = $this->dbh->prepare($sql);
             $insert = [
