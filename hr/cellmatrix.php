@@ -49,7 +49,7 @@ function getCellList() {
     from work_cell
     inner join products on products.product_key = work_cell.prokey
     where products.active is true
-    sort by products.description
+    group by products.description,work_cell.cell_name,work_cell.id
     order by products.description';
 
     try{
