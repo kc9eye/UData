@@ -43,7 +43,8 @@ function getData() {
         employees.id
     from employees
     inner join profiles on profiles.id = employees.pid
-    where employees.end_date is null';
+    where employees.end_date is null
+    order by profiles.last asc';
     try {
         $pntr = $server->pdo->prepare($sql);
         if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
