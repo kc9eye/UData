@@ -31,8 +31,8 @@ function editMatrix() {
     include('submenu.php');
     $server->userMustHavePermission('editMatrix');
     $emp = new Employee($server->pdo,$_REQUEST['id']);
-    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view = $server->getViewer('HR: Edit Matrix');
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->sideDropDownMenu($submenu);
     $view->h1("Matrix for: <small>".$emp->getFullName()."</small>");
     $form->newForm("Add Work Cell to Matrix");
