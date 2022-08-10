@@ -29,6 +29,28 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-
+    $view->wrapInPre(getData());
     $view->footer();
+}
+
+function getData() {
+    global $server;
+    $sql = 
+    'select 
+        profiles.first,
+        profiles.middle,
+        profiles.last,
+        employees.id
+    from employees
+    inner join profiles on profiles.id = employees.pid
+    where employees.end_date is null';
+    try {
+        $pntr = $server->pdo->prepare($sql);
+        if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        return "NOPE";
+    }
 }
