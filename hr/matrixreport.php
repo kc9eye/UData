@@ -29,43 +29,63 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    $view->wrapInPre(var_export(getData(),true));
+    $matrix = array();
+    $employees = getEmployees();
+    foreach($employees as $row) {
+        array_push($matrix, getEmployeeMatrix($row['id']));
+    }
+    $view->wrapInPre(print_r($matrix,true));
     $view->footer();
 }
 
-function getData() {
+function getProducts() {
     global $server;
-    $sql = 
-    'select 
-        profiles.first,
-        profiles.middle,
-        profiles.last,
-        employees.id
-    from employees
-    inner join profiles on profiles.id = employees.pid
-    where employees.end_date is null
-    order by profiles.last asc';
+    $pntr = $server->pdo->prepare("select * from products where active is true");
     try {
-        $pntr = $server->pdo->prepare($sql);
         if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
-        $emps = $pntr->fetchAll(PDO::FETCH_ASSOC);
+        return $pntr->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch (Exception $e) {
+        trigger_error($e->getMessage(), E_USER_WARNING);
+        return false;
+    }
+}
+
+function getProductWorkCells($prokey) {
+    global $server;
+    $pntr = $server->pdo->prepare("select * from work_cell where prokey = ?");
+    try {
+        if (!$pntr->execute([$prokey])) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch (Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        return false;
+    }
+}
+
+function getEmployees() {
+    global $server;
+    $pntr = $server->pdo->prepare("select * from employees where end_date is null");
+    try {
+        if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetchAll(PDO::FETCH_ASSOC);
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
-        return "NOPE";
+        return false;
     }
+}
 
-    $sql =
-    'select *
-    from cell_matrix
-    where eid = ?
-    order by gen_date desc
-    limit 1';
-    $pntr = $server->pdo->prepare($sql);
-    foreach($emps as $row) {
-        try {
-            if (!$pntr->execute($row['id'])) throw new Exception(print_r($pntr->errorInfo(),true));
-            
-        }
+function getEmployeeMatrix($eid) {
+    global $server;
+    $pntr = $server->pdo->prepare("select * from cell_matrix where eid = ? order by gen_date desc limit 1");
+    try {
+        if (!$pntr->execute([$eid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetch(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        return false;
     }
 }
