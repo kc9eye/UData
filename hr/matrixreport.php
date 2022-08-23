@@ -30,24 +30,23 @@ function displayReport() {
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
     $labor = array();
-    $indirect = array();
     foreach(getEmployees() as $person) {
         array_push($labor,getEmployeeMatrix($person['id']));
     }
     foreach(getProducts() as $product) {
-        $temp = getProductWorkCells($product['product_key']);
-        foreach($temp as $cell) {
+        $final = array();
+        foreach(getProductWorkCells($product['product_key']) as $cell) {
             $cell['labor'] = array();
             foreach($labor as $person) {
-                if (empty($person))
-                    array_push($indirect,$person);
-                else if ($person['cellid'] == $cell['id'])
-                    array_push($cell['labor'],$person);
+                if (!empty($person))
+                    if ($person['cellid'] == $cell['id'])
+                        array_push($cell['labor'],$person);
             }
+            array_push($final, $cell);
         }
-        $matrix[$product['description']] = $temp;
+        $matrix[$product['description']] = $final;
     }
-    $matrix['indirect'] = $indirect;
+
     $view->wrapInPre(print_r($matrix,true));
     $view->footer();
 }
