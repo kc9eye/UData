@@ -42,7 +42,8 @@ function displayReport() {
                 if (!empty($cell['labor'])) {
                     echo "<ul>";
                     foreach($cell['labor'] as $person) {
-                        echo "<li>".getEmployeeName($person['eid'])."</li>";
+                        $name = getEmployeeName($person['eid']);
+                        echo "<li>{$name['first']} {$name['last']}</li>";
                     }
                     echo "</ul>";
                 }
