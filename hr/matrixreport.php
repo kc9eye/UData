@@ -33,26 +33,27 @@ function displayReport() {
     $view->sideDropDownMenu($submenu);
     $matrix = getMatrix();
     foreach($matrix as $index => $value) {
-        if (!empty($value) && $index != "indirect") 
-            $view->h3($index);
-            // $view->responsiveTableStart();
-            foreach($value as $cell) {
-                $view->wrapInPre(print_r($cell,true));
-                // echo "<tr><th>{$cell['cell_name']}</th></tr>";
-                // echo "<tr><td>";
-                // if (!empty($cell['labor'])) {
-                //     echo "<ul>";
-                //     foreach($cell['labor'] as $person) {
-                //         $name = getEmployeeName($person['eid']);
-                //         echo "<li>{$name['first']} {$name['last']}</li>";
-                //     }
-                //     echo "</ul>";
-                // }
-                // else
-                //     echo "None Assigned";
-                // echo "</td></tr>";
-            }
-            // $view->responsiveTableClose();
+        if ($index != 'indirect')
+            if (!empty($value)) 
+                $view->h3($index);
+                // $view->responsiveTableStart();
+                foreach($value as $cell) {
+                    $view->wrapInPre(print_r($cell,true));
+                    // echo "<tr><th>{$cell['cell_name']}</th></tr>";
+                    // echo "<tr><td>";
+                    // if (!empty($cell['labor'])) {
+                    //     echo "<ul>";
+                    //     foreach($cell['labor'] as $person) {
+                    //         $name = getEmployeeName($person['eid']);
+                    //         echo "<li>{$name['first']} {$name['last']}</li>";
+                    //     }
+                    //     echo "</ul>";
+                    // }
+                    // else
+                    //     echo "None Assigned";
+                    // echo "</td></tr>";
+                }
+                // $view->responsiveTableClose();
     }
     $view->h3("Indirect");
     echo "<ul>";
