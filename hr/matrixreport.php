@@ -120,6 +120,7 @@ function getEmployeeMatrix($eid) {
 function getMatrix() {
     $labor = array();
     $indirect = array();
+    $matrix = array();
     foreach(getEmployees() as $person) {
         $matrix = getEmployeeMatrix($person['id']);
         if (empty($matrix)) {
@@ -130,7 +131,6 @@ function getMatrix() {
     }
     foreach(getProducts() as $product) {
         $final = array();
-        $matrix = array();
         foreach(getProductWorkCells($product['product_key']) as $cell) {
             $cell['labor'] = array();
             foreach($labor as $person) {
