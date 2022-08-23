@@ -38,7 +38,7 @@ function displayReport() {
             $view->responsiveTableStart();
             foreach($product['cells'] as $cell) {
                 echo "<tr><th>{$cell['cell_name']}</th></tr>";
-                echo "<td><td>";
+                echo "<tr><td>";
                 if (!empty($cell['labor'])) {
                     echo "<ul class='list-group'>";
                     foreach($cell['labor'] as $labor) {
