@@ -30,7 +30,7 @@ function displayReport() {
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
     foreach(getMatrix() as $index => $value) {
-        $view->h3($index);
+        if (!empty($value)) $view->h3($index);
     }
     $view->footer();
 }
