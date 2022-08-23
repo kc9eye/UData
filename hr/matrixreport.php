@@ -130,6 +130,7 @@ function getMatrix() {
     }
     foreach(getProducts() as $product) {
         $final = array();
+        $matrix = array();
         foreach(getProductWorkCells($product['product_key']) as $cell) {
             $cell['labor'] = array();
             foreach($labor as $person) {
@@ -139,9 +140,9 @@ function getMatrix() {
             }
             array_push($final, $cell);
         }
-        $matrix[$product['description']] = $final;
+        array_push($matrix,['product'=>$product['description'],'cells'=>$final]);
     }
-    $matrix['indirect'] = $indirect;
+    array_push($matrix,['product' =>"indirect",'cells'=>$indirect]);
     return $matrix;
 }
 
