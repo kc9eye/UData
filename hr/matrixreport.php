@@ -32,7 +32,24 @@ function displayReport() {
     $view = $server->getViewer("Employee Matrix");
     $view->sideDropDownMenu($submenu);
     foreach(getMatrix() as $index => $value) {
-        if (!empty($value)) $view->h3($index);
+        if (!empty($value)) 
+            $view->h3($index);
+            $view->responsiveTableStart();
+            foreach($value as $cell) {
+                echo "<tr><th>{$cell['cell_name']}</th></tr>";
+                echo "<tr><td>";
+                if (!empty($value['labor'])) {
+                    echo "<ul>";
+                    foreach($cell['labor'] as $person) {
+                        echo "<li>".getEmployeeName($person['eid'])."</li>";
+                    }
+                    echo "</ul>";
+                }
+                else
+                    echo "None Assigned";
+                echo "</td></tr>";
+            }
+            $view->responsiveTableClose();
     }
     $view->footer();
 }
