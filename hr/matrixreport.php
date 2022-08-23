@@ -33,7 +33,7 @@ function displayReport() {
     $view->sideDropDownMenu($submenu);
     $matrix = getMatrix();
     foreach($matrix as $index => $value) {
-        if (!empty($value) && $index != "Indirect") 
+        if (!empty($value) && $index != "indirect") 
             $view->h3($index);
             $view->responsiveTableStart();
             foreach($value as $cell) {
