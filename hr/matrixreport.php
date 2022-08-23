@@ -29,7 +29,9 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    $view->wrapInPre(print_r(getMatrix(),true));
+    foreach(getMatrix() as $index => $value) {
+        $view->h3($index);
+    }
     $view->footer();
 }
 
