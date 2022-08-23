@@ -36,19 +36,21 @@ function displayReport() {
             $view->h3($index);
             $view->responsiveTableStart();
             foreach($value as $cell) {
-                echo "<tr><td><pre>",print_r($cell,true),"</pre></td></tr>";
-                // echo "<tr><th>{$cell['cell_name']}</th></tr>";
-                // echo "<tr><td>";
-                // if (!empty($value['labor'])) {
-                //     echo "<ul>";
-                //     foreach($cell['labor'] as $person) {
-                //         echo "<li>".getEmployeeName($person['eid'])."</li>";
-                //     }
-                //     echo "</ul>";
-                // }
-                // else
-                //     echo "None Assigned";
-                // echo "</td></tr>";
+                // echo "<tr><td><pre>",print_r($cell,true),"</pre></td></tr>";
+                echo "<tr><th>";
+                echo (String) $cell['cell_name'];
+                echo "</th></tr>";
+                echo "<tr><td>";
+                if (!empty($value['labor'])) {
+                    echo "<ul>";
+                    foreach($cell['labor'] as $person) {
+                        echo "<li>".getEmployeeName($person['eid'])."</li>";
+                    }
+                    echo "</ul>";
+                }
+                else
+                    echo "None Assigned";
+                echo "</td></tr>";
             }
             $view->responsiveTableClose();
     }
