@@ -37,9 +37,9 @@ function displayReport() {
             $view->h3($index);
             $view->responsiveTableStart();
             foreach($value as $cell) {
-                // echo "<tr><th>{$cell['cell_name']}</th></tr>";
+                echo "<tr><th>{$cell['cell_name']}</th></tr>";
                 echo "<tr><td>";
-                if (!empty($value['labor'])) {
+                if (!empty($cell['labor'])) {
                     echo "<ul>";
                     foreach($cell['labor'] as $person) {
                         echo "<li>".getEmployeeName($person['eid'])."</li>";
