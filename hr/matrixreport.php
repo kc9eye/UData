@@ -30,6 +30,7 @@ function displayReport() {
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
     $labor = array();
+    $indirect = array();
     foreach(getEmployees() as $person) {
         array_push($labor,getEmployeeMatrix($person['id']));
     }
@@ -38,7 +39,9 @@ function displayReport() {
         foreach($temp as $cell) {
             $cell['labor'] = array();
             foreach($labor as $person) {
-                if ($person['cid'] == $cell['id'])
+                if (empty($person))
+                    array_push($indirect,$person);
+                else if ($person['cid'] == $cell['id'])
                     array_push($cell['labor'],$person);
             }
         }
