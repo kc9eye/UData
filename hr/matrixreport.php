@@ -29,9 +29,20 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    $matrix['indirect'] = array();
+    $labor = array();
+    foreach(getEmployees() as $person) {
+        array_push($labor,getEmployeeMatrix($person['id']));
+    }
     foreach(getProducts() as $product) {
-        $matrix[$product['description']] = getProductWorkCells($product['product_key']);
+        $temp = getProductWorkCells($product['product_key']);
+        foreach($temp as $cell) {
+            $cell['labor'] = array();
+            foreach($labor as $person) {
+                if ($person['cid'] == $cell['id'])
+                    array_push($cell['labor'],$person);
+            }
+        }
+        $matrix[$product['description']] = $temp;
     }
     $view->wrapInPre(print_r($matrix,true));
     $view->footer();
@@ -78,7 +89,7 @@ function getEmployees() {
 
 function getEmployeeMatrix($eid) {
     global $server;
-    $pntr = $server->pdo->prepare("select * from cell_matrix where eid = ? order by gen_date desc limit 1");
+    $pntr = $server->pdo->prepare('select * from cell_matrix where eid = ? order by gen_date desc limit 1');
     try {
         if (!$pntr->execute([$eid])) throw new Exception(print_r($pntr->errorInfo(),true));
         return $pntr->fetch(PDO::FETCH_ASSOC);
