@@ -29,8 +29,6 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    
-
     $view->wrapInPre(print_r(getMatrix(),true));
     $view->footer();
 }
@@ -89,8 +87,11 @@ function getEmployeeMatrix($eid) {
 
 function getMatrix() {
     $labor = array();
+    $indirect = array();
     foreach(getEmployees() as $person) {
-        array_push($labor,getEmployeeMatrix($person['id']));
+        $matrix = getEmployeeMatrix($person['id']);
+        if (empty($matrix)) array_push($indirect,$matrix);
+        else array_push($labor,$matrix);
     }
     foreach(getProducts() as $product) {
         $final = array();
@@ -105,5 +106,24 @@ function getMatrix() {
         }
         $matrix[$product['description']] = $final;
     }
+    $matrix['indirect'] = $indirect;
     return $matrix;
+}
+
+function getEmployeeName($eid) {
+    global $server;
+    $sql =
+    'select profiles.first,profiles.last
+    from employees
+    inner join profiles on profiles.id = employees.pid
+    where employees.id = ?';
+    $pntr = $server->pdo->prepare($sql);
+    try {
+        if (!$pntr->execute([$eid])) throw new Exception(print_r($pntr->errorInfo(),true));
+        return $pntr->fetch(PDO::FETCH_ASSOC);
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        return false;
+    }
 }
