@@ -47,6 +47,7 @@ function displayReport() {
         }
         $matrix[$product['description']] = $temp;
     }
+    $matrix['indirect'] = $indirect;
     $view->wrapInPre(print_r($matrix,true));
     $view->footer();
 }
