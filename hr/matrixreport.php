@@ -35,6 +35,11 @@ function displayReport() {
     foreach($matrix as $product) {
         if ($product['product'] != "indirect" && !empty($product['cells'])) {
             $view->h3($product['product']);
+            $view->responsiveTableStart();
+            foreach($product['cells'] as $cell) {
+                echo "<tr><th>{$cell['cell_name']}</th></tr>";
+            }
+            $view->responsiveTableClose();
         }
     } 
 
