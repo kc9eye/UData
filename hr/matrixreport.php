@@ -121,14 +121,16 @@ function getMatrix() {
     $labor = array();
     $indirect = array();
     $matrix = array();
+
     foreach(getEmployees() as $person) {
         $ass = getEmployeeMatrix($person['id']);
-        if (empty($matrix)) {
+        if (empty($ass)) {
             $emp = getEmployeeName($person['id']);
             array_push($indirect,"{$emp['first']} {$emp['last']}");
         }
         else array_push($labor,$ass);
     }
+
     foreach(getProducts() as $product) {
         $final = array();
         foreach(getProductWorkCells($product['product_key']) as $cell) {
@@ -142,6 +144,7 @@ function getMatrix() {
         }
         array_push($matrix,['product'=>$product['description'],'cells'=>$final]);
     }
+
     array_push($matrix,['product' =>"indirect",'cells'=>$indirect]);
     return $matrix;
 }
