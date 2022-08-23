@@ -29,10 +29,9 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    $matrix = array();
-    $employees = getEmployees();
-    foreach($employees as $row) {
-        array_push($matrix, getEmployeeMatrix($row['id']));
+    $matrix['indirect'] = array();
+    foreach(getProducts() as $product) {
+        $matrix[$product['description']] = getProductWorkCells($product['product_key']);
     }
     $view->wrapInPre(print_r($matrix,true));
     $view->footer();
