@@ -51,7 +51,19 @@ function displayReport() {
             }
             $view->responsiveTableClose();
         }
-    } 
+    }
+    
+    $view->hr();
+    $view->h3("Indirect (unassigned)");
+    echo "<ul class='list-group'>";
+    foreach($matrix as $product) {
+        if ($product['product'] == "indirect") {
+            foreach($product['cells'] as $labor) {
+                echo "<li class='list-group-item'>{$labor}</li>";
+            }
+        }
+    }
+    echo "</ul>";
 
     // $view->wrapInPre(print_r(getMatrix(),true));
     $view->footer();
