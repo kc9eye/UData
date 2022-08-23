@@ -122,12 +122,12 @@ function getMatrix() {
     $indirect = array();
     $matrix = array();
     foreach(getEmployees() as $person) {
-        $matrix = getEmployeeMatrix($person['id']);
+        $ass = getEmployeeMatrix($person['id']);
         if (empty($matrix)) {
             $emp = getEmployeeName($person['id']);
             array_push($indirect,"{$emp['first']} {$emp['last']}");
         }
-        else array_push($labor,$matrix);
+        else array_push($labor,$ass);
     }
     foreach(getProducts() as $product) {
         $final = array();
