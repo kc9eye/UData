@@ -90,7 +90,10 @@ function getMatrix() {
     $indirect = array();
     foreach(getEmployees() as $person) {
         $matrix = getEmployeeMatrix($person['id']);
-        if (empty($matrix)) array_push($indirect,$matrix);
+        if (empty($matrix)) {
+            $emp = getEmployeeName($person['id']);
+            array_push($indirect,"{$emp['first']} {$emp['last']}");
+        }
         else array_push($labor,$matrix);
     }
     foreach(getProducts() as $product) {
