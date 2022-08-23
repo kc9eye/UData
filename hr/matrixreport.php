@@ -29,25 +29,9 @@ function displayReport() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
-    $labor = array();
-    foreach(getEmployees() as $person) {
-        array_push($labor,getEmployeeMatrix($person['id']));
-    }
-    foreach(getProducts() as $product) {
-        $final = array();
-        foreach(getProductWorkCells($product['product_key']) as $cell) {
-            $cell['labor'] = array();
-            foreach($labor as $person) {
-                if (!empty($person))
-                    if ($person['cellid'] == $cell['id'])
-                        array_push($cell['labor'],$person);
-            }
-            array_push($final, $cell);
-        }
-        $matrix[$product['description']] = $final;
-    }
+    
 
-    $view->wrapInPre(print_r($matrix,true));
+    $view->wrapInPre(print_r(getMatrix(),true));
     $view->footer();
 }
 
@@ -101,4 +85,25 @@ function getEmployeeMatrix($eid) {
         trigger_error($e->getMessage(),E_USER_WARNING);
         return false;
     }
+}
+
+function getMatrix() {
+    $labor = array();
+    foreach(getEmployees() as $person) {
+        array_push($labor,getEmployeeMatrix($person['id']));
+    }
+    foreach(getProducts() as $product) {
+        $final = array();
+        foreach(getProductWorkCells($product['product_key']) as $cell) {
+            $cell['labor'] = array();
+            foreach($labor as $person) {
+                if (!empty($person))
+                    if ($person['cellid'] == $cell['id'])
+                        array_push($cell['labor'],$person);
+            }
+            array_push($final, $cell);
+        }
+        $matrix[$product['description']] = $final;
+    }
+    return $matrix;
 }
