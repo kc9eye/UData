@@ -34,21 +34,21 @@ function displayReport() {
     foreach(getEmployees() as $person) {
         array_push($labor,getEmployeeMatrix($person['id']));
     }
-    foreach(getProducts() as $product) {
-        $temp = getProductWorkCells($product['product_key']);
-        foreach($temp as $cell) {
-            $cell['labor'] = array();
-            foreach($labor as $person) {
-                if (empty($person))
-                    array_push($indirect,$person);
-                else if ($person['cid'] == $cell['id'])
-                    array_push($cell['labor'],$person);
-            }
-        }
-        $matrix[$product['description']] = $temp;
-    }
+    // foreach(getProducts() as $product) {
+    //     $temp = getProductWorkCells($product['product_key']);
+    //     foreach($temp as $cell) {
+    //         $cell['labor'] = array();
+    //         foreach($labor as $person) {
+    //             if (empty($person))
+    //                 array_push($indirect,$person);
+    //             else if ($person['cid'] == $cell['id'])
+    //                 array_push($cell['labor'],$person);
+    //         }
+    //     }
+    //     $matrix[$product['description']] = $temp;
+    // }
     $matrix['indirect'] = $indirect;
-    $view->wrapInPre(print_r($matrix,true));
+    $view->wrapInPre(print_r($labor,true));
     $view->footer();
 }
 
