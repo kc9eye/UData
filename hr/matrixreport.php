@@ -27,8 +27,10 @@ else
 
 function displayReport() {
     global $server;
+    include('submenu.php');
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
+    $view->sideDropDownMenu($submenu);
     foreach(getMatrix() as $index => $value) {
         if (!empty($value)) $view->h3($index);
     }
