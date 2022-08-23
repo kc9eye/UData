@@ -31,15 +31,13 @@ function displayReport() {
     $server->userMustHavePermission('viewProfiles');
     $view = $server->getViewer("Employee Matrix");
     $view->sideDropDownMenu($submenu);
-    foreach(getMatrix() as $index => $value) {
-        if (!empty($value)) 
+    $matrix = getMatrix();
+    foreach($matrix as $index => $value) {
+        if (!empty($value) && $index != "Indirect") 
             $view->h3($index);
             $view->responsiveTableStart();
             foreach($value as $cell) {
-                // echo "<tr><td><pre>",print_r($cell,true),"</pre></td></tr>";
-                echo "<tr><th>";
-                echo (String) $cell['cell_name'];
-                echo "</th></tr>";
+                echo "<tr><th>{$cell['cell_name']}</th></tr>";
                 echo "<tr><td>";
                 if (!empty($value['labor'])) {
                     echo "<ul>";
@@ -54,6 +52,12 @@ function displayReport() {
             }
             $view->responsiveTableClose();
     }
+    $view->h3("Indirect");
+    echo "<ul>";
+    foreach($matrix['indirect'] as $person) {
+        echo "<li>{$person}</li>";
+    }
+    echo "</ul>";
     // $view->wrapInPre(print_r(getMatrix(),true));
     $view->footer();
 }
@@ -134,7 +138,7 @@ function getMatrix() {
         }
         $matrix[$product['description']] = $final;
     }
-    $matrix['Indirect'] = $indirect;
+    $matrix['indirect'] = $indirect;
     return $matrix;
 }
 
