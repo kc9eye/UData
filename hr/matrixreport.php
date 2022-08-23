@@ -33,7 +33,7 @@ function displayReport() {
     $view->sideDropDownMenu($submenu);
     $matrix = getMatrix();
     foreach($matrix as $product) {
-        if ($product['product'] != "indirect") {
+        if ($product['product'] != "indirect" && !empty($product['cells'])) {
             $view->h3($product['product']);
         }
     } 
