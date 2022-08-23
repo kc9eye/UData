@@ -111,7 +111,7 @@ function getMatrix() {
         }
         $matrix[$product['description']] = $final;
     }
-    $matrix['indirect'] = $indirect;
+    $matrix['Indirect'] = $indirect;
     return $matrix;
 }
 
