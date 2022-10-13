@@ -37,7 +37,11 @@ class scheduledreviews implements Service {
         $this->server->currentUserID = 'cron';
         foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
             if (empty($row)) break;
-            elseif (!$employees->initiateReview($this->server,$row['eid'])) return false;
+            else {
+                if (!$employees->initiateReview($this->server,$row['eid'])) return false;
+                $pntr = $this->server->pdo->prepare("delete from scheduled_reviews where id = :id");
+                if (!$pntr->execute([$row['id']])) trigger_error(print_r($pntr->errorInfo(),true));
+            }
         }
         return true;
     }
