@@ -224,6 +224,27 @@ class Employee {
         }
     }
 
+    public function getAttendanceOcurrences() {
+        $sql = 
+        'select count(*)
+        from missed_time
+        where 
+            to_tsquery(\'absence | late | left | tardy\')
+            @@
+            to_tsvector(description)
+        and
+            eid = ?';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$this->eid])) throw new Exception(print_r($pntr->errorIfno(),true));
+            return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return null;
+        }
+    }
+
     /**
      * Returns the image file name of the employee
      * @return String The image's disk filename
