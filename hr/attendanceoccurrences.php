@@ -17,9 +17,9 @@
 require(dirname(__DIR__).'/lib/init.php');
 $server->userMustHavePermission("viewProfiles");
 include('submenu.php');
-$view = $server->getViewer('HR: Employee Profile',$pageOptions);
-    $view->sideDropDownMenu($submenu);
-    $view->h1("Attendance Occurrences");
+$view = $server->getViewer('HR: Employee Profile');
+$view->sideDropDownMenu($submenu);
+$view->h1("Attendance Occurrences");
 try {
     $eids = $server->pdo->query(
         'select employees.id 
@@ -42,4 +42,4 @@ try {
 catch (Exception $e) {
     trigger_error($e->getMessage(),E_USER_ERROR);
 }
-$view->footer():
+$view->footer();
