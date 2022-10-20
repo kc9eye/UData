@@ -18,7 +18,7 @@ require(dirname(__DIR__).'/lib/init.php');
 $server->userMustHavePermission("viewProfiles");
 try {
     $eids = $server->pdo->query(
-        'select id 
+        'select employees.id 
         from employees
         inner join profiles on profiles.id = employees.pid 
         where end_date is null
