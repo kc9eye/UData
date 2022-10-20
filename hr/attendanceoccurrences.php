@@ -25,7 +25,7 @@ try {
         order by profiles.last desc'
     );
     echo "<pre>";
-    foreach($eids as $row) {
+    foreach($eids->fetchAll(PDO::FETCH_ASSOC) as $row) {
         $emp = new Employee($server->pdo,$row['id']);
         echo $emp->getFullName()," ",$emp->getAttendanceOcurrences()[0]['count'],"\n"; 
     }
