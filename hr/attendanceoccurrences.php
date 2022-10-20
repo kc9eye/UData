@@ -21,7 +21,7 @@ try {
         'select id from employees where end_date is null'
     );
     foreach($eids as $row) {
-        $emp = new Employee($row['id']);
+        $emp = new Employee($server->pdo,$row['id']);
         echo $emp->getFullName()," ",$emp->getAttendanceOcurrences(),"\n"; 
     }
 }
