@@ -22,10 +22,10 @@ try {
         from employees
         inner join profiles on profiles.id = employees.pid 
         where end_date is null
-        order by profiles.last desc'
+        order by profiles.last asc'
     );
     echo "<pre>";
-    foreach($eids->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    foreach($eids as $row) {
         $emp = new Employee($server->pdo,$row['id']);
         echo $emp->getFullName()," ",$emp->getAttendanceOcurrences()[0]['count'],"\n"; 
     }
