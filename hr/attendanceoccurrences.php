@@ -16,6 +16,10 @@
  */
 require(dirname(__DIR__).'/lib/init.php');
 $server->userMustHavePermission("viewProfiles");
+include('submenu.php');
+$view = $server->getViewer('HR: Employee Profile',$pageOptions);
+    $view->sideDropDownMenu($submenu);
+    $view->h1("Attendance Occurrences");
 try {
     $eids = $server->pdo->query(
         'select employees.id 
@@ -24,13 +28,18 @@ try {
         where end_date is null
         order by profiles.last asc'
     );
-    echo "<pre>";
+    $view->responsiveTableStart();
     foreach($eids as $row) {
         $emp = new Employee($server->pdo,$row['id']);
-        echo $emp->getFullName()," ",$emp->getAttendanceOcurrences()[0]['count'],"\n"; 
+        echo
+        '<tr>
+            <td><a href="'.$view->PageData['approot'].'/hr/viewemployee?id='.$row['id'].'">'.$emp->getFullName().'</a></td>
+            <td>'.$emp->getAttendanceOcurrences().'</td>
+        </tr>';
     }
-    echo "</pre>";
+    $view->responsiveTableClose();
 }
 catch (Exception $e) {
     trigger_error($e->getMessage(),E_USER_ERROR);
 }
+$view->footer():
