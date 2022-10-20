@@ -18,7 +18,11 @@ require(dirname(__DIR__).'/lib/init.php');
 $server->userMustHavePermission("viewProfiles");
 try {
     $eids = $server->pdo->query(
-        'select id from employees where end_date is null'
+        'select id 
+        from employees
+        inner join profiles on profiles.id = employees.pid 
+        where end_date is null
+        order by profiles.last desc'
     );
     echo "<pre>";
     foreach($eids as $row) {
