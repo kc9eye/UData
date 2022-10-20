@@ -34,7 +34,7 @@ try {
         echo
         '<tr>
             <td><a href="'.$view->PageData['approot'].'/hr/viewemployee?id='.$row['id'].'">'.$emp->getFullName().'</a></td>
-            <td>'.$emp->getAttendanceOcurrences().'</td>
+            <td>'.$emp->getAttendanceOcurrences()[0]['count'].'</td>
         </tr>';
     }
     $view->responsiveTableClose();
