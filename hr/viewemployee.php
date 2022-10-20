@@ -140,7 +140,7 @@ function employeeViewDisplay () {
     });\n</script>";
     if (!empty($emp->Attendance)) {
         $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
-        $view->h3("<small>Attendance Occurences:</small>".$emp->getAttendanceOcurrences());
+        $view->h3("<small>Attendance Occurences:</small>".$emp->getAttendanceOcurrences()[0]['count']);
         $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points']);
         foreach($emp->Attendance as $row) {
             //Adam's strikethrough request
