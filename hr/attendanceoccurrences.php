@@ -20,10 +20,12 @@ try {
     $eids = $server->pdo->query(
         'select id from employees where end_date is null'
     );
+    echo "<pre>";
     foreach($eids as $row) {
         $emp = new Employee($server->pdo,$row['id']);
         echo $emp->getFullName()," ",$emp->getAttendanceOcurrences()[0]['count'],"\n"; 
     }
+    echo "</pre>";
 }
 catch (Exception $e) {
     trigger_error($e->getMessage(),E_USER_ERROR);
