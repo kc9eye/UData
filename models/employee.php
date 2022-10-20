@@ -236,7 +236,7 @@ class Employee {
             eid = ?';
         try {
             $pntr = $this->dbh->prepare($sql);
-            if (!$pntr->execute([$this->eid])) throw new Exception(print_r($pntr->errorIfno(),true));
+            if (!$pntr->execute([$this->eid])) throw new Exception(print_r($pntr->errorInfo(),true));
             return $pntr->fetchAll(PDO::FETCH_ASSOC);
         }
         catch(Exception $e) {
