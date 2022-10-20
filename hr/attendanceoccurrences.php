@@ -22,7 +22,7 @@ try {
     );
     foreach($eids as $row) {
         $emp = new Employee($server->pdo,$row['id']);
-        echo $emp->getFullName()," ",$emp->getAttendanceOcurrences(),"\n"; 
+        echo $emp->getFullName()," ",$emp->getAttendanceOcurrences()[0]['count'],"\n"; 
     }
 }
 catch (Exception $e) {
