@@ -71,6 +71,10 @@ function viewCommentDisplay () {
     $view = $server->getViewer('HR: Comments');
     $view->sideDropDownMenu($submenu);
     $view->linkButton('/hr/viewemployee?id='.$comment['eid'],"<span class='glyphicon glyphicon-arrow-left'></span> Back");
+    $view->br();
+    if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
+        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'],"Add Note");
+    }
     $view->responsiveTableStart();
     echo "<tr><th>Employee Name:</th><td>{$comment['name']}</td></tr>";
     echo "<tr><th>Comment ID:</th><td>{$comment['id']}</td></tr>";
