@@ -71,7 +71,7 @@ function viewCommentDisplay () {
     $view = $server->getViewer('HR: Comments');
     $view->sideDropDownMenu($submenu);
     $view->linkButton('/hr/viewemployee?id='.$comment['eid'],"<span class='glyphicon glyphicon-arrow-left'></span> Back");
-    $view->br();
+    echo "&#160;";
     if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
         $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'],"Add Note");
     }
