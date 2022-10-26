@@ -90,7 +90,7 @@ class SupervisorComments {
 
     public function getCommentNotes($id) {
         $sql =
-        'select * from supervisor_comments_notes
+        'select * from supervisor_comment_notes
         where cid = ? order by gen_date desc';
         try {
             $pntr = $this->dbh->prepare($sql);
