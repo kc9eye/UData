@@ -110,6 +110,7 @@ function viewCommentDisplay () {
             echo "<tr><th>Author:</th><td>".$user->getFirstName()." ".$user->getLastName()."</td></tr>";
             echo "<tr><th>Addendum</th><td>".$row['note']."</td></tr>";
             $view->responsiveTableClose();
+            $view->hr();
         }
     }
     $view->footer();
