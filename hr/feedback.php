@@ -30,6 +30,9 @@ if (!empty($_REQUEST['action'])) {
         case 'view':
             viewCommentDisplay();
         break;
+        case 'add_note':
+            addCommentNote();
+        break;
         default:
             commentFormDisplay();
         break;
@@ -71,10 +74,6 @@ function viewCommentDisplay () {
     $view = $server->getViewer('HR: Comments');
     $view->sideDropDownMenu($submenu);
     $view->linkButton('/hr/viewemployee?id='.$comment['eid'],"<span class='glyphicon glyphicon-arrow-left'></span> Back");
-    echo "&#160;";
-    if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
-        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'],"Add Note");
-    }
     $view->responsiveTableStart();
     echo "<tr><th>Employee Name:</th><td>{$comment['name']}</td></tr>";
     echo "<tr><th>Comment ID:</th><td>{$comment['id']}</td></tr>";
@@ -90,11 +89,27 @@ function viewCommentDisplay () {
         echo "</td></tr>";
     }
     $view->responsiveTableClose();
+    $view->hr();
+    if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
+        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'],"Add Note");
+    }
+    if (!empty(($adds = $handler->getCommentNotes($_REQUEST['id'])))) {
+        $view->h3('Addendums');
+        foreach($adds as $row) {
+            $user = new User($server->pdo,$row['uid']);
+            $view->responsiveTableStart();
+            echo "<tr><th>Date:</th><td>".$view->formatUserTimestamp($row['gen_date'],true)."</td></tr>";
+            echo "<tr><th>Author:</th><td>".$user->getFirstName()." ".$user->getLastName()."</td></tr>";
+            echo "<tr><th>Addendum</th><td>".$row['note']."</td></tr>";
+            $view->responsiveTableClose();
+        }
+    }
     $view->footer();
 }
 
 function addNewComment () {
     global $server;
+    $server->userMustHavePermission('editSupervisorComment');
     $handler = new SupervisorComments($server->pdo);
     $notify = new Notification($server->pdo,$server->mailer);
     try {
@@ -130,4 +145,9 @@ function addNewComment () {
     else {
         return false;
     }
+}
+
+function addCommentNote() {
+    global $server;
+    $server->userMustHavePermission('editSupervisorComment');
 }
