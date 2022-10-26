@@ -163,7 +163,7 @@ function addCommentNote() {
     $view = $server->getViewer('Comment Addendum');
     $view->sideDropDownMenu($submenu);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
+    $view->h1("<small>Adding Addendum To:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
     $form->newMultipartForm();
     $form->hiddenInput('action','submit_note');
     $form->hiddenInput('cid',$_REQUEST['cid']);
