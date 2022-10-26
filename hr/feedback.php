@@ -99,7 +99,7 @@ function viewCommentDisplay () {
     $view->responsiveTableClose();
     $view->hr();
     if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
-        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'].'eid='.$comment['eid'],"Add Note");
+        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'].'&eid='.$comment['eid'],"Add Note");
     }
     if (!empty(($adds = $handler->getCommentNotes($_REQUEST['id'])))) {
         $view->h3('Addendums');
