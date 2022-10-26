@@ -38,7 +38,7 @@ if (!empty($_REQUEST['action'])) {
             $server->processingDialog(
                 'addendumNote',
                 [],
-                $server->config['application-root'].'/hr/feedback?id='.$_REQUEST['cid']
+                $server->config['application-root'].'/hr/feedback?action=view&id='.$_REQUEST['cid']
             );
         break;
         default:
