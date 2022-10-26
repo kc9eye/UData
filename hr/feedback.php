@@ -99,7 +99,7 @@ function viewCommentDisplay () {
     $view->responsiveTableClose();
     $view->hr();
     if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
-        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'],"Add Note");
+        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'].'eid='.$comment['eid'],"Add Note");
     }
     if (!empty(($adds = $handler->getCommentNotes($_REQUEST['id'])))) {
         $view->h3('Addendums');
@@ -159,8 +159,8 @@ function addCommentNote() {
     global $server;
     $server->userMustHavePermission('editSupervisorComment');
     include('submenu.php');
-    $emp = new Employee($server->pdo,$_REQUEST['id']);
-    $view = $server->getViewer('Employee Feedback');
+    $emp = new Employee($server->pdo,$_REQUEST['eid']);
+    $view = $server->getViewer('Comment Addendum');
     $view->sideDropDownMenu($submenu);
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
     $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
