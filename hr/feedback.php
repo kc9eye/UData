@@ -169,7 +169,7 @@ function addCommentNote() {
     $form->hiddenInput('cid',$_REQUEST['cid']);
     $form->hiddenInput('uid',$server->currentUserID);
     $view->h2('Feedback',true);
-    $form->textArea('comments',null,'',true,'Enter comments for the individual',true);
+    $form->textArea('note',null,'',true,'Enter comments for the individual',true);
     $form->submitForm('Submit',false,$server->config['application-root'].'/hr/feedback?id='.$_REQUEST['cid']);
     $form->endForm();
     $view->footer();
