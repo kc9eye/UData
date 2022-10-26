@@ -87,4 +87,19 @@ class SupervisorComments {
             return false;
         }
     }
+
+    public function getCommentNotes($id) {
+        $sql =
+        'select * from supervisor_comment_notes
+        where cid = ? order by gen_date desc';
+        try {
+            $pntr = $this->dbh->prepare($sql);
+            if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+            return $pntr->fetchAll(PDO::FETCH_ASSOC);
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return array();
+        }
+    }
 }

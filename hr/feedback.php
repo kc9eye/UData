@@ -30,6 +30,17 @@ if (!empty($_REQUEST['action'])) {
         case 'view':
             viewCommentDisplay();
         break;
+        case 'add_note':
+            addCommentNote();
+        break;
+        case 'submit_note':
+            $server->userMustHavePermission('editSupervisorComments');
+            $server->processingDialog(
+                'addendumNote',
+                [],
+                $server->config['application-root'].'/hr/feedback?action=view&id='.$_REQUEST['cid']
+            );
+        break;
         default:
             commentFormDisplay();
         break;
@@ -86,11 +97,28 @@ function viewCommentDisplay () {
         echo "</td></tr>";
     }
     $view->responsiveTableClose();
+    $view->hr();
+    if ($server->security->userHasPermission('eidtSupervisorComments')||$server->security->userHasPermission('adminAll')) {
+        $view->linkButton('/hr/feedback?action=add_note&cid='.$_REQUEST['id'].'&eid='.$comment['eid'],"Add Note");
+    }
+    if (!empty(($adds = $handler->getCommentNotes($_REQUEST['id'])))) {
+        $view->h3('Addendums');
+        foreach($adds as $row) {
+            $user = new User($server->pdo,$row['uid']);
+            $view->responsiveTableStart();
+            echo "<tr><th>Date:</th><td>".$view->formatUserTimestamp($row['gen_date'],true)."</td></tr>";
+            echo "<tr><th>Author:</th><td>".$user->getFirstName()." ".$user->getLastName()."</td></tr>";
+            echo "<tr><th>Addendum</th><td>".$row['note']."</td></tr>";
+            $view->responsiveTableClose();
+            $view->hr();
+        }
+    }
     $view->footer();
 }
 
 function addNewComment () {
     global $server;
+    $server->userMustHavePermission('editSupervisorComment');
     $handler = new SupervisorComments($server->pdo);
     $notify = new Notification($server->pdo,$server->mailer);
     try {
@@ -124,6 +152,46 @@ function addNewComment () {
         return true;
     }
     else {
+        return false;
+    }
+}
+
+function addCommentNote() {
+    global $server;
+    $server->userMustHavePermission('editSupervisorComment');
+    include('submenu.php');
+    $emp = new Employee($server->pdo,$_REQUEST['eid']);
+    $view = $server->getViewer('Comment Addendum');
+    $view->sideDropDownMenu($submenu);
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $view->h1("<small>Addendum To:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
+    $form->newMultipartForm();
+    $form->hiddenInput('action','submit_note');
+    $form->hiddenInput('cid',$_REQUEST['cid']);
+    $form->hiddenInput('uid',$server->currentUserID);
+    $view->h2('Feedback',true);
+    $form->textArea('note',null,'',true,'Enter comments for the individual',true);
+    $form->submitForm('Submit',false,$server->config['application-root'].'/hr/feedback?action=view&id='.$_REQUEST['cid']);
+    $form->endForm();
+    $view->footer();
+}
+
+function addendumNote() {
+    global $server;
+    $sql = 'insert into supervisor_comment_notes values (:id,:cid,now(),:uid,:note)';
+    $insert = [
+        ':id'=>uniqid(),
+        ':cid'=>$_REQUEST['cid'],
+        ':uid'=>$_REQUEST['uid'],
+        ':note'=>$_REQUEST['note']
+    ];
+    try {
+        $pntr = $server->pdo->prepare($sql);
+        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+        return true;
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
         return false;
     }
 }
