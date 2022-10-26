@@ -184,7 +184,7 @@ function addendumNote() {
         ':cid'=>$_REQUEST['cid'],
         ':uid'=>$_REQUEST['uid'],
         ':note'=>$_REQUEST['note']
-    ]
+    ];
     try {
         $pntr = $server->pdo->prepare($sql);
         if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
