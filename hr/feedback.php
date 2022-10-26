@@ -33,6 +33,14 @@ if (!empty($_REQUEST['action'])) {
         case 'add_note':
             addCommentNote();
         break;
+        case 'submit_note':
+            $server->userMustHavePermission('editSupervisorComments');
+            $server->processingDialog(
+                'addendumNote',
+                [],
+                $server->config['application-root'].'/hr/feedback?id='.$_REQUEST['cid']
+            );
+        break;
         default:
             commentFormDisplay();
         break;
@@ -150,4 +158,40 @@ function addNewComment () {
 function addCommentNote() {
     global $server;
     $server->userMustHavePermission('editSupervisorComment');
+    include('submenu.php');
+    $emp = new Employee($server->pdo,$_REQUEST['id']);
+    $view = $server->getViewer('Employee Feedback');
+    $view->sideDropDownMenu($submenu);
+    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
+    $form->newMultipartForm();
+    $form->hiddenInput('action','submit_note');
+    $form->hiddenInput('cid',$_REQUEST['cid']);
+    $form->hiddenInput('uid',$server->currentUserID);
+    $view->h2('Feedback',true);
+    $form->inputCapture('note','Subject',null,true);
+    $form->textArea('comments',null,'',true,'Enter comments for the individual',true);
+    $form->submitForm('Submit',false,$server->config['application-root'].'/hr/feedback?id='.$_REQUEST['cid']);
+    $form->endForm();
+    $view->footer();
+}
+
+function addendumNote() {
+    global $server;
+    $sql = 'insert into supervisor_comment_notes values (:id,:cid,now(),:uid,:note)';
+    $insert = [
+        ':id'=>uniqid(),
+        ':cid'=>$_REQUEST['cid'],
+        ':uid'=>$_REQUEST['uid'],
+        ':note'=>$_REQUEST['note']
+    ]
+    try {
+        $pntr = $server->pdo->prepare($sql);
+        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+        return true;
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        return false;
+    }
 }
