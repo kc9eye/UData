@@ -141,6 +141,7 @@ function employeeViewDisplay () {
     if (!empty($emp->Attendance)) {
         $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
         $view->h3("<small>Attendance Occurences:</small>".$emp->getAttendanceOcurrences()[0]['count']);
+        $view->h3("<small>Career Ratio:</small>".$emp->getAttendanceRatio().htmlentities("%"));
         $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points']);
         foreach($emp->Attendance as $row) {
             //Adam's strikethrough request
