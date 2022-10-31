@@ -153,29 +153,6 @@ function addNewComment () {
     $server->userMustHavePermission('editSupervisorComment');
     $handler = new SupervisorComments($server->pdo);
     $notify = new Notification($server->pdo,$server->mailer);
-    // try {
-    //     $upload = new FileUpload(FileIndexer::UPLOAD_NAME);
-    //     if ($upload !== false) {
-    //         if ($upload->multiple) {
-    //             $server->newEndUserDialog(
-    //                 "Only one file may be associated with this entry.",
-    //                 DIALOG_FAILURE,
-    //                 $server->config['application-root'].'/hr/feedback?id='.$_REQUEST['eid']
-    //             );
-    //         }
-    //         $indexer = new FileIndexer($server->pdo,$server->config['data-root']);
-    //         if (($indexed = $indexer->indexFiles($upload,$_REQUEST['uid'])) !== false)
-    //             $_REQUEST['fid'] = $indexed[0];
-    //     }
-    //     else $_REQUEST['fid'] = '';
-    // }
-    // catch (UploadException $e) {
-    //     if ($e->getCode() != UPLOAD_ERR_NO_FILE) {
-    //         trigger_error($e->getMessage(),E_USER_ERROR);
-    //         return false;
-    //     }
-    //     $_REQUEST['fid'] = '';
-    // }
 
     try {
         if ($handler->addNewSupervisorFeedback($_REQUEST)) {
@@ -183,11 +160,14 @@ function addNewComment () {
             $body .= "<a href='{$server->config['application-root']}/hr/feedback?action=view&id={$handler->newCommentID}'>View Supervisor Feedback</a>";
             $notify->notify('New Supervisor Comment','New Supervisor Comment',$body);
         }
-        
+        echo 
+        '<a href="'.$server->configuration['app-root'].'/hr/viewemployee?id='.$_REQUEST['eid'].'" class="btn btn-success" role="button">
+            Completed Successfully
+        </a>';
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_ERROR);
-        return false;
+        echo '<p class="bg-danger">Something went wrong with the request</p>';
     }
 }
 
