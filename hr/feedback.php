@@ -145,13 +145,16 @@ function addNewComment () {
         $_REQUEST['fid'] = '';
     }
 
-    if ($handler->addNewSupervisorFeedback($_REQUEST)) {
-        $body = file_get_contents(INCLUDE_ROOT.'/wwwroot/templates/email/supervisorfeedback.html');
-        $body .= "<a href='{$server->config['application-root']}/hr/feedback?action=view&id={$handler->newCommentID}'>View Supervisor Feedback</a>";
-        $notify->notify('New Supervisor Comment','New Supervisor Comment',$body);
+    try {
+        if ($handler->addNewSupervisorFeedback($_REQUEST)) {
+            $body = file_get_contents(INCLUDE_ROOT.'/wwwroot/templates/email/supervisorfeedback.html');
+            $body .= "<a href='{$server->config['application-root']}/hr/feedback?action=view&id={$handler->newCommentID}'>View Supervisor Feedback</a>";
+            $notify->notify('New Supervisor Comment','New Supervisor Comment',$body);
+        }
         return true;
     }
-    else {
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
         return false;
     }
 }
