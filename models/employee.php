@@ -250,7 +250,7 @@ class Employee {
             $pntr = $this->dbh->prepare('select (current_date - start_date) as "career_days" from employees where id = ?');
             if (!$pntr->execute([$this->Employee['id']])) throw new Exception(print_r($pntr->errorInfo(),true));
 
-            $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)['career_days']/365;
+            $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['career_days']/365;
             $ratio = $this->getAttendanceOcurrences()['count']/(207*$career_years);
 
             return $ratio*100;
