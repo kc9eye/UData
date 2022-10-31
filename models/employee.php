@@ -251,7 +251,7 @@ class Employee {
             if (!$pntr->execute([$this->Employee['id']])) throw new Exception(print_r($pntr->errorInfo(),true));
 
             $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['career_days']/365;
-            $ratio = $this->getAttendanceOcurrences()['count']/(207*$career_years);
+            $ratio = $this->getAttendanceOcurrences()[0]['count']/(207*$career_years);
 
             return $ratio*100;
         }
