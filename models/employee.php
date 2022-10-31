@@ -247,7 +247,7 @@ class Employee {
 
     public function getAttendanceRatio() {
         try {
-            $pntr = $this->dbh->prepare('select (current_date - start_date) as \'career_days\' from employees where id = ?');
+            $pntr = $this->dbh->prepare('select (current_date - start_date) as "career_days" from employees where id = ?');
             if (!$pntr->execute([$this->Employee['id']])) throw new Exception(print_r($pntr->errorInfo(),true));
 
             $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)['career_days']/365;
