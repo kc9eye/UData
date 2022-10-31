@@ -161,7 +161,7 @@ function addNewComment () {
             $notify->notify('New Supervisor Comment','New Supervisor Comment',$body);
         }
         echo 
-        '<a href="'.$server->configuration['app-root'].'/hr/viewemployee?id='.$_REQUEST['eid'].'" class="btn btn-success" role="button">
+        '<a href="'.$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['eid'].'" class="btn btn-success" role="button">
             Completed Successfully
         </a>';
     }
