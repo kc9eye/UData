@@ -245,6 +245,22 @@ class Employee {
         }
     }
 
+    public function getAttendanceRatio() {
+        try {
+            $pntr = $this->dbh->prepare('select (current_date - start_date) as "career_days" from employees where id = ?');
+            if (!$pntr->execute([$this->Employee['id']])) throw new Exception(print_r($pntr->errorInfo(),true));
+
+            $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['career_days']/365;
+            $ratio = $this->getAttendanceOcurrences()[0]['count']/(207*$career_years);
+
+            return round($ratio*100,2);
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            return 'ERROR';
+        }
+    }
+
     /**
      * Returns the image file name of the employee
      * @return String The image's disk filename
