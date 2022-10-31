@@ -82,8 +82,8 @@ function commentFormDisplay () {
     // $form->submitForm('Submit',false,$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['id']);
     // $form->endForm();
     echo '</div>';
-    $view->footer([
-        '<script>
+    echo 
+    '<script>
             let pageForm = document.getElementById("commentForm");
             let btn = document.getElementById("submitBtn");
             btn.addEventListener("click",async (event)=>{
@@ -98,8 +98,8 @@ function commentFormDisplay () {
                 btn.innerHTML = "Submit";
                 btn.removeAttribute("disabled");
             });
-        </script>'
-    ]);
+        </script>';
+    $view->footer();
 }
 
 function viewCommentDisplay () {
