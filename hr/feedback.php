@@ -20,12 +20,8 @@ require_once(dirname(__DIR__).'/lib/init.php');
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
         case 'add':
-            $server->userMustHavePermission('editSupervisorComments');
-            $server->processingDialog(
-                'addNewComment',
-                [],
-                $server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['id']
-            );
+            // $server->userMustHavePermission('editSupervisorComments');
+            addNewComment();
         break;
         case 'view':
             viewCommentDisplay();
@@ -56,19 +52,54 @@ function commentFormDisplay () {
     $emp = new Employee($server->pdo,$_REQUEST['id']);
     $view = $server->getViewer('Employee Feedback');
     $view->sideDropDownMenu($submenu);
-    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
-    $form->newMultipartForm();
-    $form->hiddenInput('action','add');
-    $form->hiddenInput('eid',$_REQUEST['id']);
-    $form->hiddenInput('uid',$server->currentUserID);
-    $view->h2('Feedback',true);
-    $form->inputCapture('subject','Subject',null,true);
-    $form->textArea('comments',null,'',true,'Enter comments for the individual',true);
-    $form->fileUpload(FileIndexer::UPLOAD_NAME,'',null,false,false,"Uploaded file can not exceed ".FileUpload::MAX_UPLOAD_SIZE." bytes.");
-    $form->submitForm('Submit',false,$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['id']);
-    $form->endForm();
-    $view->footer();
+    echo 
+        '<div id="content">
+            <form id="commentForm">
+                <h1>Add Comment to:'.$emp->getFullName().'</h1>
+                <input type="hidden" name="action" value="add" />
+                <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
+                <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+                <div class="form-group">
+                    <label class="form-label" for="subject">Subject</label>
+                    <input class="form-control" type="text" name="subject" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="comments">Comment</label>
+                    <textarea class="form-control" name="comments"></textarea>
+                </div>
+                <button class="btn btn-success" type="button" id="submitBtn">Submit</button>
+            </form>';
+    // $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
+    // $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
+    // $form->newMultipartForm(null,null,"commentForm");
+    // $form->hiddenInput('action','add');
+    // $form->hiddenInput('eid',$_REQUEST['id']);
+    // $form->hiddenInput('uid',$server->currentUserID);
+    // $view->h2('Feedback',true);
+    // $form->inputCapture('subject','Subject',null,true);
+    // $form->textArea('comments',null,'',true,'Enter comments for the individual',true);
+    // $form->fileUpload(FileIndexer::UPLOAD_NAME,'',null,false,false,"Uploaded file can not exceed ".FileUpload::MAX_UPLOAD_SIZE." bytes.");
+    // $form->submitForm('Submit',false,$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['id']);
+    // $form->endForm();
+    echo '</div>';
+    $view->footer([
+        '<script>
+            let pageForm = document.getElementById("commentForm");
+            let btn = document.getElementById("submitBtn");
+            btn.addEventListener("click",async (event)=>{
+                event.preventDefault();
+                btn.setAttribute("disabled","disabled");
+                btn.innerHTML = "<span class=\'spinner-border spinner-border-sm\'></span>&#160;"+btn.innerHTML;
+                let res = await fetch(
+                    "'.$view->PageData['approot'].'/hr/feedback",
+                    {method:"POST",body:new FormData(pageForm)}
+                );
+                document.getElementById("content").innerHTML = await res.text();
+                btn.innerHTML = "Submit";
+                btn.removeAttribute("disabled");
+            });
+        </script>'
+    ]);
 }
 
 function viewCommentDisplay () {
@@ -121,29 +152,29 @@ function addNewComment () {
     $server->userMustHavePermission('editSupervisorComment');
     $handler = new SupervisorComments($server->pdo);
     $notify = new Notification($server->pdo,$server->mailer);
-    try {
-        $upload = new FileUpload(FileIndexer::UPLOAD_NAME);
-        if ($upload !== false) {
-            if ($upload->multiple) {
-                $server->newEndUserDialog(
-                    "Only one file may be associated with this entry.",
-                    DIALOG_FAILURE,
-                    $server->config['application-root'].'/hr/feedback?id='.$_REQUEST['eid']
-                );
-            }
-            $indexer = new FileIndexer($server->pdo,$server->config['data-root']);
-            if (($indexed = $indexer->indexFiles($upload,$_REQUEST['uid'])) !== false)
-                $_REQUEST['fid'] = $indexed[0];
-        }
-        else $_REQUEST['fid'] = '';
-    }
-    catch (UploadException $e) {
-        if ($e->getCode() != UPLOAD_ERR_NO_FILE) {
-            trigger_error($e->getMessage(),E_USER_WARNING);
-            return false;
-        }
-        $_REQUEST['fid'] = '';
-    }
+    // try {
+    //     $upload = new FileUpload(FileIndexer::UPLOAD_NAME);
+    //     if ($upload !== false) {
+    //         if ($upload->multiple) {
+    //             $server->newEndUserDialog(
+    //                 "Only one file may be associated with this entry.",
+    //                 DIALOG_FAILURE,
+    //                 $server->config['application-root'].'/hr/feedback?id='.$_REQUEST['eid']
+    //             );
+    //         }
+    //         $indexer = new FileIndexer($server->pdo,$server->config['data-root']);
+    //         if (($indexed = $indexer->indexFiles($upload,$_REQUEST['uid'])) !== false)
+    //             $_REQUEST['fid'] = $indexed[0];
+    //     }
+    //     else $_REQUEST['fid'] = '';
+    // }
+    // catch (UploadException $e) {
+    //     if ($e->getCode() != UPLOAD_ERR_NO_FILE) {
+    //         trigger_error($e->getMessage(),E_USER_ERROR);
+    //         return false;
+    //     }
+    //     $_REQUEST['fid'] = '';
+    // }
 
     try {
         if ($handler->addNewSupervisorFeedback($_REQUEST)) {
@@ -151,10 +182,10 @@ function addNewComment () {
             $body .= "<a href='{$server->config['application-root']}/hr/feedback?action=view&id={$handler->newCommentID}'>View Supervisor Feedback</a>";
             $notify->notify('New Supervisor Comment','New Supervisor Comment',$body);
         }
-        return true;
+        
     }
     catch(Exception $e) {
-        trigger_error($e->getMessage(),E_USER_WARNING);
+        trigger_error($e->getMessage(),E_USER_ERROR);
         return false;
     }
 }
