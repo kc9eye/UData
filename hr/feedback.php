@@ -150,7 +150,7 @@ function viewCommentDisplay () {
 
 function addNewComment () {
     global $server;
-    $server->userMustHavePermission('editSupervisorComment');
+    $server->userMustHavePermission('editSupervisorComments');
     $handler = new SupervisorComments($server->pdo);
     $notify = new Notification($server->pdo,$server->mailer);
 
