@@ -252,14 +252,11 @@ class Employee {
 
             $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['career_days']/365;
 
-            //Catches those with zero attendance ocurrences
-            try {
+            if ($this->getAttendanceOcurrences()[0]['count'] == 0) return 0;
+            else {
                 $ratio = $this->getAttendanceOcurrences()[0]['count']/(207*$career_years);
+                return round($ratio*100,2);
             }
-            catch(Exception $e) {
-                return 0;
-            }
-            return round($ratio*100,2);
         }
         catch(Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
