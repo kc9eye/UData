@@ -37,8 +37,8 @@ try {
             '<tr><td><a href="'.$view->PageData['approot'].'/hr/viewemployee?id='.$row['id'].'">'.$emp->getFullName().'</a></td>
             <td>'.$emp->getAttendancePoints().'</td>
             <td>'.$emp->getAttendanceRatio().htmlentities("%").'</td>
-            <td>'.$emp->getAttendanceOcurrences()[0]['count'].
-            '</td><td>'.$view->formatUserTimestamp($emp->getStartDate()).'</td></tr>';
+            <td>'.$emp->getAttendanceOcurrences()[0]['count'].'</td>
+            <td>'.$view->formatUserTimestamp($emp->getStartDate(),true).'</td></tr>';
         unset($emp);
     }
 
