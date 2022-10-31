@@ -20,6 +20,30 @@ $server->userMustHavePermission("viewProfiles");
 include('submenu.php');
 $view = $server->getViewer('HR: Employee Profile');
 $view->sideDropDownMenu($submenu);
-$view->h1("Attendance Occurrences");
+$view->h1("Career Attendance Data");
+
+try {
+    $eids = $server->pdo->query(
+        'select employees.id 
+        from employees
+        inner join profiles on profiles.id = employees.pid 
+        where end_date is null
+        order by profiles.last asc'
+    );
+    $view->responsiveTableStart(['Name','Current Points','Career Ratio','Total Occurences','Start Date']);
+    foreach($eids as $row) {
+        $emp = new Employee($server->pdo,$row['id']);
+        echo 
+            '<tr><td><a href="'.$view->PageData['approot'].'/hr/viewemployee?id='.$row['id'].'">'.$emp->getFullName().'</a></td>
+            <td>'.$emp->getAttendancePoints().'</td><td>'.$emp->getAttendanceRatio().'</td><td>'.$emp->getAttendanceOcurrences().
+            '</td><td>'.$view->formatUserTimestamp($emp->getStartDate()).'</td></tr>';
+        unset($emp);
+    }
+
+    $view->responsiveTableClose();
+}
+catch(Exception $e) {
+    trigger_error($e->getMessage(),E_USER_ERROR);
+}
 
 $view->footer();

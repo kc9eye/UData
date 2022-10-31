@@ -288,6 +288,10 @@ class Employee {
         unset($this->data[$name]);
     }
 
+    public function getStartDate() {
+        return $this->Employee['start_date'];
+    }
+
     /**
      * Returns the employees full name as a string
      * @return String The employees full profile name.
