@@ -59,6 +59,7 @@ function commentFormDisplay () {
                 <input type="hidden" name="action" value="add" />
                 <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
                 <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+                <input type="hidden" name="fid" value="" />
                 <div class="form-group">
                     <label class="form-label" for="subject">Subject</label>
                     <input class="form-control" type="text" name="subject" />
