@@ -253,7 +253,7 @@ class Employee {
             $career_years = $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['career_days']/365;
             $ratio = $this->getAttendanceOcurrences()[0]['count']/(207*$career_years);
 
-            return $ratio*100;
+            return round($ratio*100,2);
         }
         catch(Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
