@@ -24,18 +24,21 @@ $view->h1("Career Attendance Data");
 
 try {
     $eids = $server->pdo->query(
-        'select employees.id 
+        'select employees.id, sum(missed_time.points) as "points"
         from employees
-        inner join profiles on profiles.id = employees.pid 
-        where end_date is null
-        order by profiles.last asc'
+        inner join missed_time on missed_time.eid = employees.id
+        where employees.end_date is null
+        and missed_time.occ_date >= (current_date - interval \'180 days\')
+        group by employees.id
+        order by points desc
+        '
     );
     $view->responsiveTableStart(['Name','Current Points','Career Ratio','Total Occurences','Start Date']);
     foreach($eids as $row) {
         $emp = new Employee($server->pdo,$row['id']);
         echo 
             '<tr><td><a href="'.$view->PageData['approot'].'/hr/viewemployee?id='.$row['id'].'">'.$emp->getFullName().'</a></td>
-            <td>'.$emp->getAttendancePoints().'</td>
+            <td>'.$row['points'].'</td>
             <td>'.$emp->getAttendanceRatio().htmlentities("%").'</td>
             <td>'.$emp->getAttendanceOcurrences()[0]['count'].'</td>
             <td>'.$view->formatUserTimestamp($emp->getStartDate(),true).'</td></tr>';
