@@ -272,26 +272,30 @@ function editAttendanceDisplay() {
         "<small>Amend Record#:</small> {$_REQUEST['id']}&#160;".
         $view->trashBtnSm('/hr/attendance?action=delete&id='.$_REQUEST['id'].'&uid='.$_REQUEST['uid'],true)
     );
-    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    $form->newForm();
-    $form->hiddenInput('action','amend');
-    $form->hiddenInput('uid',$server->currentUserID);
-    $form->hiddenInput('eid',$_REQUEST['uid']);
-    $form->inputCapture('occ_date','Date',$row['occ_date'],['dateISO'=>'true']);
-    $form->inputCapture('arrive_time','Time Arrived',$row['arrive_time']);
-    $form->inputCapture('leave_time','Time Left',$row['leave_time']);
-    $form->inputCapture('points','Points',$row['points']);
-    if ($row['absent']) 
-        $form->checkBox('absent',['Absent','No'],'false',false,null,'true');
-    else
-        $form->checkBox('absent',['Absent','Yes'],'true',false,null,'false');
-    if ($row['excused'])
-        $form->checkBox('excused',['Perfect Attendace','No'],'false',false,null,'true');
-    else
-        $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
-    $form->textArea('description',null,$row['description'],true);
-    $form->submitForm('Amend',false,$view->PageData['approot'].'/hr/attendance?id='.$_REQUEST['uid']);
-    $form->endForm();
+    echo
+    '<div class="form-display">
+    <form id="editForm">
+        <input type="hidden" name="action" value="amend" />
+        <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+        <input type="hidden" name="eid" value="'.$_REQUEST['uid'].'" />
+        <div class="form-group mb-3">
+            <label class="form-label" for="occ_date">Date</label>
+            <input class="form-control" type="date" name="occ_date" value="'.$row['occ_date'].'" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="arrive_time">Time Arrived</label>
+            <input class="form-control" type="time" name="arrive_time" value="'.$row['arrive_time'].'" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="leave_time">Time Left</label>
+            <input class="form-conrol" type="time" name="leave_time" value="'.$row['leave_time'].'" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="points">Points</label>
+            <input class="form-control" type="text" name="points" value="'.$row['points'].'" />
+        </div>
+    </form>
+    </div>';
     $view->footer();
 }
 
