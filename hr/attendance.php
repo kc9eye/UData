@@ -212,9 +212,50 @@ function addAttendanceRecord() {
             exit();
         }
     }
-
-    echo "ended here for reason";
-    // echo "<pre>",print_r($_REQUEST,true),"</pre>";
+    else if ($_REQUEST['occ_date'] != '') {
+        $sql =
+            'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
+        $pntr = $server->pdo->prepare($sql);
+        try {
+            $insert = [
+                ':id'=>uniqid(),
+                ':eid'=>$_REQUEST['eid'],
+                ':occ_date'=>$date->format('Y-m-d'),
+                ':absent'=> ($_REQUEST['description'] == 'Absence') ? 1 : 0,
+                ':arrive_time'=>($_REQUEST['arrival_time'] == '') ? "00:00:00" : $_REQUEST['arrival_time'],
+                ':leave_time' =>($_REQUEST['departure_time'] == '') ? "00:00:00" : $_REQUEST['departure_time'],
+                ':description'=> $_REQUEST['description'],
+                ':excused'=>0,
+                ':uid'=>$_REQUEST['uid'],
+                ':points'=>$_REQUEST['points']
+            ];
+            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
+            echo 
+            '<div class="m-3">
+                <h4 class="bg-success">Record/s Added</h4>
+                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].' class="btn btn-secondary m-1" role="button">Back</a>
+            </div>';
+        }
+        catch(Exception $e) {
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            echo 
+            '<div class="border border-secondary rounded m-3">
+                <h4 class="bg-danger">Error</h4>
+                <b>A database error occurred</b>&#160;
+                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+            </div>';
+            exit();
+        }
+    }
+    else {
+        echo 
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>A date is required for every entry.</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+        exit();
+    }
     exit();
 }
 
