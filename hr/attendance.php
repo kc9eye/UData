@@ -146,7 +146,7 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
-    if ((!empty($_REQUEST['end_date'])) && (empty($_REQUEST['begin_date']))) {
+    if (($_REQUEST['end_date'] != "") && ($_REQUEST['begin_date'] == "")) {
         echo 
         '<span class="mb-3">
             <h4 class="bg-danger">Error</h4>
