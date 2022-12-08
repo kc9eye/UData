@@ -100,7 +100,7 @@ function attendanceDisplay () {
                         <option value="Left/Returned">Left/Returned</option>
                         <option value="No Time Lost">No Time Lost</option>
                         <option value="No Call/No Show">No Call/No Show</option>
-                        <optoin value="Vacation">Vacation</option>
+                        <option value="Vacation">Vacation</option>
                     </select>
                 </div>
                 <hr />
