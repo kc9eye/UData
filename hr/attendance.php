@@ -194,6 +194,11 @@ function addAttendanceRecord() {
                 if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
             }
             $server->pdo->commit();
+            echo 
+            '<div class="m-3">
+                <h4 class="bg-success">Record/s Added</h4>
+                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'a class="btn btn-success m-1" role="button">Back</a>
+            </div>';
         }
         catch(Exception $e) {
             $server->pdo->rollBack();
