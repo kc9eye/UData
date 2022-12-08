@@ -103,9 +103,20 @@ function attendanceDisplay () {
                     <label class="form-label" for="departure_time">Left Early</label>
                     <input class="form-control" type="time" name="departure_time" />
                 </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <select class="form-control mb-3">
+                        <option value="Absence">Absence</option>
+                        <option value="Late">Late</option>
+                        <option value="Left Early">Left</option>
+                        <option value="Left/Returned">Left/Returned</option>
+                        <option value="No Time Lost">No Time Lost</option>
+                        <option value="No Call/No Show">No Call/No Show</option>
+                    </select>
+                </div>
                 <hr />
                 <h4>Points</h4>
-                <select class="form-control" name="points">
+                <select class="form-control mb-3" name="points">
                     <option value="0">0</option>
                     <option value="0.25">0.25</option>
                     <option value="0.50">0.50</option>
@@ -127,15 +138,6 @@ function attendanceDisplay () {
         }
     }
     $view->responsiveTableClose();
-    echo "<script>$(document).ready(function(){
-        var options = {
-            format:'yyyy/mm/dd',
-            autoclose: true
-        };
-        $('.input-group input').each(function(){
-            $(this).datepicker(options);
-        });
-    });\n</script>";
     $view->footer();
 }
 
