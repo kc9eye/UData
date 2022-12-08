@@ -155,6 +155,15 @@ function addAttendanceRecord() {
         </div>';
         exit();
     }
+    if (($_REQUEST['begin_date_range'] != "") && ($_REQUEST['end_date_range'] == "")) {
+        echo
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>An end date is required for a date range entry.</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+        exit();
+    }
     exit();
 }
 
