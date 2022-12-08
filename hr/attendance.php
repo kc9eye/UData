@@ -166,16 +166,6 @@ function addAttendanceRecord() {
         </div>';
         exit();
         }
-        else {
-            echo 
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>A date is required for all entries.</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-        }
-
         $interval = new DateInterval('P1D');
         $end_date = new DateTime($_REQUEST['end_date_range']);
         $end_date->add($interval);
@@ -189,7 +179,7 @@ function addAttendanceRecord() {
 
     }
 
-
+    echo "ended here for reason";
     // echo "<pre>",print_r($_REQUEST,true),"</pre>";
     exit();
 }
