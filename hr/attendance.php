@@ -185,7 +185,7 @@ function addAttendanceRecord() {
                     ':occ_date'=>$date->format('Y-m-d'),
                     ':absent'=> ($_REQUEST['description'] == 'Absence') ? true : false,
                     ':arrive_time'=>$_REQUEST['arrival_time'],
-                    ':leave_time' =>$_REQUEST['leave_time'],
+                    ':leave_time' =>$_REQUEST['departure_time'],
                     ':decscription'=> $_REQUEST['descritpion'],
                     ':excused'=>false,
                     ':uid'=>$_REQUEST['uid'],
