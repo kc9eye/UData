@@ -36,12 +36,7 @@ if (!empty($_REQUEST['action'])) {
             );
         break;
         case 'amend':
-            $handler = new Employees($server->pdo);
-            $server->processingDialog(
-                [$handler,'amendAttendanceRecord'],
-                [$_REQUEST],
-                $server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid']
-            );
+            amendAttendanceRecord();
         break;
         case 'range':
             dateRangeDisplay();
@@ -277,6 +272,7 @@ function editAttendanceDisplay() {
     <form id="editForm">
         <input type="hidden" name="action" value="amend" />
         <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+        <input type="hidden" name="rid" value="'.$_REQUEST['id'].'" />
         <input type="hidden" name="eid" value="'.$_REQUEST['uid'].'" />
         <div class="form-group mb-3">
             <label class="form-label" for="occ_date">Date</label>
@@ -294,9 +290,58 @@ function editAttendanceDisplay() {
             <label class="form-label" for="points">Points</label>
             <input class="form-control" type="text" name="points" value="'.$row['points'].'" />
         </div>
+        <button class="btn btn-secondary" type="button" id="submitBtn">Amend</button>
     </form>
-    </div>';
+    </div>
+    <script>
+        let form = document.getElementById("editForm");
+        let btn = document.getElementByid("submitBtn");
+        btn.addEventListener("click",async (event) = >{
+            event.preventDefault();
+            btn.setAttribute("disabled","disabled");
+            btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
+            let result = await fetch(
+                "'.$server->config['application-root'].'/hr/attendance",
+                {method:"POST",body:new FormData(form)}
+            );
+            document.getElementById("form-display").innerHTML = await result.text();
+            window.scrollTo(0,0);
+        });
+    </script>';
     $view->footer();
+}
+
+function amendAttendanceRecord() {
+    global $server;
+    $sql = 'update missed_time set occ_date = :occ_date, arrive_time = :arrive_time, leave_time = :leave_time, points = :points
+    where id = :id';
+    $pntr = $server->pdo->prepare($sql);
+    try {
+        $insert = [
+            ':occ_date'=>$_REQUEST['occ_date'],
+            ':arrive_time'=>($_REQUEST['arrive_time'] == '') ? "00:00:00" : $_REQUEST['arrive_time'],
+            ':leave_time'=> ($_REQUEST['leave_time'] == '') ? "00:00:00" : $_REQUEST['leave_time'],
+            ':points'=> $_REQUEST['points'],
+            ':id'=>$_REQUEST['rid']
+        ];
+        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
+        echo
+        '<div class="m-3">
+            <h4 class="bg-success">Record/s Added</h4>
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
+        </div>';
+        exit();
+    }
+    catch (Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        echo 
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>A date is required for every entry.</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+        exit();
+    }
 }
 
 function printDisplay () {
