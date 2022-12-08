@@ -81,8 +81,8 @@ function attendanceDisplay () {
     );
     echo 
     '<form id="addRecord">
-                <input type="hidden" name="eid" value="'.$_REQUEST['eid'].'" />
-                <input type="hidden" name="uid" value="'.Authentication::getValidUser()->getUID().'" />
+                <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
+                <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
                 <div class="form-group mb-3">
                     <label class="form-label" for="occ_date">Single Occurrence Date</label>
                     <input type="date" class="form-control" name="occ_date" />
