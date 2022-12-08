@@ -60,7 +60,7 @@ function attendanceDisplay () {
     
     $emp = new Employee($server->pdo,$_REQUEST['id']);
 
-    $view = $server->getViewer("HR: Attendance",$pageOptions);
+    $view = $server->getViewer("HR: Attendance");
     $view->sideDropDownMenu($submenu);
     $view->h1("<small>Add Attendance Record:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
         $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
