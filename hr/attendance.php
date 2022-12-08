@@ -295,7 +295,7 @@ function editAttendanceDisplay() {
     </div>
     <script>
         let form = document.getElementById("editForm");
-        let btn = document.getElementByid("submitBtn");
+        let btn = document.getElementById("submitBtn");
         btn.addEventListener("click",async (event) =>{
             event.preventDefault();
             btn.setAttribute("disabled","disabled");
