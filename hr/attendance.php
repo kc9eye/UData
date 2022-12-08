@@ -296,7 +296,7 @@ function editAttendanceDisplay() {
     <script>
         let form = document.getElementById("editForm");
         let btn = document.getElementByid("submitBtn");
-        btn.addEventListener("click",async (event) = >{
+        btn.addEventListener("click",async (event) =>{
             event.preventDefault();
             btn.setAttribute("disabled","disabled");
             btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
