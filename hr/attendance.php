@@ -268,7 +268,7 @@ function editAttendanceDisplay() {
         $view->trashBtnSm('/hr/attendance?action=delete&id='.$_REQUEST['id'].'&uid='.$_REQUEST['uid'],true)
     );
     echo
-    '<div class="form-display">
+    '<div id="form-display">
     <form id="editForm">
         <input type="hidden" name="action" value="amend" />
         <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
@@ -304,7 +304,7 @@ function editAttendanceDisplay() {
                 "'.$server->config['application-root'].'/hr/attendance",
                 {method:"POST",body:new FormData(form)}
             );
-            document.getElementById("form-display").innerHTML = await result.text();
+            document.getElementById("form-display").innerHTML = result.text();
             window.scrollTo(0,0);
         });
     </script>';
