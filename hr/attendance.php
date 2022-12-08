@@ -220,7 +220,7 @@ function addAttendanceRecord() {
             $insert = [
                 ':id'=>uniqid(),
                 ':eid'=>$_REQUEST['eid'],
-                ':occ_date'=>$date->format('Y-m-d'),
+                ':occ_date'=>$_REQUEST['occ_date'],
                 ':absent'=> ($_REQUEST['description'] == 'Absence') ? 1 : 0,
                 ':arrive_time'=>($_REQUEST['arrival_time'] == '') ? "00:00:00" : $_REQUEST['arrival_time'],
                 ':leave_time' =>($_REQUEST['departure_time'] == '') ? "00:00:00" : $_REQUEST['departure_time'],
