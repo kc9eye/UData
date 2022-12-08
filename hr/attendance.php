@@ -197,7 +197,7 @@ function addAttendanceRecord() {
             echo 
             '<div class="m-3">
                 <h4 class="bg-success">Record/s Added</h4>
-                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'a class="btn btn-success m-1" role="button">Back</a>
+                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].' class="btn btn-secondary m-1" role="button">Back</a>
             </div>';
         }
         catch(Exception $e) {
