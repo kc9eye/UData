@@ -166,17 +166,45 @@ function addAttendanceRecord() {
         </div>';
         exit();
         }
+        //Date interval
         $interval = new DateInterval('P1D');
         $end_date = new DateTime($_REQUEST['end_date_range']);
         $end_date->add($interval);
-
         $period = new DatePeriod(new DateTime($_REQUEST['begin_date_range']),$interval, $end_date);
-        echo "<pre>";
-        foreach ($period as $date) {
-            echo $date->format('Y-m-d'),"\n";
-        }
-        exit("</pre>");
 
+        try {
+            $sql =
+            'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
+            $pntr = $server->pdo->prepare($sql);
+            $server->pdo->beginTransaction();
+            foreach($period as $date) {
+                $insert = [
+                    ':id'=>uniqid(),
+                    ':eid'=>$_REQUEST['eid'],
+                    ':occ_date'=>$date->format('Y-m-d'),
+                    ':absent'=> ($_REQUEST['description'] == 'Absence') ? true : false,
+                    ':arrive_time'=>$_REQUEST['arrival_time'],
+                    ':leave_time' =>$_REQUEST['leave_time'],
+                    ':decscription'=> $_REQUEST['descritpion'],
+                    ':excused'=>false,
+                    ':uid'=>$_REQUEST['uid'],
+                    ':points'=>$_REQUEST['points']
+                ];
+                if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
+            }
+            $server->pdo->commit();
+        }
+        catch(Exception $e) {
+            $server->pdo->rollBack();
+            trigger_error($e->getMessage(),E_USER_WARNING);
+            echo 
+            '<div class="border border-secondary rounded m-3">
+                <h4 class="bg-danger">Error</h4>
+                <b>A database error occurred</b>&#160;
+                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+            </div>';
+            exit();
+        }
     }
 
     echo "ended here for reason";
