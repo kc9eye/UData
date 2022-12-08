@@ -146,6 +146,7 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
+
     if (($_REQUEST['end_date_range'] != "") && ($_REQUEST['begin_date_range'] == "")) {
         echo 
         '<div class="border border-secondary rounded m-3">
@@ -155,7 +156,7 @@ function addAttendanceRecord() {
         </div>';
         exit();
     }
-    else if (($_REQUEST['begin_date_range'] != "") && ($_REQUEST['end_date_range'] == "")) {
+    if (($_REQUEST['begin_date_range'] != "") && ($_REQUEST['end_date_range'] == "")) {
         echo
         '<div class="border border-secondary rounded m-3">
             <h4 class="bg-danger">Error</h4>
@@ -164,7 +165,7 @@ function addAttendanceRecord() {
         </div>';
         exit();
     }
-    else if (($_REQUEST['occ_date'] == "") && (($_REQUEST['begin_date_range'] == "") && ($_REQUEST['end_date_range'] == ""))) {
+    if (($_REQUEST['occ_date'] == "") && (($_REQUEST['begin_date_range'] == "") && ($_REQUEST['end_date_range'] == ""))) {
         '<div class="border border-secondary rounded m-3">
             <h4 class="bg-danger">Error</h4>
             <b>A date is required for any entry</b>&#160;
