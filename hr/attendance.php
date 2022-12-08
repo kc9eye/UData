@@ -93,7 +93,7 @@ function attendanceDisplay () {
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label" for="description">Description</label>
-                    <select class="form-control mb-3" name="description>
+                    <select class="form-control mb-3" name="description">
                         <option value="Absence">Absence</option>
                         <option value="Late">Late</option>
                         <option value="Left Early">Left Early</option>
