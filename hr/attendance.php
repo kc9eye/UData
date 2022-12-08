@@ -326,11 +326,10 @@ function amendAttendanceRecord() {
         ];
         if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
         echo
-        '<div class="m-3">
+        '<div class="border border-success rounded m-3">
             <h4 class="bg-success">Record/s Added</h4>
             <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
         </div>';
-        exit();
     }
     catch (Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
@@ -342,6 +341,7 @@ function amendAttendanceRecord() {
         </div>';
         exit();
     }
+    exit();
 }
 
 function printDisplay () {
