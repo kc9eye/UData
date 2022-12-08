@@ -147,32 +147,33 @@ function attendanceDisplay () {
 function addAttendanceRecord() {
     global $server;
 
-    if (($_REQUEST['end_date_range'] != "") && ($_REQUEST['begin_date_range'] == "")) {
-        echo 
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>Beginning date is required for a date range.</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-    }
-    if (($_REQUEST['begin_date_range'] != "") && ($_REQUEST['end_date_range'] == "")) {
-        echo
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>An end date is required for a date range entry.</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-    }
-    if (($_REQUEST['occ_date'] == "") && (($_REQUEST['begin_date_range'] == "") && ($_REQUEST['end_date_range'] == ""))) {
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>A date is required for any entry</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-    }
+    // if (($_REQUEST['end_date_range'] != "") && ($_REQUEST['begin_date_range'] == "")) {
+    //     echo 
+    //     '<div class="border border-secondary rounded m-3">
+    //         <h4 class="bg-danger">Error</h4>
+    //         <b>Beginning date is required for a date range.</b>&#160;
+    //         <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+    //     </div>';
+    //     exit();
+    // }
+    // if (($_REQUEST['begin_date_range'] != "") && ($_REQUEST['end_date_range'] == "")) {
+    //     echo
+    //     '<div class="border border-secondary rounded m-3">
+    //         <h4 class="bg-danger">Error</h4>
+    //         <b>An end date is required for a date range entry.</b>&#160;
+    //         <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+    //     </div>';
+    //     exit();
+    // }
+    // if (($_REQUEST['occ_date'] == "") && (($_REQUEST['begin_date_range'] == "") && ($_REQUEST['end_date_range'] == ""))) {
+    //     '<div class="border border-secondary rounded m-3">
+    //         <h4 class="bg-danger">Error</h4>
+    //         <b>A date is required for any entry</b>&#160;
+    //         <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+    //     </div>';
+    //     exit();
+    // }
+    echo "<pre>",print_r($_REQUEST,true),"</pre>";
     exit();
 }
 
