@@ -186,7 +186,7 @@ function addAttendanceRecord() {
                     ':uid'=>$_REQUEST['uid'],
                     ':points'=>$_REQUEST['points']
                 ];
-                if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
+                if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             }
             $server->pdo->commit();
             echo 
@@ -324,7 +324,7 @@ function amendAttendanceRecord() {
             ':points'=> $_REQUEST['points'],
             ':id'=>$_REQUEST['rid']
         ];
-        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
+        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         echo
         '<div class="border border-success rounded m-3">
             <h4 class="bg-success">Record/s Added</h4>

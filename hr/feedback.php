@@ -150,6 +150,11 @@ function addNewComment () {
     $notify = new Notification($server->pdo,$server->mailer);
 
     try {
+        if (isset($_REQUEST['probation'])) {
+            $sql = "insert into employee_probation values (:id,now(),:eid,'30 days')";
+            $pntr = $server->pdo->prepare($sql);
+            if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':id'=>uniqid()])) throw new Exception(print_r($pntr->errorInfo(),true));
+        }
         if ($handler->addNewSupervisorFeedback($_REQUEST)) {
             $body = file_get_contents(INCLUDE_ROOT.'/wwwroot/templates/email/supervisorfeedback.html');
             $body .= "<a href='{$server->config['application-root']}/hr/feedback?action=view&id={$handler->newCommentID}'>View Supervisor Feedback</a>";
