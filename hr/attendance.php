@@ -79,35 +79,44 @@ function attendanceDisplay () {
     $view->h1("<small>Add Attendance Record:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
         $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
     );
-    $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
-    $form->newForm();
-    $form->hiddenInput('action','add');
-    $form->hiddenInput('uid',$server->currentUserID);
-    $form->hiddenInput('eid',$_REQUEST['id']);
-    $form->labelContent(
-        'Date',
-        "<div class='input-group input-daterange'>\n
-        <input class='form-control' type='text' name='begin_date' />\n
-        <span class='input-group-addon'>to</span>\n
-        <input class='form-control' type='text' name='end_date' />\n
-        </div>\n"
-    );
-    $form->inputCapture('arrive_time','Time Arrived','00:00');
-    $form->inputCapture('leave_time','Time Left','00:00');
-    $form->checkBox('absent',['Absent','Yes'],'true',false,null,'false');
-    $form->checkBox('nocall',['No Call/Show','Not Notified'],'true',false,null,'false');
-    $form->checkBox('nopoints',['Excused','Yes'],'true',false,'No points will be calculated.','false');
-    $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
-    if ($emp->getProbationStatus()) {
-        $form->labelContent("Probation","Employee is currently on 30 day probation.");
-        $form->hiddenInput('probation_set','true');
-    }
-    else {
-        $form->checkBox('probation',['Probation','Yes'],'true',false,"Initiate a 30 day probation reminder.");
-    }
-    $form->textArea('description',null,'',true);
-    $form->submitForm('Add',false,$view->PageData['approot'].'/hr/viewemployee?id='.$_REQUEST['id']);
-    $form->endForm();
+    echo 
+    '<form id="addRecord">
+                <input type="hidden" name="eid" value="'.$_REQUEST['eid'].'" />
+                <input type="hidden" name="uid" value="'.Authentication::getValidUser()->getUID().'" />
+                <div class="form-group mb-3">
+                    <label class="form-label" for="occ_date">Single Occurrence Date</label>
+                    <input type="date" class="form-control" name="occ_date" />
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Ranged Occurrence</label>
+                    <div class="input-group">
+                        <input class="form-control" type="date" name="begin_date_range" />
+                        <span class="input-group-text">to</span>
+                        <input class="form-control" type="date" name="end_date_range" />
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="arrival_time">Arrive Late</label>
+                    <input class="form-control" type="time" name="arrival_time" />
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="departure_time">Left Early</label>
+                    <input class="form-control" type="time" name="departure_time" />
+                </div>
+                <hr />
+                <h4>Modifiers</h4>
+                <div class="form-group mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="excused" value="1" />
+                        <label class="form-check-label" for="excused">Excused/No Points</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="perfect_uneffected" value="1" />
+                        <label class="form-check-label" for="perfect">Does not effect perfect Attendance</label>
+                    </div>
+                </div>
+                <button id="submitBtn" class="btn btn-secondary mb-3" type="button">Add Record</button>
+            </form>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
     $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points','Edit']);
     if (!empty($emp->Attendance)) {
