@@ -126,6 +126,7 @@ function attendanceDisplay () {
                         {method:"POST",body:new FormData(form)}
                     );
                     document.getElementById("form-display").innerHTML = await result.text();
+                    window.scrollTo(scrollOptions.top);
                 });
             </script>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
