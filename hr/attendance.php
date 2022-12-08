@@ -183,11 +183,11 @@ function addAttendanceRecord() {
                     ':id'=>uniqid(),
                     ':eid'=>$_REQUEST['eid'],
                     ':occ_date'=>$date->format('Y-m-d'),
-                    ':absent'=> ($_REQUEST['description'] == 'Absence') ? true : false,
+                    ':absent'=> ($_REQUEST['description'] == 'Absence') ? 1 : 0,
                     ':arrive_time'=>($_REQUEST['arrival_time'] == '') ? "00:00:00" : $_REQUEST['arrival_time'],
                     ':leave_time' =>($_REQUEST['departure_time'] == '') ? "00:00:00" : $_REQUEST['departure_time'],
                     ':description'=> $_REQUEST['description'],
-                    ':excused'=>false,
+                    ':excused'=>0,
                     ':uid'=>$_REQUEST['uid'],
                     ':points'=>$_REQUEST['points']
                 ];
