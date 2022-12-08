@@ -61,7 +61,7 @@ function commentFormDisplay () {
                 <input type="hidden" name="fid" value="" />';
     if ($server->checkPermission("approveProbation")) {
         echo 
-        '<div class="form-check">
+        '<div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" name="probation" value="1" />
             <label class="form-check-label" for="probation">Begin Probation</label>
         </div>';
