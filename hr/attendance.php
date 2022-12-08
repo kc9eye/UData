@@ -21,14 +21,8 @@ $server->userMustHavePermission('editEmployeeAttendance');
 
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
-        case 'add':
-            $handler = new Employees($server->pdo);
-            // $server->getDebugViewer(var_export($handler->addAttendanceRecord($_REQUEST),true));
-            $server->processingDialog(
-                [$handler,'addAttendanceRecord'],
-                [$_REQUEST],
-                $server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid']
-            );
+        case 'addRecord':
+            addAttendanceRecord();
     break;
         case 'edit':
             editAttendanceDisplay();
@@ -66,23 +60,17 @@ function attendanceDisplay () {
     
     $emp = new Employee($server->pdo,$_REQUEST['id']);
 
-    //View header options for adding the Boostrap DatePicker
-    $pageOptions = [
-        'headinserts'=> [
-            '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>',
-            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>'
-        ]
-    ];
-
     $view = $server->getViewer("HR: Attendance",$pageOptions);
     $view->sideDropDownMenu($submenu);
     $view->h1("<small>Add Attendance Record:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
         $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
     );
     echo 
-    '<form id="addRecord">
+    '<div id="form-display">
+    <form id="addRecord">
                 <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
                 <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+                <input type="hidden" name="action" value="addRecord" />
                 <div class="form-group mb-3">
                     <label class="form-label" for="occ_date">Single Occurrence Date</label>
                     <input type="date" class="form-control" name="occ_date" />
@@ -108,7 +96,7 @@ function attendanceDisplay () {
                     <select class="form-control mb-3">
                         <option value="Absence">Absence</option>
                         <option value="Late">Late</option>
-                        <option value="Left Early">Left</option>
+                        <option value="Left Early">Left Early</option>
                         <option value="Left/Returned">Left/Returned</option>
                         <option value="No Time Lost">No Time Lost</option>
                         <option value="No Call/No Show">No Call/No Show</option>
@@ -124,7 +112,22 @@ function attendanceDisplay () {
                     <option value="2">2</option>
                 </select>
                 <button id="submitBtn" class="btn btn-secondary mb-3" type="button">Add Record</button>
-            </form>';
+            </form>
+            </div>
+            <script>
+                let form = document.getElementById("addRecord");
+                let btn = document.getElementById("submitBtn");
+                btn.addEventListener("click",async (event)=>{
+                    event.preventDefault();
+                    btn.setAttribute("disabled","disabled");
+                    btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
+                    result = await fetch(
+                        "'.$server->config['application-root'].'/hr/attendance",
+                        {method:"POST",body:new FormData(form)}
+                    );
+                    document.getElementById("form-display").innerHTML = await result.text();
+                });
+            </script>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
     $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points','Edit']);
     if (!empty($emp->Attendance)) {
@@ -139,6 +142,12 @@ function attendanceDisplay () {
     }
     $view->responsiveTableClose();
     $view->footer();
+}
+
+function addAttendanceRecord() {
+    global $server;
+    echo "<pre>",print_r($_REQUEST,true),"</pre>";
+    exit();
 }
 
 function editAttendanceDisplay() {
