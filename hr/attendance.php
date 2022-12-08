@@ -23,7 +23,7 @@ if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
         case 'addRecord':
             addAttendanceRecord();
-    break;
+        break;
         case 'edit':
             editAttendanceDisplay();
         break;
