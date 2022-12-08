@@ -146,7 +146,15 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
-    echo "<pre>",print_r($_REQUEST,true),"</pre>";
+    if ((!empty($_REQUEST['end_date'])) && (empty($_REQUEST['begin_date']))) {
+        echo 
+        '<span class="mb-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>Beginning date is required for a date range.</b>
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger" role="button">Try Again</a>
+        </span>';
+        exit();
+    }
     exit();
 }
 
