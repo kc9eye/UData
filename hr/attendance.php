@@ -104,17 +104,14 @@ function attendanceDisplay () {
                     <input class="form-control" type="time" name="departure_time" />
                 </div>
                 <hr />
-                <h4>Modifiers</h4>
-                <div class="form-group mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="excused" value="1" />
-                        <label class="form-check-label" for="excused">Excused/No Points</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="perfect_uneffected" value="1" />
-                        <label class="form-check-label" for="perfect">Does not effect perfect Attendance</label>
-                    </div>
-                </div>
+                <h4>Points</h4>
+                <select class="form-control" name="points">
+                    <option value="0">0</option>
+                    <option value="0.25">0.25</option>
+                    <option value="0.50">0.50</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
                 <button id="submitBtn" class="btn btn-secondary mb-3" type="button">Add Record</button>
             </form>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
