@@ -175,8 +175,21 @@ function addAttendanceRecord() {
         </div>';
         exit();
         }
+
+        $interval = new DateInterval('P1D');
+        $end_date = new DateTime($_REQUEST['end_date_range']);
+        $end_date->add($interval);
+
+        $period = new DatePeriod(new DateTime($_REQUEST['begin_date_range']),$interval, $end_date);
+        echo "<pre>";
+        foreach ($period as $date) {
+            echo $date->format('Y-m-d'),"\n";
+        }
+        exit("</pre>");
+
     }
-    echo "At the end, for some reason.";
+
+
     // echo "<pre>",print_r($_REQUEST,true),"</pre>";
     exit();
 }
