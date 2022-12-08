@@ -186,7 +186,7 @@ function addAttendanceRecord() {
                     ':absent'=> ($_REQUEST['description'] == 'Absence') ? true : false,
                     ':arrive_time'=>$_REQUEST['arrival_time'],
                     ':leave_time' =>$_REQUEST['departure_time'],
-                    ':decscription'=> $_REQUEST['descritpion'],
+                    ':decscription'=> $_REQUEST['description'],
                     ':excused'=>false,
                     ':uid'=>$_REQUEST['uid'],
                     ':points'=>$_REQUEST['points']
