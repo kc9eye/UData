@@ -304,7 +304,7 @@ function editAttendanceDisplay() {
                 "'.$server->config['application-root'].'/hr/attendance",
                 {method:"POST",body:new FormData(form)}
             );
-            document.getElementById("form-display").innerHTML = result.text();
+            document.getElementById("form-display").innerHTML = await result.text();
             window.scrollTo(0,0);
         });
     </script>';
