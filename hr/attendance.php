@@ -108,7 +108,7 @@ function attendanceDisplay () {
                     <option value="1">1</option>
                     <option value="2">2</option>
                 </select>
-                <button id="submitBtn" class="btn btn-secondary mb-3" type="button">Add Record</button>
+                <button id="submitBtn" class="btn btn-secondary mb-3" type="submit">Add Record</button>
             </form>
             </div>
             <script>
