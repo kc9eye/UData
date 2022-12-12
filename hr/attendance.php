@@ -114,19 +114,9 @@ function attendanceDisplay () {
             <script>
                 let form = document.getElementById("addRecord");
                 let btn = document.getElementById("submitBtn");
-                let points = docuemtn.getElementById("points");
 
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
-                    if (points.value = "") {
-                        form.classList.add("needs-validation");
-                        points.addClass("invalid");
-                        event.stopPropagation();
-                    }
-                    else {
-                        form.classList.add("was-validated");
-                    }
-
                     btn.setAttribute("disabled","disabled");
                     btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
                     result = await fetch(
@@ -155,6 +145,15 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
+
+    if ($_REQUEST['points'] == "") {
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>A value for points must be assigned.</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+        exit();
+    }
 
     if ($_REQUEST['occ_date'] == '') {
         if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] == '') {
