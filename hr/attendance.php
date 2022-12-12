@@ -145,47 +145,28 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
-    // exit("<pre>".print_r($_REQUEST,true)."</pre>");
 
-    if ($_REQUEST['points'] == "") {
-        echo
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>A value for points must be assigned.</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-    }
-    else if ($_REQUEST['occ_date'] == '') {
-        if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] == '') {
-            echo 
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>End date for a date range is required.</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-        }
-        else if ($_REQUEST['begin_date_range'] == '' && $_REQUEST['end_date_range'] != '') {
-            echo 
-        '<div class="border border-secondary rounded m-3">
-            <h4 class="bg-danger">Error</h4>
-            <b>A begin date is required for a date range.</b>&#160;
-            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-        </div>';
-        exit();
-        }
-        //Date interval
-        $interval = new DateInterval('P1D');
-        $end_date = new DateTime($_REQUEST['end_date_range']);
-        $end_date->add($interval);
-        $period = new DatePeriod(new DateTime($_REQUEST['begin_date_range']),$interval, $end_date);
+   
 
-        try {
-            $sql =
-            'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
-            $pntr = $server->pdo->prepare($sql);
-            $server->pdo->beginTransaction();
+    try {
+        if ($_REQUEST['occ_date']=='') 
+            if ($_REQUEST['begin_date_range'] == '') throw new Exception("Must have beginning date.");
+            elseif ($_REQUEST['end_date_range'] == '') throw new Exception("Must have end date for the range.");
+        else throw new Exception("A date for the record must be provided.");
+        if ($_REQUEST['points'] == '') throw new Exception("A value must be assigend for points.");
+
+        $sql =
+        'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
+        $pntr = $server->pdo->prepare($sql);
+        $server->pdo->beginTransaction();
+
+        if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] != '') {
+            //Date interval
+            $interval = new DateInterval('P1D');
+            $end_date = new DateTime($_REQUEST['end_date_range']);
+            $end_date->add($interval);
+            $period = new DatePeriod(new DateTime($_REQUEST['begin_date_range']),$interval, $end_date);
+
             foreach($period as $date) {
                 $insert = [
                     ':id'=>uniqid(),
@@ -201,30 +182,9 @@ function addAttendanceRecord() {
                 ];
                 if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             }
-            $server->pdo->commit();
-            echo 
-            '<div class="m-3">
-                <h4 class="bg-success">Record/s Added</h4>
-                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
-            </div>';
+            
         }
-        catch(Exception $e) {
-            $server->pdo->rollBack();
-            trigger_error($e->getMessage(),E_USER_WARNING);
-            echo 
-            '<div class="border border-secondary rounded m-3">
-                <h4 class="bg-danger">Error</h4>
-                <b>A database error occurred</b>&#160;
-                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-            </div>';
-            exit();
-        }
-    }
-    else if ($_REQUEST['occ_date'] != '') {
-        $sql =
-            'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
-        $pntr = $server->pdo->prepare($sql);
-        try {
+        else {
             $insert = [
                 ':id'=>uniqid(),
                 ':eid'=>$_REQUEST['eid'],
@@ -238,28 +198,20 @@ function addAttendanceRecord() {
                 ':points'=>$_REQUEST['points']
             ];
             if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
-            echo 
-            '<div class="m-3">
-                <h4 class="bg-success">Record/s Added</h4>
-                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
-            </div>';
         }
-        catch(Exception $e) {
-            trigger_error($e->getMessage(),E_USER_WARNING);
-            echo 
-            '<div class="border border-secondary rounded m-3">
-                <h4 class="bg-danger">Error</h4>
-                <b>A database error occurred</b>&#160;
-                <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
-            </div>';
-            exit();
-        }
-    }
-    else {
+        $server->pdo->commit();
         echo 
+        '<div class="m-3">
+            <h4 class="bg-success">Record/s Added</h4>
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
+        </div>';
+    }
+    catch(Exception $e) {
+        $server->pdo->rollBack();
+         echo 
         '<div class="border border-secondary rounded m-3">
             <h4 class="bg-danger">Error</h4>
-            <b>A date is required for every entry.</b>&#160;
+            <b>'.$e->getMessage().'</b>&#160;
             <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
         </div>';
         exit();
