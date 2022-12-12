@@ -117,6 +117,7 @@ function attendanceDisplay () {
 
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
+                    
                     //Validate the form
                     if (!form.checkValidity()) {
                         event.stopPropagation();
