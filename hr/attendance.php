@@ -156,8 +156,7 @@ function addAttendanceRecord() {
         </div>';
         exit();
     }
-
-    if ($_REQUEST['occ_date'] == '') {
+    else if ($_REQUEST['occ_date'] == '') {
         if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] == '') {
             echo 
         '<div class="border border-secondary rounded m-3">
