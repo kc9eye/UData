@@ -118,13 +118,9 @@ function attendanceDisplay () {
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
                     //Validate the form
-                    inputs = form.querySelectorAll(".needs-validation");
-                    inputs.foreach((input)=>{
-                        if (!form.checkValidity()) {
-                            event.stopPropagation();
-                        }
-                        input.classList.add("was-validated");
-                    });
+                    if (!form.checkValidity()) {
+                        event.stopPropagation();
+                    }
 
                     //Submit the form
                     btn.setAttribute("disabled","disabled");
