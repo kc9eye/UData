@@ -100,7 +100,7 @@ function attendanceDisplay () {
                 </div>
                 <hr />
                 <h4>Points</h4>
-                <select class="form-control mb-3" name="points" required">
+                <select class="form-select mb-3" name="points" required>
                     <option value=""></option>
                     <option value="0">0</option>
                     <option value="0.25">0.25</option>
@@ -117,13 +117,8 @@ function attendanceDisplay () {
 
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
+                    if (!form.checkValidity()) event.stopPropagation();
 
-                    //Validate the form
-                    if (!form.checkValidity()) {
-                        event.stopPropagation();
-                    }
-
-                    //Submit the form
                     btn.setAttribute("disabled","disabled");
                     btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
                     result = await fetch(
