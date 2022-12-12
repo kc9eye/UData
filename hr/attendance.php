@@ -117,7 +117,7 @@ function attendanceDisplay () {
 
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
-                    
+
                     //Validate the form
                     if (!form.checkValidity()) {
                         event.stopPropagation();
@@ -152,6 +152,10 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
+
+    echo "<pre>",print_r($_REQUEST,true),"</pre>";
+    exit();
+
     if ($_REQUEST['occ_date'] == '') {
         if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] == '') {
             echo 
