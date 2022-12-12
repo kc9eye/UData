@@ -115,22 +115,18 @@ function attendanceDisplay () {
                 let form = document.getElementById("addRecord");
                 let btn = document.getElementById("submitBtn");
 
-                // Validate the form
-                var forms = document.querySelectorAll(".needs-validation")
-                Array.prototype.slice.call(forms)
-                    .forEach(function (form) {
-                    form.addEventListener("submit", function (event) {
-                        if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                        }
-                        form.classList.add("was-validated")
-                    }, false)
-                    })
-                })()
-
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
+                    //Validate the form
+                    inputs = form.querySelectorAll(".needs-validation");
+                    inputs.foreach((input)=>{
+                        if (!form.checkValidity()) {
+                            event.stopPropagation();
+                        }
+                        input.classList.add("was-validated");
+                    });
+
+                    //Submit the form
                     btn.setAttribute("disabled","disabled");
                     btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
                     result = await fetch(
