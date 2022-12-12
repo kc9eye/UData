@@ -114,6 +114,21 @@ function attendanceDisplay () {
             <script>
                 let form = document.getElementById("addRecord");
                 let btn = document.getElementById("submitBtn");
+
+                // Validate the form
+                var forms = document.querySelectorAll(".needs-validation")
+                Array.prototype.slice.call(forms)
+                    .forEach(function (form) {
+                    form.addEventListener("submit", function (event) {
+                        if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                        }
+                        form.classList.add("was-validated")
+                    }, false)
+                    })
+                })()
+
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
                     btn.setAttribute("disabled","disabled");
