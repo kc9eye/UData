@@ -100,7 +100,7 @@ function attendanceDisplay () {
                 </div>
                 <hr />
                 <h4>Points</h4>
-                <select class="form-select form-control mb-3" name="points" required>
+                <select id="points" class="form-select form-control mb-3" name="points" required>
                     <option value=""></option>
                     <option value="0">0</option>
                     <option value="0.25">0.25</option>
@@ -114,10 +114,14 @@ function attendanceDisplay () {
             <script>
                 let form = document.getElementById("addRecord");
                 let btn = document.getElementById("submitBtn");
+                let points = docuemtn.getElementById("points");
 
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
-                    if (!form.checkValidity()) event.stopPropagation();
+                    if (points.value = "") {
+                        points.addClass("invalid");
+                        event.stopPropagation();
+                    }
 
                     btn.setAttribute("disabled","disabled");
                     btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
