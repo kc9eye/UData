@@ -100,7 +100,7 @@ function attendanceDisplay () {
                 </div>
                 <hr />
                 <h4>Points</h4>
-                <select class="form-control mb-3" name="points" required>
+                <select class="form-control mb-3" name="points" required="required">
                     <option></option>
                     <option value="0">0</option>
                     <option value="0.25">0.25</option>
@@ -225,7 +225,7 @@ function addAttendanceRecord() {
                 ':uid'=>$_REQUEST['uid'],
                 ':points'=>$_REQUEST['points']
             ];
-            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo()));
+            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             echo 
             '<div class="m-3">
                 <h4 class="bg-success">Record/s Added</h4>
