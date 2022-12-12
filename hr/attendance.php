@@ -145,9 +145,10 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
-    exit("<pre>".print_r($_REQUEST,true)."</pre>");
+    // exit("<pre>".print_r($_REQUEST,true)."</pre>");
 
     if ($_REQUEST['points'] == "") {
+        echo
         '<div class="border border-secondary rounded m-3">
             <h4 class="bg-danger">Error</h4>
             <b>A value for points must be assigned.</b>&#160;
