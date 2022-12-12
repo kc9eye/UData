@@ -198,6 +198,7 @@ function addAttendanceRecord() {
             if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         }
         $server->pdo->commit();
+        
         echo 
         '<div class="m-3">
             <h4 class="bg-success">Record/s Added</h4>
