@@ -151,7 +151,7 @@ function addAttendanceRecord() {
         if ($_REQUEST['occ_date'] == "") 
             if ($_REQUEST['begin_date_range'] == "") throw new Exception("Must have beginning date.");
             elseif ($_REQUEST['end_date_range'] == "") throw new Exception("Must have end date for the range.");
-        else throw new Exception("A date for the record must be provided.");
+
         if ($_REQUEST['points'] == "") throw new Exception("A value must be assigend for points.");
 
         $sql =
@@ -198,7 +198,7 @@ function addAttendanceRecord() {
             if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         }
         $server->pdo->commit();
-        
+
         echo 
         '<div class="m-3">
             <h4 class="bg-success">Record/s Added</h4>
