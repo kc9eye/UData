@@ -119,7 +119,12 @@ function attendanceDisplay () {
                 btn.addEventListener("click",async (event)=>{
                     event.preventDefault();
                     if (points.value = "") {
+                        form.classList.add("needs-validation");
                         points.addClass("invalid");
+                        event.stopPropagation();
+                    }
+                    else {
+                        form.classList.add("was-validated");
                     }
 
                     btn.setAttribute("disabled","disabled");
