@@ -120,7 +120,6 @@ function attendanceDisplay () {
                     event.preventDefault();
                     if (points.value = "") {
                         points.addClass("invalid");
-                        event.stopPropagation();
                     }
 
                     btn.setAttribute("disabled","disabled");
@@ -151,9 +150,6 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
-
-    echo "<pre>",print_r($_REQUEST,true),"</pre>";
-    exit();
 
     if ($_REQUEST['occ_date'] == '') {
         if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] == '') {
