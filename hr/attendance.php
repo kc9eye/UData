@@ -145,6 +145,7 @@ function attendanceDisplay () {
 
 function addAttendanceRecord() {
     global $server;
+    exit("<pre>".print_r($_REQUEST,true)."</pre>");
 
     if ($_REQUEST['points'] == "") {
         '<div class="border border-secondary rounded m-3">
