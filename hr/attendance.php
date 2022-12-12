@@ -147,6 +147,7 @@ function addAttendanceRecord() {
     global $server;
 
     try {
+        $server->pdo->beginTransaction();
         if ($_REQUEST['occ_date'] == "") 
             if ($_REQUEST['begin_date_range'] == "") throw new Exception("Must have beginning date.");
             elseif ($_REQUEST['end_date_range'] == "") throw new Exception("Must have end date for the range.");
@@ -156,7 +157,6 @@ function addAttendanceRecord() {
         $sql =
         'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
         $pntr = $server->pdo->prepare($sql);
-        $server->pdo->beginTransaction();
 
         if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] != '') {
             //Date interval
