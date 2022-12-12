@@ -146,14 +146,12 @@ function attendanceDisplay () {
 function addAttendanceRecord() {
     global $server;
 
-   
-
     try {
-        if ($_REQUEST['occ_date']=='') 
-            if ($_REQUEST['begin_date_range'] == '') throw new Exception("Must have beginning date.");
-            elseif ($_REQUEST['end_date_range'] == '') throw new Exception("Must have end date for the range.");
+        if ($_REQUEST['occ_date'] == "") 
+            if ($_REQUEST['begin_date_range'] == "") throw new Exception("Must have beginning date.");
+            elseif ($_REQUEST['end_date_range'] == "") throw new Exception("Must have end date for the range.");
         else throw new Exception("A date for the record must be provided.");
-        if ($_REQUEST['points'] == '') throw new Exception("A value must be assigend for points.");
+        if ($_REQUEST['points'] == "") throw new Exception("A value must be assigend for points.");
 
         $sql =
         'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
@@ -205,6 +203,7 @@ function addAttendanceRecord() {
             <h4 class="bg-success">Record/s Added</h4>
             <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
         </div>';
+        exit();
     }
     catch(Exception $e) {
         $server->pdo->rollBack();
@@ -216,7 +215,7 @@ function addAttendanceRecord() {
         </div>';
         exit();
     }
-    exit();
+    echo "Why are you here?!";
 }
 
 function editAttendanceDisplay() {
