@@ -101,7 +101,7 @@ function attendanceDisplay () {
                 <hr />
                 <h4>Points</h4>
                 <select class="form-control mb-3" name="points" required="required">
-                    <option value="">Required</option>
+                    <option value="" selected></option>
                     <option value="0">0</option>
                     <option value="0.25">0.25</option>
                     <option value="0.50">0.50</option>
