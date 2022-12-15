@@ -31,6 +31,7 @@ function EOMDisplay() {
     include('submenu.php');
     $view = $server->getViewer("Employee of the Month");
     $view->sideDropDownMenu($submenu);
-
+    $view->h1("Employee of the Month Nominations");
+    
     $view->footer();
 }
