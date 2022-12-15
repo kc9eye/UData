@@ -45,5 +45,5 @@ function getActiveEmployees() {
         where employees.end_date is null
         order by profiles.last asc"
     );
-    return $pntr;
+    return $pntr->fetchAll(PDO::FETCH_ASSOC);
 }
