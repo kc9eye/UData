@@ -32,6 +32,18 @@ function EOMDisplay() {
     $view = $server->getViewer("Employee of the Month");
     $view->sideDropDownMenu($submenu);
     $view->h1("Employee of the Month Nominations");
-    
+    echo "<pre>",print_r(getActiveEmployees(),true),"</pre>";
     $view->footer();
+}
+
+function getActiveEmployees() {
+    global $server;
+    $pntr = $server->pdo->query(
+        "select profiles.first||' '||profiles.last as \"name\",employees.id as \"eid\"
+        from employees
+        inner join profiles on profiles.id = employees.pid
+        where employees.end_date is null
+        order by profiles.last asc"
+    );
+    return $pntr;
 }
