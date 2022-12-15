@@ -32,6 +32,7 @@ function EOMDisplay() {
     $view = $server->getViewer("Employee of the Month");
     $view->sideDropDownMenu($submenu);
     $view->h1("Employee of the Month Nominations");
+    echo "<pre>",print_r(getCurrentMonthNominations(),true);
     echo "<pre>",print_r(getActiveEmployees(),true),"</pre>";
     $view->footer();
 }
@@ -44,6 +45,14 @@ function getActiveEmployees() {
         inner join profiles on profiles.id = employees.pid
         where employees.end_date is null
         order by profiles.last asc"
+    );
+    return $pntr->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getCurrentMonthNominations() {
+    global $server;
+    $pntr = $server->pdo->query(
+        "select * from eotm where gen_date between date_trunc('month',current_date) and date_trunc('month',(current_date + interval '30 days'))"
     );
     return $pntr->fetchAll(PDO::FETCH_ASSOC);
 }
