@@ -141,22 +141,13 @@ function getCurrentMonthNominations() {
         //bundle the nominations
         $nominations = array();
         if (empty($pntr)) return $nominations;
-
         foreach($pntr as $row) {
-            if (empty($nominations)) {
-                $nominations[getNames($row['eid'],"employee")] = [getNames($row['uid'],"user")];
-                continue;
-            }
-            else{
-                foreach($nominations as $index=>$value) {
-                    if ($index == getNames($row['eid'],"employee")) {
-                        array_push($nominations[$index],getNames($row['uid'],"user"));
-                        continue;
-                    }
-                    else {
-                        $nominations[getNames($row['eid'],"employee")] = [getNames($row['uid'],"user")];
-                        continue;
-                    }
+            foreach($nominations as $index=>$value) {
+                if ($index == getNames($row['eid'],"employee")) {
+                    array_push($nominations[$index],getNames($row['uid'],"user"));
+                }
+                else {
+                    $nominations[getNames($row['eid'],"employee")] = [getNames($row['uid'],"user")];
                 }
             }
         }
