@@ -140,17 +140,21 @@ function getCurrentMonthNominations() {
 
         //bundle the nominations
         $nominations = array();
-        if (empty(($data = $pntr->fetchAll(PDO::FETCH_ASSOC)))) return $nominations;
+        if (empty($pntr)) return $nominations;
 
-        foreach($data as $row) {
+        foreach($pntr as $row) {
             if (empty($nominations)) {
-                $nominations[getNames($row['eid'],'employee')] = [getNames($row['uid'],'user')];
+                $nominations[getNames($row['eid'],"employee")] = getNames($row['uid'],"user");
                 continue;
             }
-            else {
-                foreach($nominations as $index => $value) {
-                    if ($nominations[$index] == getNames($row['eid'],"employee")) {
+            else{
+                foreach($nominations as $index=>$value) {
+                    if ($index == getNames($row['eid'],"employee")) {
                         array_push($nominations[$index],getNames($row['uid'],"user"));
+                        continue;
+                    }
+                    else {
+                        $nominations[getNames($row['eid'],"employee")] = [getNames($row['uid'],"user")];
                         continue;
                     }
                 }
