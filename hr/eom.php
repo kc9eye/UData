@@ -138,22 +138,9 @@ function getCurrentMonthNominations() {
             "select * from eotm where gen_date between date_trunc('month',current_date) and date_trunc('month',(current_date + interval '30 days'))"
         );
         $data = $pntr->fetchAll(PDO::FETCH_ASSOC);
-        $nominations = array();
-        foreach($data as $row) {
-            if (empty($nominations)) {
-                $nominations[getNames($row['eid'],"employee")] = array(getNames($row['uid'],"user"));
-                continue;
-            }
-            else {
-                foreach($nominations as $index => $value) {
-                    $emp = getNames($row['eid'],"employee");
-                    $user = getNames($row['uid'],"user");
-                    if ($index == $emp) array_push($nominations[$index],$user);
-                    else $nominations[$emp] = array($user);
-                }
-            }
-        }
-        return $nominations;
+        if (empty($data)) return array();
+        return $data;
+ 
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
