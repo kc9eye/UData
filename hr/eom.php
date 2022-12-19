@@ -141,10 +141,12 @@ function getCurrentMonthNominations() {
         if (empty($data)) return array();
         $nominations = array();
         foreach($data as $row) {
-            foreach($nominations as $index => $value) {
-                $emp = getNames($row['eid'],"employee");
-                $user = getNames($row['uid'],"user");
-                if (empty($nominations[$index])) $nominations[$index] = array($user);
+            $emp = getNames($row['eid'],"employee");
+            $user = getNames($row['uid'],"user");
+            if (empty($nominations)) $nominations[$emp] = [$user];
+            else {
+                if (!empty($nominations[$emp])) array_push($nominations[$emp],$user);
+                else $nominations[$emp] = [$user];
             }
         }
         return $nominations;
