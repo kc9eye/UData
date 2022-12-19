@@ -155,7 +155,7 @@ function getCurrentMonthNominations() {
                     }
                 }
             }
-            $nominations[getNames($row['eid'],'employee')] = [getNames($row['uid'],$user)];
+            $nominations[getNames($row['eid'],"employee")] = [getNames($row['uid'],"user")];
         }
 
         return $nominations;
