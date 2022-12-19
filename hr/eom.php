@@ -86,7 +86,7 @@ function getNames($id,$storage) {
     try {
         switch ($storage) {
             case 'employee':
-                $pntr = $server->pdo->prepare("select profiles.first||' '||profiles.last as \"name\"from employees inner join profiles on profiles.id = employees.pid where employees.eid = ?");
+                $pntr = $server->pdo->prepare("select profiles.first||' '||profiles.last as \"name\"from employees inner join profiles on profiles.id = employees.pid where employees.id = ?");
                 if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
                 return $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['name'];
             break;
