@@ -36,58 +36,57 @@ function EOMDisplay() {
     $view->sideDropDownMenu($submenu);
     $view->h1("Employee of the Month Nominations");
     $noms = getCurrentMonthNominations();
-    echo "<pre>",print_r($noms,true),"</pre>";
-    // echo '<div id="nominationDisplay">';
-    // if (!empty($noms)) {
-    //     foreach($noms as $index => $value) {
-    //         echo 
-    //         '<div class="card">
-    //             <div class="card-body">
-    //                 <h3 class="card-title bg-warning">'.$index.'</h3>
-    //                 <b>Nominated by:</b>
-    //                 <ul class="list-group">';
-    //                 foreach($value as $nominator) {
-    //                     echo '<li class="list-group-item">'.$nominator.'</li>';
-    //                 }
+    echo '<div id="nominationDisplay">';
+    if (!empty($noms)) {
+        foreach($noms as $index => $value) {
+            echo 
+            '<div class="card">
+                <div class="card-body">
+                    <h3 class="card-title bg-warning">'.$index.'</h3>
+                    <b>Nominated by:</b>
+                    <ul class="list-group">';
+                    foreach($value as $nominator) {
+                        echo '<li class="list-group-item">'.$nominator.'</li>';
+                    }
             
-    //         echo 
-    //         '       </ul>
-    //             </div>
-    //         </div>
-    //         <hr />';
-    //     }
-    // }
-    // echo
-    // '   <form id="nominationForm">
-    //         <input type="hidden" name="action" value="nominate" />
-    //         <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
-    //         <div class="form-group form-selection">
-    //             <label class="form-label" for="eid">Nominations</label>
-    //             <select class="form-control" name="eid">';
-    //             foreach(getActiveEmployees() as $row) {
-    //                 echo '<option value="'.$row['eid'].'">'.$row['name'].'</option>';
-    //             }
-    // echo
-    // '           </select>
-    //         </div>
-    //         <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
-    //     </form
-    // </div>
-    // <script>
-    //     let form = document.getElementById("nominationForm");
-    //     let btn = document.getElementById("submitBtn");
-    //     btn.addEventListener("click",async (event)=>{
-    //         event.preventDefault();
-    //         btn.setAttribute("disabled","disabled");
-    //         btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
-    //         let result = await fetch(
-    //             "'.$server->config['application-root'].'/hr/eom",
-    //             {method:"POST",body:new FormData(form)}
-    //         );
-    //         document.getElementById("nominationDisplay").innerHTML = await result.text();
-    //         window.scrollTo(0,0);
-    //     });
-    // </script>';
+            echo 
+            '       </ul>
+                </div>
+            </div>
+            <hr />';
+        }
+    }
+    echo
+    '   <form id="nominationForm">
+            <input type="hidden" name="action" value="nominate" />
+            <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+            <div class="form-group form-selection">
+                <label class="form-label" for="eid">Nominations</label>
+                <select class="form-control" name="eid">';
+                foreach(getActiveEmployees() as $row) {
+                    echo '<option value="'.$row['eid'].'">'.$row['name'].'</option>';
+                }
+    echo
+    '           </select>
+            </div>
+            <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
+        </form
+    </div>
+    <script>
+        let form = document.getElementById("nominationForm");
+        let btn = document.getElementById("submitBtn");
+        btn.addEventListener("click",async (event)=>{
+            event.preventDefault();
+            btn.setAttribute("disabled","disabled");
+            btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
+            let result = await fetch(
+                "'.$server->config['application-root'].'/hr/eom",
+                {method:"POST",body:new FormData(form)}
+            );
+            document.getElementById("nominationDisplay").innerHTML = await result.text();
+            window.scrollTo(0,0);
+        });
+    </script>';
     $view->footer();
 }
 
