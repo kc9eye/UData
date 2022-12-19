@@ -17,6 +17,9 @@
 require_once(dirname(__DIR__).'/lib/init.php');
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
+        case 'nominate':
+            addNomination();
+        break;
         default:
             EOMDisplay();
         break;
@@ -32,9 +35,87 @@ function EOMDisplay() {
     $view = $server->getViewer("Employee of the Month");
     $view->sideDropDownMenu($submenu);
     $view->h1("Employee of the Month Nominations");
-    echo "<pre>",print_r(getCurrentMonthNominations(),true);
-    echo "<pre>",print_r(getActiveEmployees(),true),"</pre>";
+    $noms = getCurrentMonthNominations();
+    echo '<div id="nominationDisplay">';
+    if (!empty($noms)) {
+        foreach($nom as $index => $value) {
+            echo 
+            '<div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">'.$index.'</h3>
+                    <b>Nominated by:</b>
+                    <ul class="list-group">';
+                    foreach($value as $nominator) {
+                        echo '<li class="list-group-item">'.$nominator.'</li>';
+                    }
+            
+            echo 
+            '       </ul>
+                </div>
+            </div>
+            <hr />';
+        }
+    }
+    echo
+    '   <form id="nominationForm">
+            <input type="hidden" name="action" value="nominate" />
+            <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+            <div class="form-group form-selection">
+                <label class="form-label" for="eid">Nominations</label>
+                <select class="form-control" name="eid">';
+                foreach(getActiveEmployees() as $row) {
+                    echo '<option value="'.$row['eid'].'">'.$row['name'].'</option>';
+                }
+    echo
+    '           </select>
+            </div>
+            <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
+        </form
+    </div>
+    <script>
+        let form = document.getElementById("nominationForm");
+        let btn = document.getElementById("submitBtn");
+        btn.addEventListener("click",async (event)=>{
+            event.preventDefault();
+            btn.setAttribute("disabled","disabled");
+            btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
+            let result = await fetch(
+                "'.$server->config['application-root'].'/hr/eom",
+                {method:"POST",body:new FormData(form)}
+            );
+            document.getElementById("nominationDisplay").innerHTML = await result.text();
+            window.scrollTo(0,0);
+        });
+    </script>';
     $view->footer();
+}
+
+function addNomination() {
+    global $server;
+    $server->userMustHavePermission('viewProfiles');
+    try {
+        $pntr = $server->pdo->prepare("insert into eotm values (:id,now(),:eid,:uid)");
+        $insert = [
+            ':id'=>uniqid(),
+            ':eid'=> $_REQUEST['eid'],
+            ':uid'=> $_REQUEST['uid']
+        ];
+        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+        echo
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-success">Completed</h4>
+            <a href="'.$server->config['application-root'].'/hr/eom" class="btn btn-success m-1" role="button">Return</a>
+        </div>';
+    }
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        echo
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>An error occurred.</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/eom" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+    }
 }
 
 function getActiveEmployees() {
@@ -74,9 +155,11 @@ function getCurrentMonthNominations() {
                 }
             }
         }
+        return $nominations;
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
+        return array();
     }
 
 }
