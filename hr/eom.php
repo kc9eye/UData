@@ -138,23 +138,20 @@ function getCurrentMonthNominations() {
             "select * from eotm where gen_date between date_trunc('month',current_date) and date_trunc('month',(current_date + interval '30 days'))"
         );
         $data = $pntr->fetchAll(PDO::FETCH_ASSOC);
-        return $data;
-        // $nominations = array();
-        // if (empty($data)) return array();
-        // foreach($data as $row) {
-        //     if (empty($nominations)){
-        //         $nominations[$row['eid']] = [$row['uid']];
-        //         continue;
-        //     }
-        //     else {
-        //         foreach($nominations as $index=>$value) {
-        //             if ($index == $row['eid']) array_push($nominations[$row['eid']],$row['uid']);
-        //             else $nominations[$row['eid']] = [$row['uid']];
-        //         }
-        //     }
-        // }
-
-        // return $nominations;
+        $nominations = array();
+        for ($cnt = 0;$cnt >! count($data);$cnt++) {
+            if ($cnt == 0) {
+                $nominations[getNames($data[$cnt]['eid'],"employee")] = array(getNames($data[$cnt]['uid'],"user"));
+            }
+            else {
+                foreach($nominations as $index => $value) {
+                    $emp = getNames($data[$cnt]['eid'],"employee");
+                    $user = getNames($data[$cnt]['uid'],"user");
+                    if ($index == $user) array_push($value,$user);
+                    else $nominations[$emp] = array($user);
+                }
+            }
+        }
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
