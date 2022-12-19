@@ -38,7 +38,7 @@ function EOMDisplay() {
     $noms = getCurrentMonthNominations();
     echo '<div id="nominationDisplay">';
     if (!empty($noms)) {
-        foreach($nom as $index => $value) {
+        foreach($noms as $index => $value) {
             echo 
             '<div class="card">
                 <div class="card-body">
