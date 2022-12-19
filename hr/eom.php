@@ -51,23 +51,55 @@ function getActiveEmployees() {
 
 function getCurrentMonthNominations() {
     global $server;
-    $pntr = $server->pdo->query(
-        "select * from eotm where gen_date between date_trunc('month',current_date) and date_trunc('month',(current_date + interval '30 days'))"
-    );
-    //bundle the nominations
-    $nominations = array();
-    foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
-        if (empty($nominations)) {
-            $nominations[$row['eid']] = [$row['uid']];
-            continue;
-        }
-        else {
-            foreach($nominations as $index => $value) {
-                if ($row['eid'] == $index) array_push($value,$row['uid']);
+    try {
+        $pntr = $server->pdo->query(
+            "select * from eotm where gen_date between date_trunc('month',current_date) and date_trunc('month',(current_date + interval '30 days'))"
+        );
+
+        //bundle the nominations
+        $nominations = array();
+        if (empty(($data = $pntr->fetchAll(PDO::FETCH_ASSOC)))) return $nominations;
+
+        foreach($data as $row) {
+            if (empty($nominations)) {
+                $nominations[getNames($row['eid'],'employee')] = [getNames($row['uid'],'user')];
                 continue;
             }
-            $nominations[$row['eid']] = [$row['uid']];
+            else {
+                foreach($nominations as $index => $value) {
+                    if ($nominations[$index] == getNames($row['eid'],"employee")) {
+                        array_push($nominations[$index],getNames($row['uid'],"user"));
+                        continue;
+                    }
+                }
+            }
         }
     }
-    return $nominations;
+    catch(Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+    }
+
+}
+
+function getNames($id,$storage) {
+    global $server;
+    try {
+        switch ($storage) {
+            case 'employee':
+                $pntr = $server->pdo->prepare("select profiles.first||' '||profiles.last as \"name\"from employees inner join profiles on profiles.id = employees.pid where employees.eid = ?");
+                if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+                return $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['name'];
+            break;
+            case 'user':
+                $pntr = $server->pdo->prepare("select profiles.first||' '||profiles.last as \"name\"from user_accts inner join profiles on profiles.id = user_accts.pid where user_accts.id = ?");
+                if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
+                return $pntr->fetchAll(PDO::FETCH_ASSOC)[0]['name'];
+            break;
+        }
+    }
+    catch (Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+    }
+   
+    
 }
