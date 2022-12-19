@@ -148,7 +148,7 @@ function getCurrentMonthNominations() {
                 foreach($nominations as $index => $value) {
                     $emp = getNames($row['eid'],"employee");
                     $user = getNames($row['uid'],"user");
-                    if ($index == $emp) array_push($value,$user);
+                    if ($index == $emp) array_push($nominations[$index],$user);
                     else $nominations[$emp] = array($user);
                 }
             }
