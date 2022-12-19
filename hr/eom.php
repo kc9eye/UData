@@ -42,7 +42,7 @@ function EOMDisplay() {
             echo 
             '<div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">'.$index.'</h3>
+                    <h3 class="card-title bg-warning">'.$index.'</h3>
                     <b>Nominated by:</b>
                     <ul class="list-group">';
                     foreach($value as $nominator) {
