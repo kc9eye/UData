@@ -139,8 +139,15 @@ function getCurrentMonthNominations() {
         );
         $data = $pntr->fetchAll(PDO::FETCH_ASSOC);
         if (empty($data)) return array();
-        return $data;
- 
+        $nominations = array();
+        foreach($data as $row) {
+            foreach($nominations as $index => $value) {
+                $emp = getNames($row['eid'],"employee");
+                $user = getNames($row['uid'],"user");
+                if (empty($nominations[$index])) $nominations[$index] = array($user);
+            }
+        }
+        return $nominations;
     }
     catch(Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
