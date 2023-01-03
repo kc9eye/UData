@@ -98,6 +98,10 @@ function attendanceDisplay () {
                         <option value="Vacation">Vacation</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label class="form-label" for="comments">Aimee\'s Column</label>
+                    <input class="form-control" type="text" name="comments" />
+                </div>
                 <hr />
                 <h4>Points</h4>
                 <select id="points" class="form-select form-control mb-3" name="points" required>
@@ -155,7 +159,7 @@ function addAttendanceRecord() {
         if ($_REQUEST['points'] == "") throw new Exception("A value must be assigend for points.");
 
         $sql =
-        'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
+        'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points,:comments)';
         $pntr = $server->pdo->prepare($sql);
 
         if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] != '') {
@@ -176,7 +180,8 @@ function addAttendanceRecord() {
                     ':description'=> $_REQUEST['description'],
                     ':excused'=>0,
                     ':uid'=>$_REQUEST['uid'],
-                    ':points'=>$_REQUEST['points']
+                    ':points'=>$_REQUEST['points'],
+                    ':comments'=>$_REQUEST['comments']
                 ];
                 if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             }
@@ -193,7 +198,8 @@ function addAttendanceRecord() {
                 ':description'=> $_REQUEST['description'],
                 ':excused'=>0,
                 ':uid'=>$_REQUEST['uid'],
-                ':points'=>$_REQUEST['points']
+                ':points'=>$_REQUEST['points'],
+                ':comments'=>$_REQUEST['comments']
             ];
             if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         }
@@ -249,7 +255,11 @@ function editAttendanceDisplay() {
         </div>
         <div class="form-group mb-3">
             <label class="form-label" for="leave_time">Time Left</label>
-            <input class="form-conrol" type="time" name="leave_time" value="'.$row['leave_time'].'" />
+            <input class="form-control" type="time" name="leave_time" value="'.$row['leave_time'].'" />
+        </div>
+        <div class="form-group">
+            <label class="form-control" for="comments">Comment</label>
+            <input class="form-control" type="text" name="comments" value="'.$row['comments'].'" />
         </div>
         <div class="form-group mb-3">
             <label class="form-label" for="points">Points</label>
@@ -278,7 +288,7 @@ function editAttendanceDisplay() {
 
 function amendAttendanceRecord() {
     global $server;
-    $sql = 'update missed_time set occ_date = :occ_date, arrive_time = :arrive_time, leave_time = :leave_time, points = :points
+    $sql = 'update missed_time set occ_date = :occ_date, arrive_time = :arrive_time, leave_time = :leave_time, points = :points, comments = :comments
     where id = :id';
     $pntr = $server->pdo->prepare($sql);
     try {
@@ -287,7 +297,8 @@ function amendAttendanceRecord() {
             ':arrive_time'=>($_REQUEST['arrive_time'] == '') ? "00:00:00" : $_REQUEST['arrive_time'],
             ':leave_time'=> ($_REQUEST['leave_time'] == '') ? "00:00:00" : $_REQUEST['leave_time'],
             ':points'=> $_REQUEST['points'],
-            ':id'=>$_REQUEST['rid']
+            ':id'=>$_REQUEST['rid'],
+            ':comments'=>$_REQUEST['comments']
         ];
         if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         echo
