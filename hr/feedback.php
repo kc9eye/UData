@@ -20,7 +20,6 @@ require_once(dirname(__DIR__).'/lib/init.php');
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
         case 'add':
-            // $server->userMustHavePermission('editSupervisorComments');
             addNewComment();
         break;
         case 'view':
@@ -59,7 +58,15 @@ function commentFormDisplay () {
                 <input type="hidden" name="action" value="add" />
                 <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
                 <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
-                <input type="hidden" name="fid" value="" />
+                <input type="hidden" name="fid" value="" />';
+    if ($server->checkPermission("approveProbation")) {
+        echo 
+        '<div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="probation" value="1" />
+            <label class="form-check-label" for="probation">Begin Probation</label>
+        </div>';
+    }
+    echo'
                 <div class="form-group">
                     <label class="form-label" for="subject">Subject</label>
                     <input class="form-control" type="text" name="subject" />
@@ -70,18 +77,6 @@ function commentFormDisplay () {
                 </div>
                 <button class="btn btn-success" type="button" id="submitBtn">Submit</button>
             </form>';
-    // $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    // $view->h1("<small>Add Comment to:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}",true);
-    // $form->newMultipartForm(null,null,"commentForm");
-    // $form->hiddenInput('action','add');
-    // $form->hiddenInput('eid',$_REQUEST['id']);
-    // $form->hiddenInput('uid',$server->currentUserID);
-    // $view->h2('Feedback',true);
-    // $form->inputCapture('subject','Subject',null,true);
-    // $form->textArea('comments',null,'',true,'Enter comments for the individual',true);
-    // $form->fileUpload(FileIndexer::UPLOAD_NAME,'',null,false,false,"Uploaded file can not exceed ".FileUpload::MAX_UPLOAD_SIZE." bytes.");
-    // $form->submitForm('Submit',false,$server->config['application-root'].'/hr/viewemployee?id='.$_REQUEST['id']);
-    // $form->endForm();
     echo '</div>';
     echo 
     '<script>
@@ -155,6 +150,11 @@ function addNewComment () {
     $notify = new Notification($server->pdo,$server->mailer);
 
     try {
+        if (isset($_REQUEST['probation'])) {
+            $sql = "insert into employee_probation values (:id,now(),:eid,'30 days')";
+            $pntr = $server->pdo->prepare($sql);
+            if (!$pntr->execute([':eid'=>$_REQUEST['eid'],':id'=>uniqid()])) throw new Exception(print_r($pntr->errorInfo(),true));
+        }
         if ($handler->addNewSupervisorFeedback($_REQUEST)) {
             $body = file_get_contents(INCLUDE_ROOT.'/wwwroot/templates/email/supervisorfeedback.html');
             $body .= "<a href='{$server->config['application-root']}/hr/feedback?action=view&id={$handler->newCommentID}'>View Supervisor Feedback</a>";
