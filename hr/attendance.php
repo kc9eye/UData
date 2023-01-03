@@ -257,8 +257,8 @@ function editAttendanceDisplay() {
             <label class="form-label" for="leave_time">Time Left</label>
             <input class="form-control" type="time" name="leave_time" value="'.$row['leave_time'].'" />
         </div>
-        <div class="form-group">
-            <label class="form-control" for="comments">Comment</label>
+        <div class="form-group mb-3">
+            <label class="form-label" for="comments">Comment</label>
             <input class="form-control" type="text" name="comments" value="'.$row['comments'].'" />
         </div>
         <div class="form-group mb-3">
