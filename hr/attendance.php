@@ -132,7 +132,6 @@ function attendanceDisplay () {
                 });
             </script>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
-    $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Comment','Points','Edit']);
     echo
     '<div class="table-responsive">
         <table class="table">
