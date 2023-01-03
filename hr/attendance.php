@@ -21,15 +21,9 @@ $server->userMustHavePermission('editEmployeeAttendance');
 
 if (!empty($_REQUEST['action'])) {
     switch($_REQUEST['action']) {
-        case 'add':
-            $handler = new Employees($server->pdo);
-            // $server->getDebugViewer(var_export($handler->addAttendanceRecord($_REQUEST),true));
-            $server->processingDialog(
-                [$handler,'addAttendanceRecord'],
-                [$_REQUEST],
-                $server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid']
-            );
-    break;
+        case 'addRecord':
+            addAttendanceRecord();
+        break;
         case 'edit':
             editAttendanceDisplay();
         break;
@@ -42,12 +36,7 @@ if (!empty($_REQUEST['action'])) {
             );
         break;
         case 'amend':
-            $handler = new Employees($server->pdo);
-            $server->processingDialog(
-                [$handler,'amendAttendanceRecord'],
-                [$_REQUEST],
-                $server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid']
-            );
+            amendAttendanceRecord();
         break;
         case 'range':
             dateRangeDisplay();
@@ -66,48 +55,78 @@ function attendanceDisplay () {
     
     $emp = new Employee($server->pdo,$_REQUEST['id']);
 
-    //View header options for adding the Boostrap DatePicker
-    $pageOptions = [
-        'headinserts'=> [
-            '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>',
-            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>'
-        ]
-    ];
-
-    $view = $server->getViewer("HR: Attendance",$pageOptions);
+    $view = $server->getViewer("HR: Attendance");
     $view->sideDropDownMenu($submenu);
     $view->h1("<small>Add Attendance Record:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
         $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
     );
-    $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
-    $form->newForm();
-    $form->hiddenInput('action','add');
-    $form->hiddenInput('uid',$server->currentUserID);
-    $form->hiddenInput('eid',$_REQUEST['id']);
-    $form->labelContent(
-        'Date',
-        "<div class='input-group input-daterange'>\n
-        <input class='form-control' type='text' name='begin_date' />\n
-        <span class='input-group-addon'>to</span>\n
-        <input class='form-control' type='text' name='end_date' />\n
-        </div>\n"
-    );
-    $form->inputCapture('arrive_time','Time Arrived','00:00');
-    $form->inputCapture('leave_time','Time Left','00:00');
-    $form->checkBox('absent',['Absent','Yes'],'true',false,null,'false');
-    $form->checkBox('nocall',['No Call/Show','Not Notified'],'true',false,null,'false');
-    $form->checkBox('nopoints',['Excused','Yes'],'true',false,'No points will be calculated.','false');
-    $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
-    if ($emp->getProbationStatus()) {
-        $form->labelContent("Probation","Employee is currently on 30 day probation.");
-        $form->hiddenInput('probation_set','true');
-    }
-    else {
-        $form->checkBox('probation',['Probation','Yes'],'true',false,"Initiate a 30 day probation reminder.");
-    }
-    $form->textArea('description',null,'',true);
-    $form->submitForm('Add',false,$view->PageData['approot'].'/hr/viewemployee?id='.$_REQUEST['id']);
-    $form->endForm();
+    echo 
+    '<div id="form-display">
+    <form id="addRecord">
+                <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
+                <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+                <input type="hidden" name="action" value="addRecord" />
+                <div class="form-group mb-3">
+                    <label class="form-label" for="occ_date">Single Occurrence Date</label>
+                    <input type="date" class="form-control" name="occ_date" />
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">Ranged Occurrence</label>
+                    <div class="input-group">
+                        <input class="form-control" type="date" name="begin_date_range" />
+                        <span class="input-group-text">to</span>
+                        <input class="form-control" type="date" name="end_date_range" />
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="arrival_time">Arrive Late</label>
+                    <input class="form-control" type="time" name="arrival_time" />
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="departure_time">Left Early</label>
+                    <input class="form-control" type="time" name="departure_time" />
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <select class="form-control mb-3" name="description">
+                        <option value="Absence">Absence</option>
+                        <option value="Late">Late</option>
+                        <option value="Left Early">Left Early</option>
+                        <option value="Left/Returned">Left/Returned</option>
+                        <option value="No Time Lost">No Time Lost</option>
+                        <option value="No Call/No Show">No Call/No Show</option>
+                        <option value="Vacation">Vacation</option>
+                    </select>
+                </div>
+                <hr />
+                <h4>Points</h4>
+                <select id="points" class="form-select form-control mb-3" name="points" required>
+                    <option value=""></option>
+                    <option value="0">0</option>
+                    <option value="0.25">0.25</option>
+                    <option value="0.50">0.50</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+                <button id="submitBtn" class="btn btn-secondary mb-3" type="submit">Add Record</button>
+            </form>
+            </div>
+            <script>
+                let form = document.getElementById("addRecord");
+                let btn = document.getElementById("submitBtn");
+
+                btn.addEventListener("click",async (event)=>{
+                    event.preventDefault();
+                    btn.setAttribute("disabled","disabled");
+                    btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
+                    result = await fetch(
+                        "'.$server->config['application-root'].'/hr/attendance",
+                        {method:"POST",body:new FormData(form)}
+                    );
+                    document.getElementById("form-display").innerHTML = await result.text();
+                    window.scrollTo(0,0);
+                });
+            </script>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
     $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points','Edit']);
     if (!empty($emp->Attendance)) {
@@ -121,16 +140,83 @@ function attendanceDisplay () {
         }
     }
     $view->responsiveTableClose();
-    echo "<script>$(document).ready(function(){
-        var options = {
-            format:'yyyy/mm/dd',
-            autoclose: true
-        };
-        $('.input-group input').each(function(){
-            $(this).datepicker(options);
-        });
-    });\n</script>";
     $view->footer();
+}
+
+function addAttendanceRecord() {
+    global $server;
+
+    try {
+        $server->pdo->beginTransaction();
+        if ($_REQUEST['occ_date'] == "") 
+            if ($_REQUEST['begin_date_range'] == "") throw new Exception("Must have beginning date.");
+            elseif ($_REQUEST['end_date_range'] == "") throw new Exception("Must have end date for the range.");
+
+        if ($_REQUEST['points'] == "") throw new Exception("A value must be assigend for points.");
+
+        $sql =
+        'insert into missed_time values (:id,:eid,:occ_date,:absent,:arrive_time,:leave_time,:description,:excused,:uid,now(),:points)';
+        $pntr = $server->pdo->prepare($sql);
+
+        if ($_REQUEST['begin_date_range'] != '' && $_REQUEST['end_date_range'] != '') {
+            //Date interval
+            $interval = new DateInterval('P1D');
+            $end_date = new DateTime($_REQUEST['end_date_range']);
+            $end_date->add($interval);
+            $period = new DatePeriod(new DateTime($_REQUEST['begin_date_range']),$interval, $end_date);
+
+            foreach($period as $date) {
+                $insert = [
+                    ':id'=>uniqid(),
+                    ':eid'=>$_REQUEST['eid'],
+                    ':occ_date'=>$date->format('Y-m-d'),
+                    ':absent'=> ($_REQUEST['description'] == 'Absence') ? 1 : 0,
+                    ':arrive_time'=>($_REQUEST['arrival_time'] == '') ? "00:00:00" : $_REQUEST['arrival_time'],
+                    ':leave_time' =>($_REQUEST['departure_time'] == '') ? "00:00:00" : $_REQUEST['departure_time'],
+                    ':description'=> $_REQUEST['description'],
+                    ':excused'=>0,
+                    ':uid'=>$_REQUEST['uid'],
+                    ':points'=>$_REQUEST['points']
+                ];
+                if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+            }
+            
+        }
+        else {
+            $insert = [
+                ':id'=>uniqid(),
+                ':eid'=>$_REQUEST['eid'],
+                ':occ_date'=>$_REQUEST['occ_date'],
+                ':absent'=> ($_REQUEST['description'] == 'Absence') ? 1 : 0,
+                ':arrive_time'=>($_REQUEST['arrival_time'] == '') ? "00:00:00" : $_REQUEST['arrival_time'],
+                ':leave_time' =>($_REQUEST['departure_time'] == '') ? "00:00:00" : $_REQUEST['departure_time'],
+                ':description'=> $_REQUEST['description'],
+                ':excused'=>0,
+                ':uid'=>$_REQUEST['uid'],
+                ':points'=>$_REQUEST['points']
+            ];
+            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+        }
+        $server->pdo->commit();
+
+        echo 
+        '<div class="m-3">
+            <h4 class="bg-success">Record/s Added</h4>
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
+        </div>';
+        exit();
+    }
+    catch(Exception $e) {
+        $server->pdo->rollBack();
+         echo 
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>'.$e->getMessage().'</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+        exit();
+    }
+    echo "Why are you here?!";
 }
 
 function editAttendanceDisplay() {
@@ -146,27 +232,81 @@ function editAttendanceDisplay() {
         "<small>Amend Record#:</small> {$_REQUEST['id']}&#160;".
         $view->trashBtnSm('/hr/attendance?action=delete&id='.$_REQUEST['id'].'&uid='.$_REQUEST['uid'],true)
     );
-    $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    $form->newForm();
-    $form->hiddenInput('action','amend');
-    $form->hiddenInput('uid',$server->currentUserID);
-    $form->hiddenInput('eid',$_REQUEST['uid']);
-    $form->inputCapture('occ_date','Date',$row['occ_date'],['dateISO'=>'true']);
-    $form->inputCapture('arrive_time','Time Arrived',$row['arrive_time']);
-    $form->inputCapture('leave_time','Time Left',$row['leave_time']);
-    $form->inputCapture('points','Points',$row['points']);
-    if ($row['absent']) 
-        $form->checkBox('absent',['Absent','No'],'false',false,null,'true');
-    else
-        $form->checkBox('absent',['Absent','Yes'],'true',false,null,'false');
-    if ($row['excused'])
-        $form->checkBox('excused',['Perfect Attendace','No'],'false',false,null,'true');
-    else
-        $form->checkBox('excused',['Perfect Attendance','Yes'],'true',false,null,'false');
-    $form->textArea('description',null,$row['description'],true);
-    $form->submitForm('Amend',false,$view->PageData['approot'].'/hr/attendance?id='.$_REQUEST['uid']);
-    $form->endForm();
+    echo
+    '<div id="form-display">
+    <form id="editForm">
+        <input type="hidden" name="action" value="amend" />
+        <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
+        <input type="hidden" name="rid" value="'.$_REQUEST['id'].'" />
+        <input type="hidden" name="eid" value="'.$_REQUEST['uid'].'" />
+        <div class="form-group mb-3">
+            <label class="form-label" for="occ_date">Date</label>
+            <input class="form-control" type="date" name="occ_date" value="'.$row['occ_date'].'" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="arrive_time">Time Arrived</label>
+            <input class="form-control" type="time" name="arrive_time" value="'.$row['arrive_time'].'" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="leave_time">Time Left</label>
+            <input class="form-conrol" type="time" name="leave_time" value="'.$row['leave_time'].'" />
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="points">Points</label>
+            <input class="form-control" type="text" name="points" value="'.$row['points'].'" />
+        </div>
+        <button class="btn btn-secondary" type="button" id="submitBtn">Amend</button>
+    </form>
+    </div>
+    <script>
+        let form = document.getElementById("editForm");
+        let btn = document.getElementById("submitBtn");
+        btn.addEventListener("click",async (event) =>{
+            event.preventDefault();
+            btn.setAttribute("disabled","disabled");
+            btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
+            let result = await fetch(
+                "'.$server->config['application-root'].'/hr/attendance",
+                {method:"POST",body:new FormData(form)}
+            );
+            document.getElementById("form-display").innerHTML = await result.text();
+            window.scrollTo(0,0);
+        });
+    </script>';
     $view->footer();
+}
+
+function amendAttendanceRecord() {
+    global $server;
+    $sql = 'update missed_time set occ_date = :occ_date, arrive_time = :arrive_time, leave_time = :leave_time, points = :points
+    where id = :id';
+    $pntr = $server->pdo->prepare($sql);
+    try {
+        $insert = [
+            ':occ_date'=>$_REQUEST['occ_date'],
+            ':arrive_time'=>($_REQUEST['arrive_time'] == '') ? "00:00:00" : $_REQUEST['arrive_time'],
+            ':leave_time'=> ($_REQUEST['leave_time'] == '') ? "00:00:00" : $_REQUEST['leave_time'],
+            ':points'=> $_REQUEST['points'],
+            ':id'=>$_REQUEST['rid']
+        ];
+        if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
+        echo
+        '<div class="border border-success rounded m-3">
+            <h4 class="bg-success">Record/s Added</h4>
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
+        </div>';
+    }
+    catch (Exception $e) {
+        trigger_error($e->getMessage(),E_USER_WARNING);
+        echo 
+        '<div class="border border-secondary rounded m-3">
+            <h4 class="bg-danger">Error</h4>
+            <b>A date is required for every entry.</b>&#160;
+            <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-danger m-1" role="button">Try Again</a>
+        </div>';
+        exit();
+    }
+    exit();
 }
 
 function printDisplay () {
