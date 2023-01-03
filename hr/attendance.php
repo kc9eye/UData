@@ -133,17 +133,35 @@ function attendanceDisplay () {
             </script>';
     $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
     $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Comment','Points','Edit']);
-    if (!empty($emp->Attendance)) {
-        foreach($emp->Attendance as $row) {
-            $absent = ($row['absent'] == 'true') ? 'Yes' : 'No';
-            // $excused = ($row['excused'] == 'true') ? 'Yes' : 'No';
-            echo "<tr><td>{$row['occ_date']}</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td>";
-            echo "<td>{$absent}</td><td>{$row['description']}</td><td>{$row['comments']}</td><td>{$row['points']}</td><td>";
-            $view->editBtnSm('/hr/attendance?action=edit&id='.$row['id'].'&uid='.$_REQUEST['id']);
-            echo "</td></tr>\n";
-        }
-    }
-    $view->responsiveTableClose();
+    echo
+    '<div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Arrived Late</th>
+                    <th>Left Early</th>
+                    <th>Absent</th>
+                    <th>Description</th>
+                    <th>Comment</th>
+                    <th>Points</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>';
+            if (!empty($emp->Attendance)) {
+                foreach($emp->Attendance as $row) {
+                    $absent = ($row['absent'] == 'true') ? 'Yes' : 'No';
+                    echo "<tr><td>{$row['occ_date']}</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td>";
+                    echo "<td>{$absent}</td><td>{$row['description']}</td><td>{$row['comments']}</td><td>{$row['points']}</td><td>";
+                    $view->editBtnSm('/hr/attendance?action=edit&id='.$row['id'].'&uid='.$_REQUEST['id']);
+                    echo "</td></tr>\n";
+                }
+            }
+    echo'   </tbody>
+        </table>
+    </div>';
+
     $view->footer();
 }
 
