@@ -281,7 +281,7 @@ function editAttendanceDisplay() {
             <option value="Late"',($row['description'] == "Late")?' selected="selected"':"",'>Late</option>
             <option value="Left Early"',($row['description'] == "Left Early")?' selected="selected"':"",'>Left Early</option>
             <option value="Left/Returned"',($row['description'] == "Left/Returned")?' selected="selected"':"",'>Left/Returned</option>
-            <option value="No Time Lost"',($row['descprition'] == "No Time Lost")?' selected="selected"':"",'>No Time Lost</option>
+            <option value="No Time Lost"',($row['description'] == "No Time Lost")?' selected="selected"':"",'>No Time Lost</option>
             <option value="No Call/No Show"',($row['description'] == "No Call/No Show")?' selected="selected"':"",'>No Call/No Show</option>
             <option value="Vacation"',($row['description'] == "Vacation")?' selected="selected"':"",'>Vacation</option>
         </select>
