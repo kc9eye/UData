@@ -142,7 +142,7 @@ function employeeViewDisplay () {
         $view->h3("<small>Attendance Points:</small> {$emp->AttendancePoints}");
         $view->h3("<small>Attendance Occurences:</small>".$emp->getAttendanceOcurrences()[0]['count']);
         $view->h3("<small>Career Ratio:</small>".$emp->getAttendanceRatio().htmlentities("%"));
-        $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Reason','Points']);
+        $view->responsiveTableStart(['Date','Arrived Late','Left Early','Absent','Type','Comments','Points']);
         foreach($emp->Attendance as $row) {
             //Adam's strikethrough request
             $strike = (new DateTime($row['occ_date']) < (new DateTime())->sub(new DateInterval('P180D'))) ? true : false;
@@ -150,7 +150,13 @@ function employeeViewDisplay () {
             else $absent = 'No';
             // if ($row['excused'] == 'true') $excused = 'Yes';
             // else $excused = 'No';
-            echo "<tr><td>".$view->formatUserTimestamp($row['occ_date'],true)."</td><td>{$row['arrive_time']}</td><td>{$row['leave_time']}</td><td>{$absent}</td><td>{$row['description']}</td>";
+            echo 
+                "<tr>
+                    <td>".$view->formatUserTimestamp($row['occ_date'],true)."</td>
+                    <td>{$row['arrive_time']}</td>
+                    <td>{$row['leave_time']}</td>
+                    <td>{$absent}</td><td>{$row['description']}</td>
+                    <td>{$row['comments']}</td>";
             if ($strike) {
                 echo "<td><del>{$row['points']}</del></td></tr>\n";
             }
