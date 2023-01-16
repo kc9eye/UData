@@ -229,7 +229,7 @@ class Employee {
         'select count(*)
         from missed_time
         where 
-            to_tsquery(\'absence | late | left | tardy\')
+            to_tsquery(\'(absence|Absent)|(late)|(left|Left<->Early)|(Left/Returned)|(tardy)|(No<->Call/No<->Show)|(No<->Time<->Lost)\')
             @@
             to_tsvector(description)
         and
