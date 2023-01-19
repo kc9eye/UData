@@ -96,6 +96,7 @@ function attendanceDisplay () {
                         <option value="No Time Lost">No Time Lost</option>
                         <option value="No Call/No Show">No Call/No Show</option>
                         <option value="Vacation">Vacation</option>
+                        <option value="Comment">Comment</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -284,6 +285,7 @@ function editAttendanceDisplay() {
             <option value="No Time Lost"',($row['description'] == "No Time Lost")?' selected="selected"':"",'>No Time Lost</option>
             <option value="No Call/No Show"',($row['description'] == "No Call/No Show")?' selected="selected"':"",'>No Call/No Show</option>
             <option value="Vacation"',($row['description'] == "Vacation")?' selected="selected"':"",'>Vacation</option>
+            <option value="Comment"',($row['description'] == "Comment")?' selected="selected"':"",'>Comment</option>
         </select>
     </div>
         <div class="form-group mb-3">
