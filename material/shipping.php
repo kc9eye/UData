@@ -198,13 +198,13 @@ function viewCategory () {
         );
     $view->h1($heading);
     $view->hr();
-    $th = ['View','Date','Shipper'];
+    $th = ['View','Vehicle #','Date','Shipper'];
     $view->responsiveTableStart($th);
     foreach($sent as $row) {
         echo "<tr><td>";
         $view->linkButton('/material/shipping?action=view_shipment&shipid='.$row['id'],"<span class='oi oi-eye'></span> View",'secondary');
         $view->insertTab();
-        echo "{$row['id']}</td><td>".$view->formatUserTimestamp($row['_date'],true)."</td><td>{$row['shipper']}</td>";
+        echo "{$row['id']}</td><td>{$row['vehicle_number']}<td>".$view->formatUserTimestamp($row['_date'],true)."</td><td>{$row['shipper']}</td>";
         echo "</tr>";
     }
     $view->responsiveTableClose();
