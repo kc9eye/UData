@@ -227,7 +227,7 @@ class Shipments {
         $sql = 'DELETE FROM shipping_log WHERE id = ?';
         try {
             $pntr = $this->dbh->prepare($sql);
-            if (!$pntr->execute([$id])) throw new Execption(print_r($pntr->errorInfo(),true));
+            if (!$pntr->execute([$id])) throw new Exception(print_r($pntr->errorInfo(),true));
             return true;
         }
         catch (Exception $e) {
