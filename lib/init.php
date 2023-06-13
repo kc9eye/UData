@@ -39,9 +39,11 @@ require_once(dirname(__DIR__).'/etc/constants.php');
 require_once(dirname(__DIR__).'/etc/config.php');
 require_once(dirname(__DIR__).'/framework/autoloader.php');
 require_once(dirname(__DIR__).'/framework/errorhandler.php');
-trigger_error("I made it here",E_USER_ERROR);
+
 $loader = new Autoloader(dirname(__DIR__),['.php','.lib.php','.class.php','.obj.php','.int.php']);
 $error = new Errorhandler($config['error-log-file-path'], $config['error-support-link']);
+
+trigger_error("I made it here",E_USER_ERROR);
 
 if (empty($_SESSION['viewer'])) {
     try {
