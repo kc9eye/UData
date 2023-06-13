@@ -61,4 +61,3 @@ try {
 catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
-die("I initialized the instance!");
