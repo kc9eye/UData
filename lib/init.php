@@ -43,7 +43,7 @@ require_once(dirname(__DIR__).'/framework/errorhandler.php');
 $loader = new Autoloader(dirname(__DIR__),['.php','.lib.php','.class.php','.obj.php','.int.php']);
 die("I loaded things!");
 $error = new Errorhandler($config['error-log-file-path'], $config['error-support-link']);
-
+die("I initialized the error handler!");
 
 
 if (empty($_SESSION['viewer'])) {
