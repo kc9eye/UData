@@ -55,10 +55,10 @@ if (empty($_SESSION['viewer'])) {
         echo "Uncaught init Exception: ".$e->getMessage();
     }
 }
-die("I checked for mobile!");
 try {
     $server = new Instance($config);
 }
 catch (Exception $e) {
     trigger_error($e->getMessage(), E_USER_ERROR);
 }
+die("I initialized the instance!");
