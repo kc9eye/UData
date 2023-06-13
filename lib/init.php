@@ -42,7 +42,6 @@ require_once(dirname(__DIR__).'/framework/errorhandler.php');
 
 $loader = new Autoloader(dirname(__DIR__),['.php','.lib.php','.class.php','.obj.php','.int.php']);
 $error = new Errorhandler($config['error-log-file-path'], $config['error-support-link']);
-die("I initialized the error handler!");
 
 
 if (empty($_SESSION['viewer'])) {
@@ -56,6 +55,7 @@ if (empty($_SESSION['viewer'])) {
         echo "Uncaught init Exception: ".$e->getMessage();
     }
 }
+die("I checked for mobile!");
 try {
     $server = new Instance($config);
 }
