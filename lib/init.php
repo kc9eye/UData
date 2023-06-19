@@ -43,6 +43,7 @@ require_once(dirname(__DIR__).'/framework/errorhandler.php');
 $loader = new Autoloader(dirname(__DIR__),['.php','.lib.php','.class.php','.obj.php','.int.php']);
 $error = new Errorhandler($config['error-log-file-path'], $config['error-support-link']);
 
+
 if (empty($_SESSION['viewer'])) {
     try {
         include(dirname(__DIR__).'/third-party/Mobile_Detect/Mobile_Detect.php');
