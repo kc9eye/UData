@@ -165,7 +165,7 @@ class Product {
         if (!$pntr->execute([$this->pKey])) throw new Exception("SQL Failed: {$sql['today_count']}");
         $number = $pntr->fetch(PDO::FETCH_ASSOC)['number'];
         $number = ($number == null) ? 0.000 : $number;
-        $this->pStats['today_count'] = round($pntr->fetch(PDO::FETCH_ASSOC)['number'],2,PHP_ROUND_HALF_UP);
+        $this->pStats['today_count'] = round($number,2,PHP_ROUND_HALF_UP);
     }
 
     private function getBOM () {
