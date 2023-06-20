@@ -81,7 +81,7 @@ Class Errorhandler {
      * @author Paul W. Lane
      * @return Mixed
      */
-    public function ErrorHandler ($code,$msg,$file,$line,$trace) {
+    public function ErrorHandler ($code,$msg,$file,$line,$trace = array()) {
         if (isset($_SESSION['bg_process'])) {
             $_SESSION['bg_process']['status'] = 'error';
         }
