@@ -141,7 +141,9 @@ class Product {
             foreach($sql as $i=>$v) {
                 $pntr = $this->dbh->prepare($v);
                 if (!$pntr->execute($execute)) throw new Exception("SQL Failed: {$v}");
-                $this->pStats[$i] = round($pntr->fetch(PDO::FETCH_ASSOC)['number'],2,PHP_ROUND_HALF_UP);
+                $number = $pntr->fetch(PDO::FETCH_ASSOC)['number'];
+                $number = ($number == null) ? 0.000 : $number;
+                $this->pStats[$i] = round($number,2,PHP_ROUND_HALF_UP);
             }
         }
         else {
@@ -153,12 +155,16 @@ class Product {
             foreach($sql as $i=>$v) {
                 $pntr = $this->dbh->prepare($v);
                 if (!$pntr->execute($execute)) throw new Exception("SQL Failed: {$v}");
-                $this->pStats[$i] = round($pntr->fetch(PDO::FETCH_ASSOC)['number'],2,PHP_ROUND_HALF_UP);
+                $number = $pntr->fetch(PDO::FETCH_ASSOC)['number'];
+                $number = ($number == null) ? 0.000 : $number;
+                $this->pStats[$i] = round($number,2,PHP_ROUND_HALF_UP);
             }
         }
         $sql['today_count'] = "SELECT count(*) as \"number\" FROM production_log WHERE prokey = :prokey AND date_trunc('day', _date) = CURRENT_DATE";
         $pntr = $this->dbh->prepare($sql['today_count']);
         if (!$pntr->execute([$this->pKey])) throw new Exception("SQL Failed: {$sql['today_count']}");
+        $number = $pntr->fetch(PDO::FETCH_ASSOC)['number'];
+        $number = ($number == null) ? 0.000 : $number;
         $this->pStats['today_count'] = round($pntr->fetch(PDO::FETCH_ASSOC)['number'],2,PHP_ROUND_HALF_UP);
     }
 
