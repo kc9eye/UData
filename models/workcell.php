@@ -80,6 +80,8 @@ class WorkCell {
      */
     public $Files;
 
+    public $SafetyReview;
+
     /**
      * Class constructor
      * @param PDO $dbh The database handle
