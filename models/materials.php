@@ -19,6 +19,7 @@ class Materials {
 
     const PDN_TYPE = 'PDN';
     const PDIH_TYPE = 'PDIH';
+    const MATERIAL_NOT_FOUND = false;
 
     private $dbh;
 
@@ -438,7 +439,7 @@ class Materials {
             if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             return $pntr->fetchAll(PDO::FETCH_ASSOC);
         }
-        catch (Excception $e) {
+        catch (Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
