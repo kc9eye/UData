@@ -80,14 +80,17 @@ else
 $view->hr();
 $view->h3("Workcells");
 $view->beginBtnCollapse();
-if (!is_null($part->workcells)) {
-    $view->responsiveTableStart(['Product','Cell','Qty']);
-    foreach($part->workcells as $row) {
-        echo "<tr><td>{$row['product']}</td>";
-        echo "<td><a href='{$view->PageData['approot']}/cells/main?action=view&id={$row['id']}'>{$row['work_cell']}</a></td>";
-        echo "<td>{$row['qty']}</td></tr>\n";
-    }
-    $view->responsiveTableClose();
-}
+echo "<pre>";
+var_export($part->workcells);
+echo "</pre>";
+// if (!is_null($part->workcells)) {
+//     $view->responsiveTableStart(['Product','Cell','Qty']);
+//     foreach($part->workcells as $row) {
+//         echo "<tr><td>{$row['product']}</td>";
+//         echo "<td><a href='{$view->PageData['approot']}/cells/main?action=view&id={$row['id']}'>{$row['work_cell']}</a></td>";
+//         echo "<td>{$row['qty']}</td></tr>\n";
+//     }
+//     $view->responsiveTableClose();
+// }
 $view->endBtnCollapse();
 $view->footer();
