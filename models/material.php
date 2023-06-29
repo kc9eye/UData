@@ -67,7 +67,7 @@ class Material {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->number])) throw new Exception("Select failed: {$sql}");
             if (!empty(($rtn = $pntr->fetchAll(PDO::FETCH_ASSOC)))) $this->setData(['material'=>$rtn[0]]);
-            foreach(['receiving','discrepancies','inventory'] as $store) {
+            foreach(['discrepancies','inventory'] as $store) {
                 $sql = "SELECT * FROM {$store} WHERE partid = ?";
                 $pntr = $this->dbh->prepare($sql);
                 if (!$pntr->execute([$this->material['id']])) $this->setData([$store=>NULL]);
@@ -91,7 +91,7 @@ class Material {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->id])) throw new Exception("Select failed: {$sql}");
             if (!empty(($rtn = $pntr->fetchAll(PDO::FETCH_ASSOC)))) $this->setData(['material'=>$rtn[0]]);
-            foreach(['receiving','discrepancies','inventory'] as $store) {
+            foreach(['discrepancies','inventory'] as $store) {
                 $sql = "SELECT * FROM {$store} WHERE partid = ?";
                 $pntr = $this->dbh->prepare($sql);
                 if (!$pntr->execute([$this->material['id']])) $this->setData([$store=>NULL]);
