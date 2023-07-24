@@ -609,6 +609,7 @@ class Employees extends Profiles {
     public function getPendingScheduledReviews() {
         $sql = "select eid, date_trunc('day',(_date + schedule)) as due from scheduled_reviews where (date_trunc('day',_date) + schedule) > CURRENT_DATE";
         $pntr = $this->dbh->prepare($sql);
+        $scheduled = array();
         if (!$pntr->execute()) throw new Exception(print_r($pntr->errorInfo(),true));
         foreach($pntr->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $scheduled[] = [$row['due'], new Employee($this->dbh, $row['eid'])];
