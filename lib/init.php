@@ -44,17 +44,17 @@ $loader = new Autoloader(dirname(__DIR__),['.php','.lib.php','.class.php','.obj.
 $error = new Errorhandler($config['error-log-file-path'], $config['error-support-link']);
 
 
-if (empty($_SESSION['viewer'])) {
-    try {
-        include(dirname(__DIR__).'/third-party/Mobile_Detect/Mobile_Detect.php');
-        $mobile = new Mobile_Detect();
-        $_SESSION['viewer'] = ($mobile->isMobile() ? ($mobile->isTablet() ? 'tablet' : 'mobile') : 'standard');
-        unset($mobile);
-    }
-    catch (Exception $e) {
-        echo "Uncaught init Exception: ".$e->getMessage();
-    }
-}
+// if (empty($_SESSION['viewer'])) {
+//     try {
+//         include(dirname(__DIR__).'/third-party/Mobile_Detect/Mobile_Detect.php');
+//         $mobile = new Mobile_Detect();
+//         $_SESSION['viewer'] = ($mobile->isMobile() ? ($mobile->isTablet() ? 'tablet' : 'mobile') : 'standard');
+//         unset($mobile);
+//     }
+//     catch (Exception $e) {
+//         echo "Uncaught init Exception: ".$e->getMessage();
+//     }
+// }
 try {
     $server = new Instance($config);
 }
