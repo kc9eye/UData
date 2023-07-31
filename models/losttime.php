@@ -30,19 +30,21 @@ class LostTime {
      */
     public function getPerfectAttendanceDateRange ($begin, $end) {
         $sql = 
-            "SELECT 
-                profiles.first||' '||profiles.middle||' '||profiles.last||' '||profiles.other AS name
-             FROM profiles
-             INNER JOIN employees ON employees.pid = profiles.id
-             WHERE employees.end_date IS NULL 
-             AND employees.id NOT IN 
-             (
-                SELECT eid 
-                FROM missed_time
-                WHERE occ_date >= :begin::date
-                AND occ_date <= :end::date
-                AND NOT excused
-             ) ORDER BY profiles.last ASC";
+            "with range_ as (
+                select * from missed_time
+                where occ_date between :begin and :end
+                ),
+                vacations as (
+                select * from range_
+                where description != 'Vacation'
+                and description != 'Comment'
+                )
+            select 
+                profiles.first||' '||profiles.last as name
+            from profiles
+            inner join employees on employees.pid = profiles.id
+            where employees.end_date is null
+            and employees.id not in (select eid from vacations)";
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([':begin'=>$begin,':end'=>$end])) throw new Exception(print_r($pntr->errorInfo(),true));
