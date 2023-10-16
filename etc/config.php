@@ -36,7 +36,7 @@ $config = [
 
     #PHPMailer configuration
     'mailer-type' => 'SMTP',            #The mailer to use, SMTP (sends as SMTP), Mail (sends with PHP mail function), Sendmail (uses host sendmail server)
-    'mailer-default-from-addr' => 'udata@uhaul.com',   #The address the server will send mail as if not defined at send time
+    'mailer-default-from-addr' => 'paul_lane@uhaul.com',   #The address the server will send mail as if not defined at send time
     'mailer-default-from-name' => 'UData Server',   #The name the server will send mail as if not defined at send time
     'mailer-host' => 'smtp.uhi.amerco',                #comma separated list is acceptable in order of percedence
     'mailer-SMTPAuth' => false,         #If this is set to true then the security type should also be set
