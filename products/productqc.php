@@ -27,6 +27,11 @@ if (!empty($_REQUEST['action']) && $_REQUEST['action'] == 'submit') {
 }
 
 $product = new Product($server->pdo,$_REQUEST['prokey']);
+$employees = array();
+foreach((new Employees($server->pdo))->getActiveEmployeeList() as $row) {
+    array_push($employees,[$row['eid'],$row['name']]);
+}
+
 $view = $server->getViewer("Products: Quality Control");
 $view->sideDropDownMenu($submenu);
 $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
@@ -35,7 +40,7 @@ $form->hiddenInput('action','submit');
 $form->hiddenInput('uid',$server->currentUserID);
 $form->inputCapture('serial',htmlentities('Unit Serial#'),null,true,"See your supervisor with questions.");
 $form->inputCapture('misc',htmlentities('Misc. Info.'),null,true,"See your supervisor with questions.");
-$form->inputCapture('driver','Test Driver',null,true,"The name of the test driver");
+$form->selectBox("driver","Test Driver",$employees,true);
 $cnt = 0;
 foreach($product->pQualityControl as $row) {
     $good = empty($row['cellid']) ? '1' : "1:{$row['cellid']}";
