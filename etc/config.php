@@ -26,12 +26,12 @@
  */
 $config = [
     #Database configuration options
-    'dbuser' => 'chicago',                                                      #Database user for the active db
-    'dbpass' => 'MonkeyFuck34',                                               #Database users password for the active db
-    'dbpdo' => 'pgsql:host=localhost;port=5432;dbname=chicago;sslmode=prefer',  #PDO database connection string 'dbdriver:host=mydbhost;port=mydbport;dbnam=mydbname;[sslmode=mydbencryption...]
+    'dbuser' => 'developer',                                                      #Database user for the active db
+    'dbpass' => 'localalpha',                                               #Database users password for the active db
+    'dbpdo' => 'pgsql:host=localhost;port=5432;dbname=developmet;sslmode=prefer',  #PDO database connection string 'dbdriver:host=mydbhost;port=mydbport;dbnam=mydbname;[sslmode=mydbencryption...]
 
     #Errorhandler config options
-    'error-log-file-path' => '/var/www/chicago/var/error_log.xml',    #Where to save th error log file, hard disk location (URL not supported at this time)
+    'error-log-file-path' => '/var/www/development/var/error_log.xml',    #Where to save th error log file, hard disk location (URL not supported at this time)
     'error-support-link' => 'https://github.com/kc9eye/UData/issues', #A link to bug/issue reporting infrastructure, users will see this.
 
     #PHPMailer configuration
