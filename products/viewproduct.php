@@ -71,7 +71,7 @@ if ($server->checkPermission('editWorkCell'))
     $control_bar['Create Work Cell'] = "window.open(\"{$view->PageData['approot']}/cells/createworkcell?prokey={$_REQUEST['prokey']}\",\"_self\");";
 if ($server->checkPermission('viewWorkCell'))
     $control_bar['Work Cells'] = "window.open(\"{$view->PageData['approot']}/cells/main?action=list&prokey={$_REQUEST['prokey']}\",\"_self\");";
-if (!empty($control_bar)) 
+if (!empty($control_bar))
     $form->inlineButtonGroup($control_bar);
 
 
@@ -112,7 +112,7 @@ if ($server->checkPermission('addProduct')) {
     $view->endBtnCollapse();
 }
 
-#Product log section 
+#Product log section
 if ($server->checkPermission('viewProductLog')) {
     $edit = $server->checkPermission('editProductLog');
     $view->hr();
@@ -132,13 +132,13 @@ if ($server->checkPermission('viewProductLog')) {
 
     $view->beginBtnCollapse('Show/Hide Log',null, $preview);
     if ($server->checkPermission('inspectQC')) {
-        $view->h3("Production Log <a href='{$view->PageData['approot']}/products/productqc?prokey={$_REQUEST['prokey']}' 
+        $view->h3("Production Log <a href='{$view->PageData['approot']}/products/productqc?prokey={$_REQUEST['prokey']}'
             class='btn btn-success btn-sm' role='button'><span class='oi oi-plus' title='plus' aria-hidden='true'></span>&#160;Add Entry</a>");
     }
     else {
         $view->h3('Production Log');
-    } 
-    $head = ['Sequence#','Serial#','Unit Description','Unit QC','Date','Comments','Inspector'];
+    }
+    $head = ['Sequence#','Serial#','Unit Description','Unit QC','Date','Comments','Inspector','Driver'];
     if ($edit) array_unshift($head,'Edit');
     $view->responsiveTableStart($head);
     foreach($product->pLog as $row) {
@@ -147,7 +147,7 @@ if ($server->checkPermission('viewProductLog')) {
         echo "<td>{$row['sequence_number']}</td>";
         echo "<td>{$row['serial_number']}</td><td>{$row['misc']}</td>";
         echo "<td>{$row['ftc']}</td><td>".$view->formatUserTimestamp($row['_date'],true)."</td>";
-        echo "<td>{$row['comments']}</td><td>{$row['inspector']}</td></tr>\n";
+        echo "<td>{$row['comments']}</td><td>{$row['inspector']}</td><td>{$row['driver']}</td></tr>\n";
     }
     $view->responsiveTableClose();
     $view->endBtnCollapse();
