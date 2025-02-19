@@ -17,7 +17,7 @@
  */
 /**
  * Product Class Model
- * 
+ *
  * @package UData\Models\Database\Postgres
  * @link https://kc9eye.github.io/udata/UData_Database_Structure.html
  * @author Paul W. Lane
@@ -114,14 +114,18 @@ class Product {
         $this->pQualityControl = $pntr->fetchAll(PDO::FETCH_ASSOC);
 
         if (is_null($this->beginDate) && is_null($this->endDate)) {
-            $sql = 'SELECT *,(SELECT firstname||\' \'||lastname as "inspector" FROM user_accts WHERE id = a.uid) 
+            $sql = 'SELECT *,(SELECT firstname||\' \'||lastname as "inspector" FROM user_accts WHERE id = a.uid),
+            (select first||\' \'||last as driver from employees inner join profiles on profiles.id = employees.pid
+            where employees.id = a.test_driver_id)
             FROM production_log AS a WHERE prokey = ? ORDER BY sequence_number DESC';
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->pKey])) throw new Exception("Select failed: {$sql}");
             $this->pLog = $pntr->fetchAll(PDO::FETCH_ASSOC);
         }
         else {
-            $sql = 'SELECT *,(SELECT firstname||\' \'||lastname as "inspector" FROM user_accts WHERE id = a.uid)
+            $sql = 'SELECT *,(SELECT firstname||\' \'||lastname as "inspector" FROM user_accts WHERE id = a.uid),
+            (select first||\' \'||last as driver from employees inner join profiles on profiles.id = employees.pid
+            where employees.id = a.test_driver_id)
             FROM production_log as a WHERE prokey = :key AND date_trunc(\'day\',_date) BETWEEN :begin AND :end ORDER BY sequence_number DESC';
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([':key'=>$this->pKey,':begin'=>$this->beginDate,':end'=>$this->endDate])) {
@@ -177,13 +181,13 @@ class Product {
                 $this->pBOM = null;
             }
             else {
-                $sql = 
-                    'SELECT 
+                $sql =
+                    'SELECT
                         id,
                         (SELECT number FROM material WHERE id = a.partid),
-                        (SELECT description FROM material WHERE id = a.partid), 
+                        (SELECT description FROM material WHERE id = a.partid),
                         qty
-                    FROM bom as a 
+                    FROM bom as a
                     WHERE prokey = :key ORDER BY number ASC';
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$this->pKey])) throw new Exception("Select failed: {$sql}");
