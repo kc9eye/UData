@@ -17,7 +17,7 @@
  */
 /**
  * Products Class Model
- * 
+ *
  * @package UData\Models\Database\Postgres
  * @link https://kc9eye.github.io/udata/UData_Database_Structure.html
  * @author Paul W. Lane
@@ -65,7 +65,7 @@ class Products {
      * @return Boolean `true` on success, `false` otherwise.
      */
     public function addNewProduct ($data) {
-        $sql = 
+        $sql =
             'INSERT INTO products (product_key,description,active,_date,uid)
             VALUES (:product_key,:description,:active,now(),:uid)';
         $pntr = $this->dbh->prepare($sql);
@@ -122,7 +122,7 @@ class Products {
 
     /**
      * Searches the master list for products
-     * 
+     *
      * Either returns an array of matches found or false if
      * no matches were found.
      * @param String $search_term A formatted search string
@@ -144,7 +144,7 @@ class Products {
 
     /**
      * Removes a product from the master list
-     * 
+     *
      * Removes a product from only the master list. The parameter array
      * can have either the `product_description` index, or `product_key` index.
      * If both are given, the product matching both will be removed
@@ -233,13 +233,13 @@ class Products {
 
     /**
      * Updates an existsing QC log entry from an Array
-     * @param Array $data The data for the entry; 
+     * @param Array $data The data for the entry;
      * `['id'=>string,'serial'=>string,'sequence'=>string,'misc'=>string,'ftc'=>string,'comments'=>string,'uid'=>string]`
      * @return Boolean
      */
     public function updateExistingQCLog ($data) {
-        $sql = 
-            'UPDATE production_log 
+        $sql =
+            'UPDATE production_log
              SET sequence_number = :sequence,
              serial_number = :serial,
              misc = :misc,
@@ -269,14 +269,14 @@ class Products {
 
     /**
      * Removes a product log entry and realigns existing sequence numbers
-     * 
+     *
      * Deletes the given entry from the log denoting it's sequence and aligns
      * all remaining entries sequence numbers missing the deleted entry.
      */
     public function removeExistingQCLogEntry ($id) {
         $entry = $this->getQCLogEntryByID($id);
         $delete = 'DELETE FROM production_log WHERE id = ?';
-        $update = 
+        $update =
             'UPDATE production_log SET sequence_number = (sequence_number - 1)
              WHERE prokey = :pkey AND sequence_number > :seq';
         $this->dbh->beginTransaction();
@@ -303,12 +303,12 @@ class Products {
 
     /**
      * Retrieves the checkpoints for a given product
-     * 
+     *
      * @param String $key The product master key to retreive checkponits for
      * @return Mixed Either a multi-dimensional array of checkpoints or false on error
      */
     public function getCheckPoints ($key) {
-        $sql = "SELECT 
+        $sql = "SELECT
             id,prokey,description,_date,cellid,
             (SELECT cell_name as cell FROM work_cell WHERE id = a.cellid),
             (SELECT firstname||' '||lastname as author FROM user_accts WHERE id = a.uid)
@@ -326,9 +326,9 @@ class Products {
 
     /**
      * Adds a given checkpoint to a product
-     * 
+     *
      * The `$data` parameter needs to be an indexed array containing the data to insert.
-     * Namely the users uid, and a description of the checkpoint as well as the product 
+     * Namely the users uid, and a description of the checkpoint as well as the product
      * key the product belongs to in the form `['uid'=>string,'description'=>string,'prokey'=>string,'cellid'=>string]`
      * @param Array $data Usually the $_REQUEST array from a form to add the point.
      * @return Boolean `true` on success, otherwise `false`
@@ -358,7 +358,7 @@ class Products {
     }
 
     /**
-     * Removes a quality checkpoint from a product 
+     * Removes a quality checkpoint from a product
      * @param String $prokey The product key to remove the checkpoint from
      * @param String $id The ID of the check point to remove
      * @return Boolean
@@ -386,7 +386,7 @@ class Products {
 
     /**
      * Adds an entry to the Quality Control Log
-     * 
+     *
      * The `$data` array should be in the form
      * `['prokey'=>string,'uid'=>string,serial'=>string,'misc'=>string,'comments'=>string,['qc'=>[1/0,...]]]`
      * The array can contain others, but they are not used or changed.
@@ -394,12 +394,12 @@ class Products {
      * @return Boolean
      */
     public function addToQcLog (Array $data) {
-        $sql = 
-            "INSERT INTO production_log 
+        $sql =
+            "INSERT INTO production_log
              SELECT :id,:prokey,:serial_num,(
                 (SELECT count(*) from production_log WHERE prokey = :pkey) + 1
-             ),:misc,:ftc,:comments,:uid,now()";
-        
+             ),:misc,:ftc,:comments,:uid,now(),:driver";
+
         #Calculate FTC
         $qc = count($data['qc']);
         $defect = $qc;
@@ -409,7 +409,7 @@ class Products {
                 $defect--;
                 if (!empty($split[1])) $this->defectWorkCell($split[1]);
             }
-            elseif (!empty($split[1])) 
+            elseif (!empty($split[1]))
                 $this->compWorkCell($split[1]);
         }
         $ftc = round((($defect/$qc) * 100),2, PHP_ROUND_HALF_UP);
@@ -423,7 +423,8 @@ class Products {
             ':misc'=>$data['misc'],
             ':ftc'=>$ftc,
             ':comments'=>$data['comments'],
-            ':uid'=>$data['uid']
+            ':uid'=>$data['uid'],
+            ':driver'=>$data['driver']
         ];
         try {
             $pntr = $this->dbh->prepare($sql);
@@ -442,8 +443,8 @@ class Products {
 
     /**
      * Returns an array of active Products
-     * 
-     * Returns an array of products which have the 
+     *
+     * Returns an array of products which have the
      * designation of active.
      * @return Mixed A multidimensional array of active products, or FALSE on error.
      * @author Paul W. Lane
@@ -465,7 +466,7 @@ class Products {
 
     /**
      * Increases a work cells control without incereasing quality.
-     * 
+     *
      * Decrements a work cell as to show a defect in that work cell
      * @param String $cellid The ID of the work cell
      * @return Boolean True on success, false otherwise.
@@ -489,7 +490,7 @@ class Products {
 
     /**
      * Complement a work cell by incrementing control and quality
-     * 
+     *
      * @param String $cellid The ID of the string
      * @return Boolean True on success, false otherwise
      */
