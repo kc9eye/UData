@@ -35,6 +35,7 @@ $form->hiddenInput('action','submit');
 $form->hiddenInput('uid',$server->currentUserID);
 $form->inputCapture('serial',htmlentities('Unit Serial#'),null,true,"See your supervisor with questions.");
 $form->inputCapture('misc',htmlentities('Misc. Info.'),null,true,"See your supervisor with questions.");
+$form->inputCapture('driver','Test Driver',null,true,"The name of the test driver");
 $cnt = 0;
 foreach($product->pQualityControl as $row) {
     $good = empty($row['cellid']) ? '1' : "1:{$row['cellid']}";
