@@ -51,7 +51,7 @@ function rejectReviewDisplay() {
 
 function giveFeedBack () {
     global $server;
-    $body = "<h1><img src='/favicons/favicon-16x16.png' />UData</h1>";
+    $body = "<h1><img src='favicon-16x16.png' />UData</h1>";
     $body .= "<p>The safety assessment for work cell <strong>{$_REQUEST['cell_name']}</strong> has been rejected.";
     $body .= "The reviewer left the following feedback regarding the rejection:</p>";
     $body .= "<hr><p>{$_REQUEST['review']}</p><hr><p>The submitted document can be found at ";
