@@ -61,7 +61,7 @@ function EOMDisplay() {
     '   <form id="nominationForm">
             <input type="hidden" name="action" value="nominate" />
             <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
-            <div class="form-group form-selection">
+            <div class="input-group form-selection">
                 <label class="form-label" for="eid">Nominations</label>
                 <select class="form-control" name="eid">';
                 foreach(getActiveEmployees() as $row) {
@@ -69,10 +69,8 @@ function EOMDisplay() {
                 }
     echo
     '           </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="comment">Comment</label>
-                <textarea class="form-control" name="comment" required></textarea>
+                <span class="input-group-text">Comment:</span>
+                <input type="text" class="form-control" name="comment" required />
             </div>
             <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
         </form
