@@ -40,17 +40,17 @@ function EOMDisplay() {
     echo '<div id="nominationDisplay">';
     if (!empty($noms)) {
         foreach($noms as $index => $value) {
-            echo 
+            echo
             '<div class="card">
                 <div class="card-body">
                     <h3 class="card-title bg-warning">'.$index.'</h3>
                     <b>Nominated by:</b>
                     <ul class="list-group">';
                     foreach($value as $nominator) {
-                        echo '<li class="list-group-item">'.$nominator.'</li>';
+                        echo '<li class="list-group-item">'.$nominator['user'].' says: '.$nominator['comment'].'</li>';
                     }
-            
-            echo 
+
+            echo
             '       </ul>
                 </div>
             </div>
@@ -142,7 +142,7 @@ function getCurrentMonthNominations() {
         $nominations = array();
         foreach($data as $row) {
             $emp = getNames($row['eid'],"employee");
-            $user = getNames($row['uid'],"user");
+            $user = array('user'=>getNames($row['uid'],"user"),'comment'=>$row['comment']);
             if (empty($nominations)) $nominations[$emp] = [$user];
             else {
                 if (!empty($nominations[$emp])) array_push($nominations[$emp],$user);
@@ -177,6 +177,6 @@ function getNames($id,$storage) {
     catch (Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
     }
-   
-    
+
+
 }
