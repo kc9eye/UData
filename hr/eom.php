@@ -62,8 +62,8 @@ function EOMDisplay() {
             <input type="hidden" name="action" value="nominate" />
             <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
             <div class="input-group form-selection">
-                <label class="form-label" for="eid">Nominations</label>
-                <select class="form-control" name="eid">';
+                <span class="input-group-text">Nominee</span>
+                <select class="form-control" name="eid" required>';
                 foreach(getActiveEmployees() as $row) {
                     echo '<option value="'.$row['eid'].'">'.$row['name'].'</option>';
                 }
@@ -71,14 +71,14 @@ function EOMDisplay() {
     '           </select>
                 <span class="input-group-text">Comment:</span>
                 <input type="text" class="form-control" name="comment" required />
+                <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
             </div>
-            <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
         </form
     </div>
     <script>
         let form = document.getElementById("nominationForm");
         let btn = document.getElementById("submitBtn");
-        btn.addEventListener("click",async (event)=>{
+        form.addEventListener("submit",async (event)=>{
             event.preventDefault();
             btn.setAttribute("disabled","disabled");
             btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
