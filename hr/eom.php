@@ -40,17 +40,17 @@ function EOMDisplay() {
     echo '<div id="nominationDisplay">';
     if (!empty($noms)) {
         foreach($noms as $index => $value) {
-            echo 
+            echo
             '<div class="card">
                 <div class="card-body">
                     <h3 class="card-title bg-warning">'.$index.'</h3>
                     <b>Nominated by:</b>
                     <ul class="list-group">';
                     foreach($value as $nominator) {
-                        echo '<li class="list-group-item">'.$nominator.'</li>';
+                        echo '<li class="list-group-item">'.$nominator['user'].' <b>says:</b> '.$nominator['comment'].'</li>';
                     }
-            
-            echo 
+
+            echo
             '       </ul>
                 </div>
             </div>
@@ -61,22 +61,24 @@ function EOMDisplay() {
     '   <form id="nominationForm">
             <input type="hidden" name="action" value="nominate" />
             <input type="hidden" name="uid" value="'.$server->currentUserID.'" />
-            <div class="form-group form-selection">
-                <label class="form-label" for="eid">Nominations</label>
-                <select class="form-control" name="eid">';
+            <div class="input-group form-selection">
+                <span class="input-group-text">Nominee</span>
+                <select class="form-control" name="eid" required>';
                 foreach(getActiveEmployees() as $row) {
                     echo '<option value="'.$row['eid'].'">'.$row['name'].'</option>';
                 }
     echo
     '           </select>
+                <span class="input-group-text">Comment:</span>
+                <input type="text" class="form-control" name="comment" required />
+                <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
             </div>
-            <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
         </form
     </div>
     <script>
         let form = document.getElementById("nominationForm");
         let btn = document.getElementById("submitBtn");
-        btn.addEventListener("click",async (event)=>{
+        form.addEventListener("submit",async (event)=>{
             event.preventDefault();
             btn.setAttribute("disabled","disabled");
             btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>&#160;"+btn.innerHTML;
@@ -95,11 +97,12 @@ function addNomination() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     try {
-        $pntr = $server->pdo->prepare("insert into eotm values (:id,now(),:eid,:uid)");
+        $pntr = $server->pdo->prepare("insert into eotm values (:id,now(),:eid,:uid,:comment)");
         $insert = [
             ':id'=>uniqid(),
             ':eid'=> $_REQUEST['eid'],
-            ':uid'=> $_REQUEST['uid']
+            ':uid'=> $_REQUEST['uid'],
+            ':comment'=>$_REQUEST['comment']
         ];
         if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         echo
@@ -142,7 +145,7 @@ function getCurrentMonthNominations() {
         $nominations = array();
         foreach($data as $row) {
             $emp = getNames($row['eid'],"employee");
-            $user = getNames($row['uid'],"user");
+            $user = array('user'=>getNames($row['uid'],"user"),'comment'=>$row['comment']);
             if (empty($nominations)) $nominations[$emp] = [$user];
             else {
                 if (!empty($nominations[$emp])) array_push($nominations[$emp],$user);
@@ -177,6 +180,6 @@ function getNames($id,$storage) {
     catch (Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
     }
-   
-    
+
+
 }
