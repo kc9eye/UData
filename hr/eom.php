@@ -47,7 +47,7 @@ function EOMDisplay() {
                     <b>Nominated by:</b>
                     <ul class="list-group">';
                     foreach($value as $nominator) {
-                        echo '<li class="list-group-item">'.$nominator['user'].' says: '.$nominator['comment'].'</li>';
+                        echo '<li class="list-group-item">'.$nominator['user'].' <b>says:</b> '.$nominator['comment'].'</li>';
                     }
 
             echo
