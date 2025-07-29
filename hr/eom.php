@@ -97,11 +97,12 @@ function addNomination() {
     global $server;
     $server->userMustHavePermission('viewProfiles');
     try {
-        $pntr = $server->pdo->prepare("insert into eotm values (:id,now(),:eid,:uid)");
+        $pntr = $server->pdo->prepare("insert into eotm values (:id,now(),:eid,:uid,:comment)");
         $insert = [
             ':id'=>uniqid(),
             ':eid'=> $_REQUEST['eid'],
-            ':uid'=> $_REQUEST['uid']
+            ':uid'=> $_REQUEST['uid'],
+            ':comment'=>$_REQUEST['comment']
         ];
         if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
         echo
