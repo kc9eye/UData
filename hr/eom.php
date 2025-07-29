@@ -73,6 +73,7 @@ function EOMDisplay() {
             <div class="form-group">
                 <label class="form-label" for="comment">Comment</label>
                 <textarea class="form-control" name="comment" required></textarea>
+            </div>
             <button id="submitBtn" class="btn btn-secondary" type="submit">Nominate</button>
         </form
     </div>
