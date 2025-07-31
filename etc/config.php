@@ -52,8 +52,8 @@ $config = [
     'template-root' => '',     #Where the application templates are stored for file_get_contents
 
     #ViewMaker pagedata settings, effect how the UI looks
-    'company-name' => 'Chicago Assembly Division',
-    'company-motto' => 'UData production management software',
+    'company-name' => 'UData',
+    'company-motto' => 'Your data, your way',
     'home-name' => 'Safety',
     'theme' => 'dark',
 
