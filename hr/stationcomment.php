@@ -117,9 +117,9 @@ function stationComment() {
     }
     $viewer = $server->getViewer("Success");
     echo
-    '<div class="border border-dark rounded bg-success text-dark">
+    '<div class="border border-dark rounded bg-success text-dark p-3">
         <h3>Sucess</h3>
-        <small class="m-3">There were no employees found to comment on</small><br>
+        <small class="m-3">Added multiple employee comments</small><br>
         <a href="'.$server->config['application-root'].'/hr/stationcomment" class="btn btn-secondary" role="button">Back</a>
     </div>';
     $viewer->footer();
