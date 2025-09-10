@@ -55,7 +55,7 @@ function displayForm() {
         <input type="hidden" name="action" value="stationComment" />
         <div class="form-group mb-3">
             <label class="form-label" for="comment">Comments</label>
-            <textarea class="form-control" cols="100" rows="20" name="comment"></textarea>
+            <textarea class="form-control" name="comment"></textarea>
         </div>
         <button id="stationCommentBtn" class="btn btn-secondary" type="submit">Submit</button>
     </form>';
