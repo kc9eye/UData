@@ -72,6 +72,7 @@ function displayForm() {
         let comBtn = document.getElementById("stationCommentBtn");
         let resetBtn = document.getElementById("resetEmployees");
         resetBtn.addEventListener("click",async (event)=>{
+            event.preventDefault();
             var form = new FormData();
             form.append("action","resetSession");
             var result = await fetch(
