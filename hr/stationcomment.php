@@ -48,13 +48,16 @@ function displayForm() {
     if (!empty($_SESSION['station_employee_comment'])) {
         echo
         '<h3>Added Employees</h3>
-        <ul class="list-group">';
-        foreach($_SESSION['station_employee_comment'] as $row) {
-            echo '<li class="list-group-item">'.$row['name'].'</li>';
-        }
-        echo
-        '</ul>
-        <button class="btn btn-secondary" id="resetEmployees">Clear</button>';
+        <form id="somethingDifferent">
+            <input type="hidden" name="action" value="resetSession" />
+            <ul class="list-group">';
+            foreach($_SESSION['station_employee_comment'] as $row) {
+                echo '<li class="list-group-item">'.$row['name'].'</li>';
+            }
+            echo
+            '</ul>
+            <button type="submit" class="btn btn-secondary" id="resetEmployees">Clear</button>
+        </form>';
     }
     echo
     '<form id="stationComment">
@@ -64,32 +67,7 @@ function displayForm() {
             <textarea class="form-control" name="comment"></textarea>
         </div>
         <button id="stationCommentBtn" class="btn btn-secondary" type="submit">Submit</button>
-    </form>
-    <script>
-        let empForm = document.getElementById("selectEmployees");
-        let commentForm = document.getElementById("stationComment");
-        let empBtn = document.getElementById("addEmployeeBtn");
-        let comBtn = document.getElementById("stationCommentBtn");
-        let resetBtn = document.getElementById("resetEmployees");
-        resetBtn.addEventListener("click", async (event)=>{
-            event.preventDefault();
-            var form = new FormData();
-            form.append("action","resetSession");
-            var result = await fetch(
-                "'.$server->config['application-root'].'/hr/stationcomment",
-                {method:"POST",body:form}
-            );
-        });
-        empForm.addEventListener("submit", async (event)=>{
-            event.preventDefault();
-            empBtn.setAttribute("disabled","disabled");
-            empBtn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>";
-            var result = await fetch(
-                "'.$server->config['application-root'].'/hr/stationcomment",
-                {method:"POST",body:new FormData(empForm)}
-            );
-        });
-    </script>';
+    </form>';
     $view->footer();
 }
 
