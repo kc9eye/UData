@@ -20,6 +20,7 @@ $server->userMustHavePermission("editSupervisorComments");
 if (!empty($_REQUEST)) {
     switch($_REQUEST['action']) {
         case 'addEmployee': addEMployee(); break;
+        case 'resetSession': resetSession();break;
         default: displayForm();break;
     }
 }
@@ -45,11 +46,15 @@ function displayForm() {
         </div>
     </form>';
     if (!empty($_SESSION['station_employee_comment'])) {
-        echo '<ul class="list-group">';
+        echo
+        '<h3>Added Employees</h3>
+        <ul class="list-group">';
         foreach($_SESSION['station_employee_comment'] as $row) {
-            echo '<li class="lsit-group-item">'.$row['name'].'</li>';
+            echo '<li class="list-group-item">'.$row['name'].'</li>';
         }
-        echo '</ul>';
+        echo
+        '</ul>
+        <button class="btn btn-secondary" id="resetEmployees">Clear</button>';
     }
     echo
     '<form id="stationComment">
@@ -65,6 +70,15 @@ function displayForm() {
         let commentForm = document.getElementById("stationComment");
         let empBtn = document.getElementById("addEmployeeBtn");
         let comBtn = document.getElementById("stationCommentBtn");
+        let resetBtn = document.getElementById("resetEmployees");
+        resetBtn.addEventListener("click",async (event)=>{
+            var form = new FormData();
+            form.append("action","resetSession");
+            var result = await fetch(
+                "'.$server->config['application-root'].'/hr/stationcomment",
+                {method:"POST",body:form}
+            );
+        });
         empForm.addEventListener("submit",async (event)=>{
             event.preventDefault();
             empBtn.setAttribute("disabled",disabled");
@@ -83,5 +97,10 @@ function addEmployee() {
     if (!isset($_SESSION['station_employee_comment'])) $_SESSION['station_employee_comment'] = [];
     $emp = new Employee($server->pdo,$_REQUEST['employee']);
     array_push($_SESSION['station_employee_comment'],['eid'=>$emp->getEID(),'name'=>$emp->getFullName()]);
+    displayForm();
+}
+
+function resetSession() {
+    unset($_SESSION['station_employee_comment']);
     displayForm();
 }
