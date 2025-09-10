@@ -21,6 +21,7 @@ if (!empty($_REQUEST)) {
     switch($_REQUEST['action']) {
         case 'addEmployee': addEmployee(); break;
         case 'resetSession': resetSession();break;
+        case 'stationComment': stationComment();break;
         default: displayForm();break;
     }
 }
@@ -63,8 +64,8 @@ function displayForm() {
     '<form id="stationComment">
         <input type="hidden" name="action" value="stationComment" />
         <div class="form-group mb-3">
-            <label class="form-label" for="comment">Comments</label>
-            <textarea class="form-control" name="comment"></textarea>
+            <label class="form-label" for="comments">Comments</label>
+            <textarea class="form-control" name="comments"></textarea>
         </div>
         <button id="stationCommentBtn" class="btn btn-secondary" type="submit">Submit</button>
     </form>';
@@ -82,4 +83,46 @@ function addEmployee() {
 function resetSession() {
     unset($_SESSION['station_employee_comment']);
     displayForm();
+}
+
+function stationComment() {
+    global $server;
+
+    if (empty($_SESSION['station_employee_comment'])) {
+        $viewer = $server->getViewer("Error");
+        echo
+        '<div class="border border-dark rounded bg-danger text-dark">
+            <h3>Exception</h3>
+            <small class="m-3">There were no employees found to comment on</small><br>
+            <a href="'.$server->config['application-root'].'/hr/stationcomment" class="btn btn-secondary" role="button">Back</a>
+        </div>';
+        $viewer->footer();
+        exit();
+    }
+    $uid = $server->security->secureUserID;
+    $class = new SupervisorComments($server->pdo);
+    foreach($_SESSION['station_employee_comment'] as $emp) {
+        $data = ['id'=>uniqid(),'uid'=>$uid,'comments'=>$_REQUEST['comments'],'eid'=>$emp['eid'],'fid'=>"",'subject'=>"Station Comment"];
+        if (!$class->addNewSupervisorFeedback($data)) {
+            $viewer = $server->getViewer("Error");
+            echo
+            '<div class="border border-dark rounded bg-danger text-dark">
+                <h3>Exception</h3>
+                <small class="m-3">There was an error submitting the comment.</small><br>
+                <a href="'.$server->config['application-root'].'/hr/stationcomment" class="btn btn-secondary" role="button">Back</a>
+            </div>';
+            $viewer->footer();
+            exit();
+        }
+    }
+    $viewer = $server->getViewer("Success");
+    echo
+    '<div class="border border-dark rounded bg-success text-dark">
+        <h3>Sucess</h3>
+        <small class="m-3">There were no employees found to comment on</small><br>
+        <a href="'.$server->config['application-root'].'/hr/stationcomment" class="btn btn-secondary" role="button">Back</a>
+    </div>';
+    $viewer->footer();
+    unset($_SESSION['station_employee_comment']);
+    exit();
 }
