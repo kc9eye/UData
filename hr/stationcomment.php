@@ -26,6 +26,20 @@ else displayForm();
 
 function displayForm() {
     global $server;
+    $emps = new Employees($server->pdo);
     $view = $server->getViewer("Station Comment");
+    echo
+    '<h1>Station Comment</h1>
+    <form id="selectEmployees">
+        <div class="input-group">
+            <select class="form-control" name="employee">';
+            foreach($emps->getActiveEmployeeList() as $row) {
+                echo '<option value="'.$row['eid'].'">'.$row['name'].'</option>';
+            }
+    echo
+            '</select>
+            <button id="addEmployeeBtn" type="submit" class="btn btn-secondary">Add</button>
+        </div>
+    </form>';
     $view->footer();
 }
