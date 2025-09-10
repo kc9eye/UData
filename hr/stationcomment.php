@@ -80,15 +80,15 @@ function displayForm() {
         //         {method:"POST",body:form}
         //     );
         // });
-        empForm.addEventListener("submit", async (event)=>{
-            event.preventDefault();
-            empBtn.setAttribute("disabled",disabled");
-            empBtn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>";
-            var result = await fetch(
-                "'.$server->config['application-root'].'/hr/stationcomment",
-                {method:"POST",body:new FormData(empForm)}
-            );
-        });
+        // empForm.addEventListener("submit", async (event)=>{
+        //     event.preventDefault();
+        //     empBtn.setAttribute("disabled",disabled");
+        //     empBtn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>";
+        //     var result = await fetch(
+        //         "'.$server->config['application-root'].'/hr/stationcomment",
+        //         {method:"POST",body:new FormData(empForm)}
+        //     );
+        // });
     </script>';
     $view->footer();
 }
