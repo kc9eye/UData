@@ -42,8 +42,7 @@ function displayForm() {
             '</select>
             <button id="addEmployeeBtn" type="submit" class="btn btn-secondary">Add</button>
         </div>
-    </form>
-    <h3>Comment</h3>';
+    </form>';
     if (!empty($_SESSION['station_employee_comment'])) {
         echo '<ul class="list-group">';
         foreach($_SESSION['station_employee_comment'] as $row) {
@@ -54,7 +53,10 @@ function displayForm() {
     echo
     '<form id="stationComment">
         <input type="hidden" name="action" value="stationComment" />
-        <textarea cols="100" rows="50" name="comment"></textarea>
+        <div class="form-group mb-3">
+            <label class="form-label" for="comment">Comments</label>
+            <textarea class="form-control" cols="100" rows="20" name="comment"></textarea>
+        </div>
         <button id="stationCommentBtn" class="btn btn-secondary" type="submit">Submit</button>
     </form>';
     $view->footer();
