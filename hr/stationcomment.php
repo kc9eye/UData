@@ -71,15 +71,15 @@ function displayForm() {
         let empBtn = document.getElementById("addEmployeeBtn");
         let comBtn = document.getElementById("stationCommentBtn");
         let resetBtn = document.getElementById("resetEmployees");
-        resetBtn.addEventListener("click",async (event)=>{
-            event.preventDefault();
-            var form = new FormData();
-            form.append("action","resetSession");
-            var result = await fetch(
-                "'.$server->config['application-root'].'/hr/stationcomment",
-                {method:"POST",body:form}
-            );
-        });
+        // resetBtn.addEventListener("click",async (event)=>{
+        //     event.preventDefault();
+        //     var form = new FormData();
+        //     form.append("action","resetSession");
+        //     var result = await fetch(
+        //         "'.$server->config['application-root'].'/hr/stationcomment",
+        //         {method:"POST",body:form}
+        //     );
+        // });
         empForm.addEventListener("submit",async (event)=>{
             event.preventDefault();
             empBtn.setAttribute("disabled",disabled");
