@@ -17,10 +17,10 @@
  */
 /**
  * The application interface widgets
- * 
+ *
  * Creates the main interface in a consistent manner.
- * 
- * This class can be used stand alone, however it is best instanitated with the 
+ *
+ * This class can be used stand alone, however it is best instanitated with the
  * Instance class. In so doing all the heavy lifting is done for you.
  * @package UData\Framework\UI\Boostrap3
  * @see Instance::getViewer()
@@ -35,12 +35,13 @@ Class ViewMaker implements ViewWidgets {
      * to push data to an interface.
      */
     public $ViewData;
-    
+
     /**
      * @var Array Contains an array of strings which are typically used on a per page basis
      */
     public $PageData;
 
+    public $security;
     /**
      * Class constructor
      * @param Instance $server The server instance class object
@@ -48,7 +49,7 @@ Class ViewMaker implements ViewWidgets {
      * @return ViewMaker
      */
     public function __construct (Instance $server) {
-        $this->PageData = $server->config; 
+        $this->PageData = $server->config;
         $this->PageData['approot'] = !empty($this->PageData['application-root']) ? $this->PageData['application-root'] : '/';
         $this->PageData['wwwroot'] = $this->PageData['application-root'].'/wwwroot';
         $this->PageData['sidenav'] = false;
@@ -61,11 +62,12 @@ Class ViewMaker implements ViewWidgets {
             $this->ViewData['user'] = null;
             $this->ViewData['admin'] = false;
         }
+        $this->security = $server->security;
     }
 
     /**
      * The interface header.
-     * 
+     *
      * Ouputs the beginning of the interface view to the stream.
      * @return Void
      * @uses ViewMaker::sideNav
@@ -114,10 +116,10 @@ Class ViewMaker implements ViewWidgets {
         echo "<div class='container-float view-content'>";
     }
 
-    
+
     /**
      * Generates the upper interface view navigation bar.
-     * 
+     *
      * This method should not be called standalone as the `ViewMaker::header()`
      * method calls it as part of the standard interface. It is a seperate method
      * only as it would make the header method overly complex.
@@ -158,7 +160,7 @@ Class ViewMaker implements ViewWidgets {
             echo "<span class='oi oi-dashboard' title='dashboard' aria-hidden='true'></span>&#160;My Account</a>";
             echo "<a class='dropdown-item' href='{$this->PageData['approot']}/user/logout'>";
             echo "<span class='oi oi-delete' title='delete' aria-hidden='true'></span>&#160;Log Out</a>";
-            echo "</div>";        
+            echo "</div>";
         }
         echo "</ul>";
         echo "</div>";
@@ -167,16 +169,16 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Outputs the interface view footer.
-     * 
+     *
      * Closes the interface content section, once the view is complete.
      * You are responsible for closing the view after your content.
-     * 
+     *
      * @param Array $script_links Optional array of hyperlinks to add as script files
      * that may be required for you content.
      * @uses ViewMaker::sideNav
      * @return Void
      */
-    public function footer (Array $script_links = null) {
+    public function footer (Array $script_links = []) {
         if ($this->PageData['sidenav']) {
             echo "</div></div>";
         }
@@ -224,7 +226,7 @@ Class ViewMaker implements ViewWidgets {
         echo "<a href='{$this->PageData['error-support-link']}' target='_blank'>Problem with this page?</a>";
         echo "<a href='https://github.com/kc9eye/UData/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed' class='mr-2 float-right' target='_blank'>Release Notes</a>";
         echo "</div>";
-        if (!is_null($script_links)) {
+        if (!empty($script_links)) {
             foreach($script_links as $link) {
                 echo "<script src='".$link."'></script>";
             }
@@ -234,16 +236,16 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Generates an off canvas sliding navigation bar.
-     * 
+     *
      * This method of navigation is optional and has been given up
      * for the cleaner looking, on mobile, method of ViewMaker::sideDropDownMenu().
      * it can however still be used per preference.
      * @uses ViewMaker::sideNav
-     * @param Array $navLinks Optional indexed string array of navigation links. 
+     * @param Array $navLinks Optional indexed string array of navigation links.
      * The array should be indexed as such: `link_text=>link_address`.
      * @return Void
      */
-    public function offCanvasSideNav (Array $navLinks = null) {
+    public function offCanvasSideNav (Array $navLinks = []) {
         $this->PageData['sidenav'] = true;
         echo "<div class='row'>";
         echo "<div class='col-md-1 col-xs-12'>";
@@ -254,7 +256,7 @@ Class ViewMaker implements ViewWidgets {
         echo "<div id='offCanvasSideNav' class='offCanvasSideNav'>";
         echo "<a href='javascript:void(0)' class='closebtn' id='offCanvasSideNavClose'>&times;</a>";
         echo "<div class='offCanvasSideNavContent'>";
-        if (!is_null($navLinks)) {
+        if (!empty($navLinks)) {
             foreach($navLinks as $link => $url) {
                 if (is_array($url)){
                     if ($this->security->userHasPermission($url[1])) {
@@ -269,12 +271,12 @@ Class ViewMaker implements ViewWidgets {
         echo "</div>";
         echo "</div>";
         echo "</div>";
-        echo "<div class='col-md-11 col-xs-12'>";        
+        echo "<div class='col-md-11 col-xs-12'>";
     }
 
     /**
      * Simple debugging interface method
-     * 
+     *
      * Generates a scrollable `<pre>` section to the output
      * stream with whatever string is given to the `$debug`
      * variable.
@@ -288,7 +290,7 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Generates the left side drop down navigation menu.
-     * 
+     *
      * Outputs a side navaigation drop down menu to the stream.
      * Same parameters as ViewMaker::offCanvasSideNav(). Cleaner look
      * on mobile than off canvas though.
@@ -327,10 +329,10 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Outputs a file icon image to screen.
-     * 
+     *
      * Based on the filename extension given as parameter
-     * will output an image link to the stream. The images 
-     * icons are the open source icons that are included 
+     * will output an image link to the stream. The images
+     * icons are the open source icons that are included
      * with the Apache Web Server.
      * @param String $file_name The file name to use to retrieve an icon for.
      * @param String $icon_root If not null, taken as the standard apache /icons root
@@ -375,8 +377,8 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Outputs a scrolltopbutton to the stream
-     * 
-     * Generates a button upon view scrolling that allows the 
+     *
+     * Generates a button upon view scrolling that allows the
      * user to immediately reach the top of the current view scroll
      * @return Void
      */
@@ -390,7 +392,7 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Outputs a standard tab to the stream.
-     * 
+     *
      * Inserts a standardized tab to the stream in the form
      * of HTML nonbreaking spaces.
      * @param Int $num Optional, the number of tabs to insert.
@@ -428,7 +430,7 @@ Class ViewMaker implements ViewWidgets {
      * @return Void
      */
     public function h1 ($content, $centered=false) {
-        if ($centered) 
+        if ($centered)
             echo "<div class='row'><div class='col-md-3'></div><div class='col-md-6 col-xs-12'><h1>{$content}</h1></div><div class='col-md-3'></div></div>";
         else
             echo "<h1>{$content}</h1>";
@@ -460,7 +462,7 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Encapsulates `$content` in an HTML strong section.
-     * 
+     *
      * This is an inline method bolding.
      * @param String $content The string to encapsulate.
      * @param Boolean $return Optionally true to return the string instead of outputting it
@@ -500,7 +502,7 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Outputs a print button to the stream.
-     * 
+     *
      * Executes the javascript print function
      * @param Boolean $return Default = false. If true will return the string instead of outputing to buffer stream
      * @return Mixed Void if $return is false, String if $return true
@@ -563,7 +565,7 @@ Class ViewMaker implements ViewWidgets {
      * @param Boolean $centered Whether or not to include Bootstrap centering
      * @return Void
      */
-    public function responsiveTableStart (Array $columnHeadings = null, $centered = false, $return = false) {
+    public function responsiveTableStart (Array $columnHeadings = [], $centered = false, $return = false) {
         $output = "";
         if ($centered) {
             $output = "<div class='row'><div class='col-md-3'></div><div class='col-md-6 col-xs-12'><div class='table-responsive'><table class='table'>";
@@ -571,7 +573,7 @@ Class ViewMaker implements ViewWidgets {
         else {
             $output = "<div class='table-responsive'><table class='table'>";
         }
-        if (!is_null($columnHeadings)) {
+        if (!empty($columnHeadings)) {
             $output .= "<tr>";
             foreach($columnHeadings as $heading) {
                 $output .= "<th>{$heading}</th>";
@@ -649,7 +651,7 @@ Class ViewMaker implements ViewWidgets {
 
     /**
      * Outputs a button and beginning preamble for a collapse section.
-     * 
+     *
      * Everything after this method call output to the stream will
      * be wrapped in a collapse division until the subsequent `ViewMaker::endBtnCollapse()`
      * is called.
@@ -672,7 +674,7 @@ Class ViewMaker implements ViewWidgets {
         }
         else {
             echo "<button data-toggle='collapse' data-target='#{$id}' class='btn btn-secondary'>{$name}</button>";
-        }        
+        }
         echo "<div id='{$id}' class='collapse'>";
 
     }

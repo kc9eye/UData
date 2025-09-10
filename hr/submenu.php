@@ -24,5 +24,6 @@ $submenu = [
     'Employee of the Month'=>$server->config['application-root'].'/hr/eom',
     // 'Attendance Points'=>$server->config['application-root'].'/hr/points',
     // 'Attendance Occurrences'=>$server->config['application-root'].'/hr/attendanceoccurrences',
-    'Employee Matrix'=>$server->config['application-root'].'/hr/matrixreport'
+    'Employee Matrix'=>$server->config['application-root'].'/hr/matrixreport',
+    'Station Comment'=>$server->config['application-root'].'/hr/stationcomment'
 ];
