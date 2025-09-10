@@ -19,6 +19,7 @@ $server->userMustHavePermission("editSupervisorComments");
 
 if (!empty($_REQUEST)) {
     switch($_REQUEST['action']) {
+        case 'addEmployee': addEMployee(); break;
         default: displayForm();break;
     }
 }
@@ -58,6 +59,29 @@ function displayForm() {
             <textarea class="form-control" name="comment"></textarea>
         </div>
         <button id="stationCommentBtn" class="btn btn-secondary" type="submit">Submit</button>
-    </form>';
+    </form>
+    <script>
+        let empForm = document.getElementById("selectEmployees");
+        let commentForm = document.getElementById("stationComment");
+        let empBtn = document.getElementById("addEmployeeBtn");
+        let comBtn = document.getElementById("stationCommentBtn");
+        empForm.addEventListener("submit",async (event)=>{
+            event.preventDefault();
+            empBtn.setAttribute("disabled",disabled");
+            empBtn.innerHTML = "<span class=\"spinner-border spinner-border-sm\"></span>";
+            var result = await fetch(
+                "'.$server->config['application-root'].'/hr/stationcomment",
+                {method:"POST",body:new FormData(empForm)}
+            );
+        });
+    </script>';
     $view->footer();
+}
+
+function addEmployee() {
+    global $server;
+    if (!isset($_SESSION['station_employee_comment'])) $_SESSION['station_employee_comment'] = [];
+    $emp = new Employee($server->pdo,$_REQUEST['employee']);
+    array_push($_SESSION['station_employee_comment'],['eid'=>$emp->getEID(),'name'=>$emp->getFullName()]);
+    displayForm();
 }
