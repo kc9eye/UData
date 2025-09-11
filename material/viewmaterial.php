@@ -41,18 +41,18 @@ $view->hr();
 //Receiveing info data
 $view->h3("Receiving Info");
 if (!is_null($part->receiving)) {
-    $view->responsiveTableStart(null);
+    $view->responsiveTableStart();
     //do something
     $view->responsiveTableClose();
 }
-else 
+else
     $view->bold("No receiving data found");
 
 //Inventory data info
 $view->hr();
 $view->h3("Inventory");
 if (!is_null($part->inventory)) {
-    $view->responsiveTableStart(null);
+    $view->responsiveTableStart();
     //do something
     $view->responsiveTableClose();
 }

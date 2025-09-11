@@ -17,12 +17,12 @@
  */
 /**
  * The application security model.
- * 
+ *
  * This class defines the security model employed by the applcation.
  * This class should not be used stand alone. Instead it is instantiated
  * by the Instance class. The methods here should rarely if ever be required
- * to be used stand alone. Instead they are called by other methods in the 
- * Instance class. Those methods in Instance class should be employed, not 
+ * to be used stand alone. Instead they are called by other methods in the
+ * Instance class. Those methods in Instance class should be employed, not
  * the ones here.
  * @package UData\Framework\Database\Postgres
  * @see Instance::getAuthority()
@@ -75,7 +75,7 @@ Class Security {
 
     /**
      * Sets security data for the current user
-     * 
+     *
      * @uses Security::$secureUserID
      * @return Void
      */
@@ -104,7 +104,7 @@ Class Security {
 
     /**
      * Validates any persistent log on requests
-     * 
+     *
      * If the user has requested a persistent log on,
      * this method checks that log on upon user return.
      * @uses Security::COOKIE_ID
@@ -127,7 +127,7 @@ Class Security {
                 setcookie(self::COOKIE_ID, '', time() - 1, '/');
                 return false;
             }
-            $res = $res[0];            
+            $res = $res[0];
         }
         catch (Exception $e) {
             trigger_error($e->getMessage(),E_USER_WARNING);
@@ -146,7 +146,7 @@ Class Security {
 
     /**
      * Verifies a given username and password combo.
-     * 
+     *
      * Takes a username and password as paramters and compares them
      * against a valid users credentials.
      * @return Boolean `true` if passwords match for given user, `false` otherwise.
@@ -158,7 +158,7 @@ Class Security {
         if (! $this->verifyUsername($username)) {
             return self::BAD_USERNAME;
         }
-        
+
         #Get users account data
         $sql = 'SELECT * FROM user_accts WHERE username = ?';
         $pntr = $this->dbh->prepare($sql);
@@ -178,9 +178,9 @@ Class Security {
 
     /**
      * Sets a persistent log on for a given user.
-     * 
+     *
      * Upon a successful log on the user has the option to remain
-     * signed in. This method sets that persistent log on to 
+     * signed in. This method sets that persistent log on to
      * be used on subsequent log on's from the given users machine.
      * @param String $uid The users ID to use for persistent log on's
      * @return Boolean
@@ -211,7 +211,7 @@ Class Security {
 
     /**
      * Removes a persistent log on for a user.
-     * 
+     *
      * Persistent log on's set with Security::setPersistentLogOn() are
      * removed with this method.
      * @return Boolean
@@ -254,10 +254,10 @@ Class Security {
 
     /**
      * Determines if the current user has the given role.
-     * 
+     *
      * Returns true if user has the role, false otherwise.
      * @param String $role The role to check the user for
-     * @return Boolean 
+     * @return Boolean
      */
     public function userHasRole ($role) {
         if (is_null($this->secureUserID)) {
@@ -277,14 +277,14 @@ Class Security {
             return false;
         }
         catch (PDOException $e) {
-            trigger_error($e->message, E_USER_WARNING);
+            trigger_error($e->getMessage(), E_USER_WARNING);
             return false;
         }
     }
 
     /**
      * Determines if the current user has the given permission
-     * 
+     *
      * Returns true if user has the permission, false otherwise.
      * @param String $permission The permission to check the user for
      * @return Boolean
@@ -314,14 +314,14 @@ Class Security {
             return false;
         }
         catch (PDOException $e) {
-            trigger_error($e->message, E_USER_NOTICE);
+            trigger_error($e->getMessage(), E_USER_NOTICE);
             return false;
         }
     }
 
     /**
      * Get a array of users who have the given permission
-     * 
+     *
      * Returns either a PDO array of users who have the given permission
      * or false if no users have the permission.
      * @param String $perm The permission to search for
@@ -329,9 +329,9 @@ Class Security {
      */
     public function getUsersByPerm ($perm) {
         try {
-            $sql = 'SELECT DISTINCT 
+            $sql = 'SELECT DISTINCT
             user_accts.id, user_accts.username,
-            user_accts.password, user_accts.firstname, 
+            user_accts.password, user_accts.firstname,
             user_accts.lastname, user_accts.alt_email
             FROM user_accts
             INNER JOIN user_roles ON user_roles.uid = user_accts.id
@@ -345,15 +345,15 @@ Class Security {
             return $pntr->fetchAll(PDO::FETCH_ASSOC);
         }
         catch (PDOException $e) {
-            trigger_error($e->message,E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
     }
 
     /**
      * Returns a PDO array of users who have the given role.
-     * 
-     * Either an array of users with the given role is returned 
+     *
+     * Either an array of users with the given role is returned
      * or false if no users have the role.
      * @param String $role The role to search for.
      * @return Mixed
@@ -371,7 +371,7 @@ Class Security {
             return $pntr->fetchAll(PDO::FETCH_ASSOC);
         }
         catch (PDOException $e) {
-            trigger_error($e->message,E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
     }

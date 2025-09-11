@@ -69,3 +69,4 @@ $config = [
     #Background operations
     'services-run' => 'onaccess'        #When background serveices shoudl run, options are 'onacess' (services are run on every page acess), 'cron' (services are run by OS as a cron job).
 ];
+

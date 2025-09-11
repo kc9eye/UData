@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 class Notification {
-    
+
     const EMAIL_TYPE = 'EMAIL';
 
     private $dbh;
@@ -35,9 +35,9 @@ class Notification {
      * @param Array $attachments An unindexed array of file path's to attach to the email
      * @return Boolean True on success, false other wise.
      */
-    public function notify ($notification, $subject, $body, Array $attachments = null) {
+    public function notify ($notification, $subject, $body, Array $attachments = []) {
         $sql = 'SELECT (SELECT username FROM user_accts WHERE id = a.uid) as email
-                FROM notify as a WHERE 
+                FROM notify as a WHERE
                 nid = (SELECT id FROM notifications WHERE description = ?)';
         try {
             $pntr = $this->dbh->prepare($sql);
@@ -51,7 +51,7 @@ class Notification {
 
         try {
             $send = ['to'=>[],'subject'=> $subject, 'body'=>$body];
-            if (!is_null($attachments)) $send['attach'] = $attachments;
+            if (!empty($attachments)) $send['attach'] = $attachments;
             foreach($results as $user) {
                 array_push($send['to'],$user['email']);
             }

@@ -17,9 +17,9 @@
  */
 /**
  * Represents an interface that delivers a document.
- * 
- * This class is designed for delivering an interface 
- * for a specific document and giving users a method for 
+ *
+ * This class is designed for delivering an interface
+ * for a specific document and giving users a method for
  * doing different things with that document. It is designed to
  * be used with a special class of controller, a document controller.
  * @uses Instance::$pdo
@@ -31,7 +31,7 @@
  * @package UData\FrameWork\Database\Postgres
  * @license GPLv2
  * @todo Rewrite the controller into a method call from a controller
- * 
+ *
  */
 class DocumentViewer extends ViewMaker {
     /**
@@ -110,12 +110,12 @@ class DocumentViewer extends ViewMaker {
     public $seeking;
 
     /**
-     * @var Array $access An indexed array of security permissions for editing the document 
+     * @var Array $access An indexed array of security permissions for editing the document
      * and approving the document.
      */
     public $access;
 
-    protected $security;
+    public $security;
     protected $config;
 
     /**
@@ -137,7 +137,7 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Determines the current users access
-     * 
+     *
      * Sets the $rights property determined by the current users permission set
      * and the access permissions given in the $access property
      * @return Void
@@ -170,8 +170,8 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Sets the current document for the current interface.
-     * 
-     * The document given by name to the parameter is used in the 
+     *
+     * The document given by name to the parameter is used in the
      * interface
      * @param String $name The document name to dsiplay in the interface.
      * @return Boolean If the document is not empty returns true, otherwise false
@@ -190,7 +190,7 @@ class DocumentViewer extends ViewMaker {
                 }
                 elseif ($doc['state'] == self::SEEKING) {
                     $this->seeking = $doc['id'];
-                } 
+                }
             }
             if (empty($this->states['body'])) {
                 return false;
@@ -200,7 +200,7 @@ class DocumentViewer extends ViewMaker {
             }
         }
         catch (PDOException $e) {
-            throw new Exception($e->message);
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -224,9 +224,9 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Displays the requested document in an interface
-     * 
+     *
      * An entire interface is output to the stream that
-     * contains the requested document taking into account 
+     * contains the requested document taking into account
      * the current users access permissions.
      * @param Array $submenu An optional indexed array of links to display in the side navigation
      * @param Array $queryString An optional array of additional query string variables
@@ -267,8 +267,8 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Outputs an editable version of the selected document inside an interface.
-     * 
-     * An entire interface with an editable version of the 
+     *
+     * An entire interface with an editable version of the
      * selected document is output to the stream.
      * @param Array $submenu An optional indexed array of links for the side navigation menu
      * @param Array $queryString An optional array of additional query string variables
@@ -309,9 +309,9 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Outputs a document that is seeking approval encapsulated in an enitire interface
-     * 
+     *
      * An interface with an editted document that is seeking approval
-     * is display. The user has options to approve or disapprove of the 
+     * is display. The user has options to approve or disapprove of the
      * document.
      * @param Array $submenu An optional indexed navigation array
      * @param Array $queryString An optional array of query string parameters in the form `['variable'=>'value',...]`
@@ -335,11 +335,11 @@ class DocumentViewer extends ViewMaker {
             foreach($queryString as $var=>$val) {
                 echo  "input type='hidden' name='{$var}' value='{$val}' />\n";
             }
-        }      
+        }
         echo "      <textarea name=':body' required>{$document['body']}</textarea>
                     <label for='pass'>Password:
                         <input class='form-contorl' id='pass' type='password' name=':password' placeholder='Required for Approval' required/>
-                    </label>                    
+                    </label>
                     <button type='submit' class='btn btn-success'>Approve Document</button>&#160;
                     <a href='{$this->docURL}?action=reject&id={$this->seeking}' class='btn btn-danger' role='button'>
                         Reject
@@ -357,7 +357,7 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Submits an edited document to the database seeking approval.
-     * 
+     *
      * When a document is edited it is submitted for approval through this method.
      * @param Array $data The required data given from the `DocumentViewer::editDisplay()` method.
      * @return Boolean
@@ -383,12 +383,12 @@ class DocumentViewer extends ViewMaker {
             return true;
         }
         catch(PDOException $e) {
-            trigger_error($e->message,E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             $this->dbh->rollback();
             return false;
         }
         catch (Exception $e) {
-            trigger_error($e->message,E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             $this->dbh->rollback();
             return false;
         }
@@ -396,8 +396,8 @@ class DocumentViewer extends ViewMaker {
 
     /**
      * Sends email to approvers that a document is seeking approval
-     * 
-     * This method sends an email to users with permissions to approve the 
+     *
+     * This method sends an email to users with permissions to approve the
      * document that has been submitted.
      * @param Array $data Data submitted to DocumentViewer::submitForApproval()
      * @return Boolean
@@ -419,14 +419,14 @@ class DocumentViewer extends ViewMaker {
             return true;
         }
         catch (Exception $e) {
-            trigger_error($e->message,E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
     }
 
     /**
      * Approves a document edit and marks the document approved
-     * 
+     *
      * Used by the `DocumentViewer::approveDisplay()` to turn an
      * edited document into an approved document.
      * @param Array $data Data submitted by the `DocumentViewer::approveDisplay()`
@@ -457,14 +457,14 @@ class DocumentViewer extends ViewMaker {
             }
         }
         catch (Exception $e) {
-            trigger_error($e->message, E_USER_WARNING);
+            trigger_error($e->getMessage(), E_USER_WARNING);
             return false;
         }
     }
 
     /**
      * Database rollback method for transactions
-     * 
+     *
      * A public rollback method for database transaction that fail
      * either in this class or the calling controller.
      * @param String $id The document ID to rollback
@@ -479,7 +479,7 @@ class DocumentViewer extends ViewMaker {
             return true;
         }
         catch (Exception $e) {
-            trigger_error($e->message,E_USER_WARNING);
+            trigger_error($e->getMessage(),E_USER_WARNING);
             return false;
         }
     }

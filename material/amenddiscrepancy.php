@@ -48,7 +48,7 @@ function amendDisplay () {
     $dis = new MaterialDiscrepancy($server->pdo,$_REQUEST['id']);
     $view = $server->getViewer("Material: Amend Discrepancy",$pageOptions);
     $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
-    $view->responsiveTableStart(null,true);
+    $view->responsiveTableStart([],true);
     echo "<tr><th>ID:</th><td>{$dis->id}</td></tr>\n";
     echo "<tr><th>Type:</th><td>{$dis->type}</td></tr>\n";
     echo "<tr><th>Date:</th><td>".$view->formatUserTimestamp($dis->date,true)."</td></tr>\n";

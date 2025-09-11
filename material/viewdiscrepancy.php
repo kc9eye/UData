@@ -142,7 +142,7 @@ function discrepancyDisplay (MaterialDiscrepancy $dis) {
     if ($server->checkPermission('editDiscrepancy'))
         $heading .= $view->linkButton('/material/amenddiscrepancy?id='.$dis->id,'Add Notes','info',true);
     $view->h1($heading,true);
-    $view->responsiveTableStart(null,true);
+    $view->responsiveTableStart([],true);
     echo "<tr><th>ID:</th><td>{$dis->id}</td></tr>\n";
     echo "<tr><th>Type:</th><td>{$dis->type}</td></tr>\n";
     echo "<tr><th>Date:</th><td>".$view->formatUserTimestamp($dis->date,true)."</td></tr>\n";

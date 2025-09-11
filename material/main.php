@@ -49,7 +49,7 @@ function searchDisplay ($results = null) {
     $form = new InlineFormWidgets($view->PageData['wwwroot'].'/scripts');
     $form->fullPageSearchBar('mat_search');
     if (!is_null($results)) {
-        $view->responsiveTableStart(null,true);
+        $view->responsiveTableStart([],true);
         foreach($results as $row) {
             echo "<tr><td><a href='{$server->config['application-root']}/material/viewmaterial?id={$row['id']}'>{$row['number']}</td>";
             echo "<td>{$row['description']}</td></tr>\n";
