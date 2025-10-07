@@ -52,7 +52,7 @@ else attendanceDisplay();
 function attendanceDisplay () {
     global $server;
     include('submenu.php');
-    
+
     $emp = new Employee($server->pdo,$_REQUEST['id']);
 
     $view = $server->getViewer("HR: Attendance");
@@ -60,7 +60,7 @@ function attendanceDisplay () {
     $view->h1("<small>Add Attendance Record:</small> {$emp->Profile['first']} {$emp->Profile['middle']} {$emp->Profile['last']} {$emp->Profile['other']}".
         $view->linkButton("/hr/viewemployee?id={$_REQUEST['id']}","<span class='glyphicon glyphicon-arrow-left'></span> Back",'info',true)
     );
-    echo 
+    echo
     '<div id="form-display">
     <form id="addRecord">
                 <input type="hidden" name="eid" value="'.$_REQUEST['id'].'" />
@@ -95,6 +95,7 @@ function attendanceDisplay () {
                         <option value="Left/Returned">Left/Returned</option>
                         <option value="No Time Lost">No Time Lost</option>
                         <option value="No Call/No Show">No Call/No Show</option>
+                        <option value="Vacation-Unplanned">Vacation-Unplanned</option>
                         <option value="Vacation">Vacation</option>
                         <option value="Comment">Comment</option>
                     </select>
@@ -170,7 +171,7 @@ function addAttendanceRecord() {
 
     try {
         $server->pdo->beginTransaction();
-        if ($_REQUEST['occ_date'] == "") 
+        if ($_REQUEST['occ_date'] == "")
             if ($_REQUEST['begin_date_range'] == "") throw new Exception("Must have beginning date.");
             elseif ($_REQUEST['end_date_range'] == "") throw new Exception("Must have end date for the range.");
 
@@ -203,7 +204,7 @@ function addAttendanceRecord() {
                 ];
                 if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             }
-            
+
         }
         else {
             $insert = [
@@ -223,7 +224,7 @@ function addAttendanceRecord() {
         }
         $server->pdo->commit();
 
-        echo 
+        echo
         '<div class="m-3">
             <h4 class="bg-success">Record/s Added</h4>
             <a href="'.$server->config['application-root'].'/hr/attendance?id='.$_REQUEST['eid'].'" class="btn btn-secondary m-1" role="button">Back</a>
@@ -232,7 +233,7 @@ function addAttendanceRecord() {
     }
     catch(Exception $e) {
         $server->pdo->rollBack();
-         echo 
+         echo
         '<div class="border border-secondary rounded m-3">
             <h4 class="bg-danger">Error</h4>
             <b>'.$e->getMessage().'</b>&#160;
@@ -341,7 +342,7 @@ function amendAttendanceRecord() {
     }
     catch (Exception $e) {
         trigger_error($e->getMessage(),E_USER_WARNING);
-        echo 
+        echo
         '<div class="border border-secondary rounded m-3">
             <h4 class="bg-danger">Error</h4>
             <b>A date is required for every entry.</b>&#160;
