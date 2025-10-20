@@ -29,6 +29,6 @@ function main(){
         $view->linkButton('','Edit Document',null,false,'_blank',true);
     }
     $view->hr();
-    echo '<iframe id="printFrame" name="printFrame" src="https://docs.google.com/document/d/12y6sMb_7dBlRLs1J1WkA7E3cJbLrqwxcN8seehNw5WQ/view?usp=sharing" width="800" height="600"></iframe>';
+    echo '<iframe height="600" width="800" src="https://docs.google.com/document/d/e/2PACX-1vTq_6H50JXePCayWIjdkJe85dKbqruiwB8am217tjxHLmyp58_UInXw93LFfQgIUXEg1KhJb-GRBky6/pub?embedded=true"></iframe>';
     $view->footer();
 }
