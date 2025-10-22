@@ -752,7 +752,12 @@ Class ViewMaker implements ViewWidgets {
         try {
             if (is_null($this->ViewData['user'])) $string = $timestamp;
             elseif (empty($this->ViewData['user']->getUserDateFormat())) $string = $timestamp;
-            else $string = date($this->ViewData['user']->getUserDateFormat(),strtotime($timestamp));
+            // else $string = date($this->ViewData['user']->getUserDateFormat(),strtotime($timestamp));
+            else {
+                $utc = new DateTime($timestamp, new DateTimeZone('UTC'));
+                $utc->setTimezone(new DateTimeZone("America/Chicago"));
+                $string = $utc->format($this->ViewData['user']->getUserDateFormat());
+            }
             if ($return) return $string;
             else echo $string;
         }
