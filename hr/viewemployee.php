@@ -45,20 +45,20 @@ function employeeViewDisplay () {
 
     //Main profile data
     $view->hr();
-    
+
     $title = "<small>Name:</small> ".$emp->getFullName();
-    if ($server->checkPermission('addNewProfile')) 
+    if ($server->checkPermission('addNewProfile'))
         $title .= "&#160;".$view->editBtnSm('/hr/updateprofile?id='.$_REQUEST['id'],true);
     if ($server->checkPermsArray(['initEmployeeReview','reviewEmployee']))
         $title .= "&#160;".$view->linkButton('/hr/employeereview?eid='.$emp->eid, 'Employee Review', 'info', true);
-    $view->h2($title);    
-    
+    $view->h2($title);
+
     if (!empty($emp->Profile['image'])) {
         $view->responsiveTableStart(['Image','Start Date','End Date','Status']);
         echo "<tr><td>";
-        echo 
+        echo
             "<a href='{$server->config['application-root']}/data/files?file=".$emp->getImageFilename()."'>
-             <img 
+             <img
                 class='img-fluid'
                 src='{$server->config['application-root']}/data/files?file=".$emp->getImageFilename()."'
                 alt='[IMAGE NOT FOUND]'
@@ -150,9 +150,9 @@ function employeeViewDisplay () {
             else $absent = 'No';
             // if ($row['excused'] == 'true') $excused = 'Yes';
             // else $excused = 'No';
-            echo 
+            echo
                 "<tr>
-                    <td>".$view->formatUserTimestamp($row['occ_date'],true)."</td>
+                    <td>".$row['occ_date']."</td>
                     <td>{$row['arrive_time']}</td>
                     <td>{$row['leave_time']}</td>
                     <td>{$absent}</td><td>{$row['description']}</td>
@@ -229,7 +229,7 @@ function employeeViewDisplay () {
         $view->hr();
         $view->beginBtnCollapse("Show/Hide Comments");
         $heading = $server->checkPermission('editSupervisorComments') ?
-            "Comments ".$view->linkButton('/hr/feedback?id='.$_REQUEST['id'],"<span class='glyphicon glyphicon-plus'></span>Add",'info',true) 
+            "Comments ".$view->linkButton('/hr/feedback?id='.$_REQUEST['id'],"<span class='glyphicon glyphicon-plus'></span>Add",'info',true)
             : "Comments";
         $view->h3($heading);
         if (!empty($emp->Comments)) {
@@ -242,7 +242,7 @@ function employeeViewDisplay () {
         }
         else $view->bold("No comment data found");
         $view->endBtnCollapse();
-    }    
+    }
 
     //PPE Data
     if ($server->checkPermission('readPPE')) {
