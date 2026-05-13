@@ -18,13 +18,13 @@
 
 /**
  * The main server init script.
- * 
+ *
  * This file should be sourced in the first line of any controller
- * scripts. This file creates the server instance and makes 
+ * scripts. This file creates the server instance and makes
  * it available globally as the `$server` variable. This gives you access
  * to the Security model, the instance PDO, configuration variables,
- * interface widgets and the like. 
- * 
+ * interface widgets and the like.
+ *
  * @return Instance in the form of the global variable `$server`
  * @uses config.php Configuration variables
  * @uses autoloader.php The class autoloader
@@ -41,7 +41,7 @@ require_once(dirname(__DIR__).'/framework/autoloader.php');
 require_once(dirname(__DIR__).'/framework/errorhandler.php');
 
 $loader = new Autoloader(dirname(__DIR__),['.php','.lib.php','.class.php','.obj.php','.int.php']);
-$error = new Errorhandler($config['error-log-file-path'], $config['error-support-link']);
+$error = new Errorhandler(dirname(__DIR__).'/'.$config['error-log-file-path'], $config['error-support-link']);
 
 
 // if (empty($_SESSION['viewer'])) {
