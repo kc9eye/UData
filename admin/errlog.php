@@ -44,7 +44,7 @@ function main () {
     $view->h1('Error Log &#160;'.$view->linkButton('/admin/errlog?action=reset','Reset Log File','danger',true));
     echo "<p class='text-weight-light'>Clicking on each error will display the error, as well as give access to the backtrace.</p>";
     if (file_exists($server->config['error-log-file-path'])) {
-        $log = simplexml_load_file($server->config['error-log-file-path']);
+        $log = simplexml_load_file(dirname(__DIR__).'/'.$server->config['error-log-file-path']);
         $errors = array_reverse($log->xpath('error'));
         echo "<div class='list-group'>";
         foreach($errors as $err) {
@@ -73,5 +73,5 @@ function main () {
 
 function resetLogFile () {
     global $server;
-    return unlink($server->config['error-log-file-path']); 
+    return unlink(dirname(__DIR__).'/'.$server->config['error-log-file-path']);
 }
