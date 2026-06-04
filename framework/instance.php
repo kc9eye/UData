@@ -82,7 +82,7 @@ Class Instance {
      */
     public function __construct ($config) {
         $this->config = $config;
-        $this->pdo = new PDO($this->config['dbpdo'], $this->config['dbuser'], $this->config['dbpass']);
+        $this->pdo = new PDO($this->config['dbpdo']);
         $this->security = $this->getAuthority();
         $this->mailer = new Mailer($this->config);
         $this->currentUserID = $this->security->secureUserID;
