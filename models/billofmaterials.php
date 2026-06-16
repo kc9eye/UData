@@ -17,7 +17,7 @@
  */
 /**
  * BillOfMaterials Class Model
- * 
+ *
  * @package UData\Models\Database\Postgres
  * @link https://kc9eye.github.io/udata/UData_Database_Structure.html
  * @author Paul W. Lane
@@ -71,7 +71,7 @@ class BillOfMaterials {
         }
 
         try {
-            $sql = 
+            $sql =
             'INSERT INTO bom (id,prokey,qty,uid,partid)
                 SELECT :id, :prokey, :qty, :uid, id FROM material WHERE number = :num';
             $this->dbh->beginTransaction();
@@ -249,8 +249,7 @@ class BillOfMaterials {
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$number])) throw new Exception(print_r($pntr->errorInfo(),true));
-            $result = empty($pntr->fetchAll(PDO::FETCH_COLUMN)) ? true : false;
-            return $result;
+            return empty($pntr->fetchAll(PDO::FETCH_ASSOC));
         }
         catch (Exception $e) {
             trigger_error($e->getMessage(), E_USER_ERROR);
@@ -263,15 +262,16 @@ class BillOfMaterials {
      * @return Boolean True if the material exists, false otherwise
      */
     public function verifyMaterialExists ($number) {
-        if ($this->verifyMaterialNotEntered($number)) return false;
-        return true;
+        return !$this->verifyMaterialNotEntered($number);
+        // if ($this->verifyMaterialNotEntered($number)) return false;
+        // return true;
     }
 
     /**
      * Returns an array of rows of material.
-     * 
+     *
      * Returns an array of rows from the BOM that are not
-     * presently assigned to a work cell as material from the 
+     * presently assigned to a work cell as material from the
      * given master product key.
      * @param String $prokey The master product ID
      * @return Array An array of rows in the form :
@@ -280,8 +280,8 @@ class BillOfMaterials {
      * there were no items found.
      */
     public function getUnassignedMaterial ($prokey) {
-        $sql = 
-        'SELECT 
+        $sql =
+        'SELECT
             a.id AS id,
             a.qty AS qty,
             (SELECT number FROM material WHERE id = a.partid) AS number,
@@ -320,9 +320,9 @@ class BillOfMaterials {
                 (SELECT number FROM material WHERE id = a.partid) as number,
                 (SELECT description FROM material WHERE id = a.partid) as description,
                 (
-                    SELECT SUM(qty) 
+                    SELECT SUM(qty)
                     FROM cell_material
-                    INNER JOIN work_cell on work_cell.id = cell_material.cellid 
+                    INNER JOIN work_cell on work_cell.id = cell_material.cellid
                     WHERE bomid = a.id
                     AND work_cell.prokey = :cell_prokey
                 ) as used,
@@ -343,12 +343,12 @@ class BillOfMaterials {
 
     /**
      * Rebase an existing BOM with an addendum file
-     * 
+     *
      * @param Array $data in the form `['file'=>FileUpload Object,'prokey'=>string,'uid'=>string]
      * @return Boolean True on success, false otherwise
      */
     public function rebaseExistingBOM ($data) {
-        $rebase = [];        
+        $rebase = [];
         $this->prokey = $data['prokey'];
         $this->uid = $data['uid'];
         try {
@@ -410,7 +410,7 @@ class BillOfMaterials {
     /**
      * Delete multiple items from BOM by ID given in an array
      * @param Array $deletes An unindexed array containing ID's of row's to delete
-     * @return Boolean True on success, false otherwise. 
+     * @return Boolean True on success, false otherwise.
      */
     public function deleteFromIDArray (Array $deletes) {
         $sql = 'DELETE FROM bom WHERE id = ?';
@@ -437,7 +437,7 @@ class BillOfMaterials {
      * @return Boolean Returns true if the material is on work cell already, false if not.
      */
     public function materialInUse ($bomid, $prokey) {
-        $sql = 
+        $sql =
         'select count(*)
         from cell_material
         where cellid in (
