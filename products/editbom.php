@@ -48,12 +48,11 @@ if (!empty($_REQUEST['action'])) {
                     $server->config['application-root'].'/material/addnew'
                 );
             else
-                $bom->addendumBOM($_REQUEST);
-                // $server->processingDialog(
-                //     [$bom,'addendumBOM'],
-                //     [$_REQUEST],
-                //     $server->config['application-root'].'/products/bom?prokey='.$_REQUEST['prokey']
-                // );
+                $server->processingDialog(
+                    [$bom,'addendumBOM'],
+                    [$_REQUEST],
+                    $server->config['application-root'].'/products/bom?prokey='.$_REQUEST['prokey']
+                );
         break;
         case 'rerebase':
             $_REQUEST['file'] = new FileUpload(FileIndexer::UPLOAD_NAME);
