@@ -41,13 +41,13 @@ if (!empty($_REQUEST['action'])) {
         break;
         case 'add':
             $bom = new BillOfMaterials($server->pdo);
-            if (!$bom->verifyMaterialExists($_REQUEST['number'])) 
+            if (!$bom->verifyMaterialExists($_REQUEST['number']))
                 $server->newEndUserDialog(
-                    "This material number does not yet exists, first add it as a valid material.",
+                    "This material number does not yet exist, first add it as a valid material.",
                     DIALOG_FAILURE,
                     $server->config['application-root'].'/material/addnew'
                 );
-            else 
+            else
                 $server->processingDialog(
                     [$bom,'addendumBOM'],
                     [$_REQUEST],
@@ -70,7 +70,7 @@ if (!empty($_REQUEST['action'])) {
                     $server->config['application-root'].'/products/bom?prokey='.$_REQUEST['prokey']
                 );
             }
-            else 
+            else
                 $server->newEndUserDialog(
                     "Use must select items to delete!",
                     DIALOG_FAILURE,
@@ -95,7 +95,7 @@ function editMaterial () {
 
     $view = $server->getViewer("BOM: Edit");
     $form = new FormWidgets($view->PageData['wwwroot'].'/scripts');
-    
+
     $view->h1("<small>Material for:</small> {$line['productname']}",true);
     $form->newForm("<small>Delete From BOM:</small> ".$view->trashBtnSm('/products/editbom?action=remove&id='.$_REQUEST['id'].'&prokey='.$line['prokey'],true));
     $form->hiddenInput('action','amend');

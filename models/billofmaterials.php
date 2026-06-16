@@ -249,7 +249,7 @@ class BillOfMaterials {
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$number])) throw new Exception(print_r($pntr->errorInfo(),true));
-            return empty($pntr->fetchAll(PDO::FETCH_ASSOC));
+            return empty($pntr->fetchAll(PDO::FETCH_COLUMN));
         }
         catch (Exception $e) {
             trigger_error($e->getMessage(), E_USER_ERROR);
