@@ -218,7 +218,7 @@ class BillOfMaterials {
      * @return Boolean true on success, false otherwise
      */
     public function addendumBOM ($data) {
-        if ($this->verifyMaterialNotEntered($data['number'])) exit("I'm HERE!!");
+        if ($this->verifyMaterialNotEntered($data['number'])) return false;
         $sql = 'INSERT INTO bom (id,prokey,partid,qty,uid)
             SELECT :id,:prokey,(SELECT id FROM material WHERE number = :num),:qty,:uid';
         try {
@@ -230,7 +230,7 @@ class BillOfMaterials {
                 ':qty'=>$data['qty'],
                 ':uid'=>$data['uid']
             ];
-            if (!$pntr->execute($insert)) throw new Exception("Insert failed: {$sql}");
+            if (!$pntr->execute($insert)) throw new Exception(print_r($pntr->errorInfo(),true));
             return true;
         }
         catch (PDOException $e) {
