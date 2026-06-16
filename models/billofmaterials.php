@@ -218,6 +218,8 @@ class BillOfMaterials {
      * @return Boolean true on success, false otherwise
      */
     public function addendumBOM ($data) {
+        echo "<pre>",var_export($this->verifyMaterialNotEntered($data['number'])),"</pre>";
+        exit();
         if ($this->verifyMaterialNotEntered($data['number'])) return false;
         $sql = 'INSERT INTO bom (id,prokey,partid,qty,uid)
             SELECT :id,:prokey,(SELECT id FROM material WHERE number = :num),:qty,:uid';
@@ -249,7 +251,7 @@ class BillOfMaterials {
         try {
             $pntr = $this->dbh->prepare($sql);
             if (!$pntr->execute([$number])) throw new Exception(print_r($pntr->errorInfo(),true));
-            return empty($pntr->fetchAll(PDO::FETCH_COLUMN));
+            return empty($pntr->fetchAll(PDO::FETCH_ASSOC));
         }
         catch (Exception $e) {
             trigger_error($e->getMessage(), E_USER_ERROR);

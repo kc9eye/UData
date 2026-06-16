@@ -41,8 +41,6 @@ if (!empty($_REQUEST['action'])) {
         break;
         case 'add':
             $bom = new BillOfMaterials($server->pdo);
-            // echo "<pre>",var_export($bom->verifyMaterialExists($_REQUEST['number'])),"</pre>";
-            // exit();
             if (!$bom->verifyMaterialExists($_REQUEST['number']))
                 $server->newEndUserDialog(
                     "This material number does not yet exist, first add it as a valid material.",
@@ -50,7 +48,7 @@ if (!empty($_REQUEST['action'])) {
                     $server->config['application-root'].'/material/addnew'
                 );
             else
-                exit("I'm HERE!!!");
+                $bom->addendumBOM($_REQUEST);
                 // $server->processingDialog(
                 //     [$bom,'addendumBOM'],
                 //     [$_REQUEST],
