@@ -262,9 +262,14 @@ class BillOfMaterials {
      * @return Boolean True if the material exists, false otherwise
      */
     public function verifyMaterialExists ($number) {
-        return !$this->verifyMaterialNotEntered($number);
-        // if ($this->verifyMaterialNotEntered($number)) return false;
-        // return true;
+        try {
+            $pntr = $this->dbh->prepare("select * from material where number = ?");
+            if (!$pntr->execute([$number])) throw new Exception(print_r($pntr->errorInfo(),true));
+            return !empty($pntr->fetchAll(PDO::FETCH_ASSOC));
+        }
+        catch(Exception $e) {
+            throw new Exception($e);
+        }
     }
 
     /**
