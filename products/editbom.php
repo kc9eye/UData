@@ -41,20 +41,21 @@ if (!empty($_REQUEST['action'])) {
         break;
         case 'add':
             $bom = new BillOfMaterials($server->pdo);
-            echo "<pre>",var_export($bom->verifyMaterialExists($_REQUEST['number'])),"</pre>";
-            exit();
-            // if (!$bom->verifyMaterialExists($_REQUEST['number']))
-            //     $server->newEndUserDialog(
-            //         "This material number does not yet exist, first add it as a valid material.",
-            //         DIALOG_FAILURE,
-            //         $server->config['application-root'].'/material/addnew'
-            //     );
-            // else
-            //     $server->processingDialog(
-            //         [$bom,'addendumBOM'],
-            //         [$_REQUEST],
-            //         $server->config['application-root'].'/products/bom?prokey='.$_REQUEST['prokey']
-            //     );
+            // echo "<pre>",var_export($bom->verifyMaterialExists($_REQUEST['number'])),"</pre>";
+            // exit();
+            if (!$bom->verifyMaterialExists($_REQUEST['number']))
+                $server->newEndUserDialog(
+                    "This material number does not yet exist, first add it as a valid material.",
+                    DIALOG_FAILURE,
+                    $server->config['application-root'].'/material/addnew'
+                );
+            else
+                exit("I'm HERE!!!");
+                // $server->processingDialog(
+                //     [$bom,'addendumBOM'],
+                //     [$_REQUEST],
+                //     $server->config['application-root'].'/products/bom?prokey='.$_REQUEST['prokey']
+                // );
         break;
         case 'rerebase':
             $_REQUEST['file'] = new FileUpload(FileIndexer::UPLOAD_NAME);
