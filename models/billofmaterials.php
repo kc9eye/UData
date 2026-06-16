@@ -218,9 +218,7 @@ class BillOfMaterials {
      * @return Boolean true on success, false otherwise
      */
     public function addendumBOM ($data) {
-        echo "<pre>",var_export($this->verifyMaterialNotEntered($data['number'])),"</pre>";
-        exit();
-        if ($this->verifyMaterialNotEntered($data['number'])) return false;
+        if ($this->verifyMaterialNotEntered($data['number'])) exit("I'm HERE!!");
         $sql = 'INSERT INTO bom (id,prokey,partid,qty,uid)
             SELECT :id,:prokey,(SELECT id FROM material WHERE number = :num),:qty,:uid';
         try {
