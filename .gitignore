@@ -3,3 +3,7 @@
 /phpDocumentor.phar
 /etc/config.php
 /.phpdoc/
+data/raw/*
+var/*
+etc/config.php
+
