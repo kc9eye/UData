@@ -27,7 +27,7 @@ function main(){
     $view->sideDropDownMenu($submenu);
     $view->h1("Hazardous Communications Document");
     if ($server->checkPermission('approveHazcom')){
-        $view->linkButton('','Edit Document',null,false,'_blank',true);
+        $view->linkButton('https://docs.google.com/document/d/12y6sMb_7dBlRLs1J1WkA7E3cJbLrqwxcN8seehNw5WQ/edit?usp=sharing','Edit Document',null,false,'_blank',true);
     }
     $view->hr();
     echo '<iframe height="600" width="800" src="https://docs.google.com/document/d/e/2PACX-1vRhWzhM-YNaJrMR84Fg9aeUYC18e_dyCOCkuJRBqM5UgHlqT6EYKcd2mfNhPudbFiDXLZ-wkDtLjDMy/pub?embedded=true"></iframe>';

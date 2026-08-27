@@ -59,5 +59,6 @@ try {
     $server = new Instance($config);
 }
 catch (Exception $e) {
-    trigger_error($e->getMessage(), E_USER_ERROR);
+    exit($e);
 }
+
